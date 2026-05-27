@@ -45,3 +45,9 @@ dev.db
 
 # firebase dev rules (local only)
 firebase-dev-rules.txt
+
+# zip files
+*.zip
+
+# scripts
+/scripts/
