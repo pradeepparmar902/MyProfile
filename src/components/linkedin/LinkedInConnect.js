@@ -1,9 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Linkedin, CheckCircle2, AlertCircle, Unlink } from "lucide-react";
+import { CheckCircle2, AlertCircle, Unlink } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+
+function LinkedinIcon({ size = 16, className = "" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
 
 function LinkedInConnectInner({ isConnected }) {
   const [connected, setConnected] = useState(isConnected);
@@ -35,7 +45,7 @@ function LinkedInConnectInner({ isConnected }) {
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-center gap-3">
         <div className="flex size-10 items-center justify-center rounded-xl bg-[#0077B5]">
-          <Linkedin size={20} className="text-white" />
+          <LinkedinIcon size={20} className="text-white" />
         </div>
         <div>
           <h2 className="text-base font-bold text-slate-800">LinkedIn Integration</h2>
@@ -78,7 +88,7 @@ function LinkedInConnectInner({ isConnected }) {
                 href="/api/auth/linkedin"
                 className="flex items-center gap-2 rounded-lg border border-[#0077B5] px-4 py-2 text-sm font-semibold text-[#0077B5] transition hover:bg-[#0077B5] hover:text-white"
               >
-                <Linkedin size={14} />
+                <LinkedinIcon size={14} />
                 Reconnect
               </a>
             </div>
@@ -97,7 +107,7 @@ function LinkedInConnectInner({ isConnected }) {
               href="/api/auth/linkedin"
               className="flex w-fit items-center gap-2 rounded-xl bg-[#0077B5] px-6 py-3 text-sm font-bold text-white shadow transition hover:bg-[#005f91] hover:shadow-md"
             >
-              <Linkedin size={16} />
+              <LinkedinIcon size={16} />
               Connect LinkedIn Account
             </a>
           </div>

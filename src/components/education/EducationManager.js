@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Linkedin, Share2, ExternalLink } from "lucide-react";
+import { Plus, Trash2, Share2, ExternalLink } from "lucide-react";
+
+function LinkedinIcon({ size = 16, className = "" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -121,7 +131,7 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
         {!linkedinConnected && (
           <div className="mt-6 rounded-xl border border-[#0077B5]/30 bg-[#0077B5]/5 p-4">
             <div className="flex items-center gap-2 text-sm font-semibold text-[#0077B5]">
-              <Linkedin size={16} />
+              <LinkedinIcon size={16} />
               LinkedIn not connected
             </div>
             <p className="mt-1 text-xs text-slate-500">Connect your LinkedIn account to share education entries directly to your feed.</p>
@@ -129,7 +139,7 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
               href="/api/auth/linkedin"
               className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-[#0077B5] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#005f91]"
             >
-              <Linkedin size={14} />
+              <LinkedinIcon size={14} />
               Connect LinkedIn
             </a>
           </div>
