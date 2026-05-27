@@ -5,7 +5,8 @@ import { slugify } from "@/lib/api";
 import { hashPassword } from "@/lib/password";
 
 function redirectTo(request, path) {
-  return NextResponse.redirect(new URL(path, request.url), 303);
+  const origin = request.headers.get("origin") || request.headers.get("referer") || request.url;
+  return NextResponse.redirect(new URL(path, origin), 303);
 }
 
 export async function POST(request) {
