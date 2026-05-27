@@ -12,10 +12,12 @@ model User {
   name         String
   email        String        @unique
   passwordHash String
-  role         Role          @default(STUDENT)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  profile      Profile?
+  role                   Role          @default(STUDENT)
+  linkedinAccessToken    String?
+  linkedinTokenExpiry    DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  profile                Profile?
   education    Education[]
   achievements Achievement[]
   projects     Project[]
