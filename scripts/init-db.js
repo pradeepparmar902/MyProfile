@@ -1,0 +1,124 @@
+const Database = require("better-sqlite3");
+const path = require("path");
+
+const dbPath = path.join(__dirname, "..", "dev.db");
+const db = new Database(dbPath);
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS User (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  passwordHash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'STUDENT',
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS Profile (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL UNIQUE,
+  username TEXT NOT NULL UNIQUE,
+  headline TEXT,
+  bio TEXT,
+  careerGoal TEXT,
+  location TEXT,
+  profileImageUrl TEXT,
+  coverImageUrl TEXT,
+  linkedinUrl TEXT,
+  githubUrl TEXT,
+  portfolioUrl TEXT,
+  emailVisible BOOLEAN NOT NULL DEFAULT false,
+  isPublic BOOLEAN NOT NULL DEFAULT true,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Profile_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Education (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL,
+  institutionName TEXT NOT NULL,
+  degree TEXT NOT NULL,
+  fieldOfStudy TEXT,
+  startYear INTEGER,
+  endYear INTEGER,
+  grade TEXT,
+  description TEXT,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Education_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Achievement (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL,
+  title TEXT NOT NULL,
+  category TEXT NOT NULL,
+  problemStatement TEXT,
+  thinkingProcess TEXT,
+  executionProcess TEXT,
+  result TEXT,
+  metrics TEXT,
+  learning TEXT,
+  skillsUsed TEXT,
+  proofLink TEXT,
+  status TEXT NOT NULL DEFAULT 'DRAFT',
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Achievement_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Project (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  problemSolved TEXT,
+  toolsUsed TEXT,
+  githubLink TEXT,
+  demoLink TEXT,
+  outcome TEXT,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Project_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Skill (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL,
+  skillName TEXT NOT NULL,
+  proficiencyLevel TEXT NOT NULL DEFAULT 'BEGINNER',
+  proofLink TEXT,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Skill_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS ProfileView (
+  id TEXT PRIMARY KEY NOT NULL,
+  profileId TEXT NOT NULL,
+  viewerIp TEXT,
+  viewerUserAgent TEXT,
+  viewedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT ProfileView_profileId_fkey FOREIGN KEY (profileId) REFERENCES Profile (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Media (
+  id TEXT PRIMARY KEY NOT NULL,
+  userId TEXT NOT NULL,
+  relatedType TEXT NOT NULL,
+  relatedId TEXT NOT NULL,
+  category TEXT NOT NULL,
+  fileUrl TEXT NOT NULL,
+  fileName TEXT NOT NULL,
+  fileType TEXT NOT NULL,
+  mimeType TEXT NOT NULL,
+  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT Media_userId_fkey FOREIGN KEY (userId) REFERENCES User (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+`);
+
+db.close();
+console.log(`Database ready at ${dbPath}`);

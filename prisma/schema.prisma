@@ -1,0 +1,158 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         Role          @default(STUDENT)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  profile      Profile?
+  education    Education[]
+  achievements Achievement[]
+  projects     Project[]
+  skills       Skill[]
+  media        Media[]
+}
+
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  username        String   @unique
+  headline        String?
+  bio             String?
+  careerGoal      String?
+  location        String?
+  profileImageUrl String?
+  coverImageUrl   String?
+  linkedinUrl     String?
+  githubUrl       String?
+  portfolioUrl    String?
+  emailVisible    Boolean  @default(false)
+  isPublic        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views           ProfileView[]
+}
+
+model Education {
+  id              String   @id @default(cuid())
+  userId          String
+  institutionName String
+  degree          String
+  fieldOfStudy    String?
+  startYear       Int?
+  endYear         Int?
+  grade           String?
+  description     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Achievement {
+  id               String              @id @default(cuid())
+  userId           String
+  title            String
+  category         AchievementCategory
+  problemStatement String?
+  thinkingProcess  String?
+  executionProcess String?
+  result           String?
+  metrics          String?
+  learning         String?
+  skillsUsed       String?
+  proofLink        String?
+  status           ContentStatus       @default(DRAFT)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  user             User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  userId        String
+  title         String
+  description   String?
+  problemSolved String?
+  toolsUsed     String?
+  githubLink    String?
+  demoLink      String?
+  outcome       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id               String           @id @default(cuid())
+  userId           String
+  skillName        String
+  proficiencyLevel ProficiencyLevel @default(BEGINNER)
+  proofLink        String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ProfileView {
+  id              String   @id @default(cuid())
+  profileId       String
+  viewerIp        String?
+  viewerUserAgent String?
+  viewedAt        DateTime @default(now())
+  profile         Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  userId      String
+  relatedType String
+  relatedId   String
+  category    String
+  fileUrl     String
+  fileName    String
+  fileType    String
+  mimeType    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum AchievementCategory {
+  ACADEMIC
+  PROJECT
+  COMPETITION
+  INTERNSHIP
+  LEADERSHIP
+  VOLUNTEERING
+  INNOVATION
+  PERSONAL_GROWTH
+  SPORTS
+  CREATIVE_WORK
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ProficiencyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
