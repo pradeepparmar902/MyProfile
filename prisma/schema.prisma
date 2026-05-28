@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -13,7 +13,7 @@ model User {
   email        String        @unique
   passwordHash String
   role                   Role          @default(STUDENT)
-  linkedinAccessToken    String?
+  linkedinAccessToken    String?   @db.Text
   linkedinTokenExpiry    DateTime?
   createdAt              DateTime      @default(now())
   updatedAt              DateTime      @updatedAt
