@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(request) {
   const clientId = process.env.LINKEDIN_CLIENT_ID;
   const redirectUri = process.env.LINKEDIN_REDIRECT_URI;
 
@@ -11,8 +11,14 @@ export async function GET() {
     );
   }
 
-  // Request w_member_social to post on behalf of user
-  const scope = "openid profile email w_member_social";
+  const { searchParams } = new URL(request.url);
+  const mode = searchParams.get("mode");
+
+  // Allow fallback to basic scopes to test connection if w_member_social is rejected
+  const scope = mode === "basic"
+    ? "openid profile email"
+    : "openid profile email w_member_social";
+
   const state = Math.random().toString(36).substring(2); // CSRF protection
 
   const authUrl = new URL("https://www.linkedin.com/oauth/v2/authorization");
