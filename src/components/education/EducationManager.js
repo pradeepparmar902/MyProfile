@@ -82,10 +82,13 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
 
     const text = `🎓 Excited to share my education journey!\n\nI studied ${degree}${field} at ${school}${years}.${grade}\n\nCheck out my full portfolio at datacraze.tech\n\n#Education #Learning #Growth`;
 
+    const itemMedia = mediaByEducation[item.id] || [];
+    const mediaUrls = itemMedia.filter(m => m.fileType === "IMAGE").map(m => m.fileUrl);
+
     const res = await fetch("/api/linkedin/post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, mediaUrls }),
     });
     const data = await res.json();
 

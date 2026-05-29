@@ -19,7 +19,7 @@ export async function POST(request) {
   }
 
   const body = await request.json();
-  const { text } = body;
+  const { text, mediaUrls } = body;
 
   if (!text || text.trim().length === 0) {
     return error("Post text is required.");
@@ -37,6 +37,75 @@ export async function POST(request) {
   const profileData = await profileRes.json();
   const authorUrn = `urn:li:person:${profileData.sub}`;
 
+  let imageUrn = null;
+
+  // If there are images, upload the first one to LinkedIn
+  if (mediaUrls && mediaUrls.length > 0) {
+    try {
+      const imageUrl = mediaUrls[0];
+      const imgRes = await fetch(imageUrl);
+      
+      if (imgRes.ok) {
+        const imgBuffer = await imgRes.arrayBuffer();
+
+        // Initialize upload
+        const initRes = await fetch("https://api.linkedin.com/rest/images?action=initializeUpload", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${fullUser.linkedinAccessToken}`,
+            "Content-Type": "application/json",
+            "LinkedIn-Version": "202605",
+            "X-Restli-Protocol-Version": "2.0.0",
+          },
+          body: JSON.stringify({
+            initializeUploadRequest: {
+              owner: authorUrn
+            }
+          })
+        });
+
+        if (initRes.ok) {
+          const initData = await initRes.json();
+          const uploadUrl = initData.value.uploadUrl;
+          imageUrn = initData.value.image;
+
+          // Upload image bytes
+          await fetch(uploadUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/octet-stream"
+            },
+            body: imgBuffer
+          });
+        }
+      }
+    } catch (e) {
+      console.error("Failed to upload image to LinkedIn:", e);
+      // Continue without image if upload fails
+    }
+  }
+
+  const postPayload = {
+    author: authorUrn,
+    commentary: text,
+    visibility: "PUBLIC",
+    distribution: {
+      feedDistribution: "MAIN_FEED",
+      targetEntities: [],
+      thirdPartyDistributionChannels: []
+    },
+    lifecycleState: "PUBLISHED",
+    isReshareDisabledByAuthor: false
+  };
+
+  if (imageUrn) {
+    postPayload.content = {
+      media: {
+        id: imageUrn
+      }
+    };
+  }
+
   // Create the LinkedIn post
   const postRes = await fetch("https://api.linkedin.com/rest/posts", {
     method: "POST",
@@ -46,18 +115,7 @@ export async function POST(request) {
       "LinkedIn-Version": "202605",
       "X-Restli-Protocol-Version": "2.0.0",
     },
-    body: JSON.stringify({
-      author: authorUrn,
-      commentary: text,
-      visibility: "PUBLIC",
-      distribution: {
-        feedDistribution: "MAIN_FEED",
-        targetEntities: [],
-        thirdPartyDistributionChannels: []
-      },
-      lifecycleState: "PUBLISHED",
-      isReshareDisabledByAuthor: false
-    }),
+    body: JSON.stringify(postPayload),
   });
 
   if (!postRes.ok) {
