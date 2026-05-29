@@ -51,8 +51,12 @@ export async function POST(request) {
       commentary: text,
       visibility: "PUBLIC",
       distribution: {
-        feedDistribution: "MAIN_FEED"
-      }
+        feedDistribution: "MAIN_FEED",
+        targetEntities: [],
+        thirdPartyDistributionChannels: []
+      },
+      lifecycleState: "PUBLISHED",
+      isReshareDisabledByAuthor: false
     }),
   });
 
