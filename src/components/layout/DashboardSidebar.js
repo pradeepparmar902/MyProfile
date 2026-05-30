@@ -12,6 +12,7 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import { LogoutButton } from "./LogoutButton";
 
 const items = [
   { label: "Dashboard", href: "/dashboard", icon: Gauge },
@@ -31,7 +32,7 @@ const items = [
 
 export function DashboardSidebar() {
   return (
-    <aside className="no-print hidden min-h-screen w-64 shrink-0 border-r border-slate-200 bg-white px-4 py-5 lg:block">
+    <aside className="no-print hidden min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
       <Link href="/" className="mb-8 flex items-center gap-3 px-2">
         <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white">
           <Sparkles size={20} />
@@ -56,6 +57,9 @@ export function DashboardSidebar() {
           );
         })}
       </nav>
+      <div className="mt-auto border-t border-slate-200 pt-4">
+        <LogoutButton />
+      </div>
     </aside>
   );
 }
