@@ -75,7 +75,7 @@ export default function RegisterPage() {
             <p className="text-sm text-slate-500">Start with a simple student account.</p>
           </div>
         </div>
-        <div className="grid gap-4" onKeyDown={(e) => e.key === 'Enter' && handleRegister(e)}>
+        <form className="grid gap-4" onSubmit={handleRegister}>
           <Field label="Full Name">
             <Input 
               name="name" 
@@ -118,10 +118,10 @@ export default function RegisterPage() {
             />
           </Field>
           {error ? <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p> : null}
-          <Button onClick={handleRegister} className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Creating..." : "Create Account"}
           </Button>
-        </div>
+        </form>
         <p className="mt-5 text-center text-sm text-slate-600">
           Already have an account? <a className="font-semibold text-[#4F46E5]" href="/login">Login</a>
         </p>
