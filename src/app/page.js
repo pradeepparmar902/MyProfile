@@ -21,7 +21,7 @@ export default function Home() {
           <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white">
             <Sparkles size={20} />
           </span>
-          <span className="text-lg font-bold">Proofolio</span>
+          <span className="text-lg font-bold">Portfolio</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
           <a href="#features">Features</a>

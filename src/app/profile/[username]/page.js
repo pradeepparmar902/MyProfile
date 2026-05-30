@@ -43,7 +43,7 @@ export default async function PublicProfilePage({ params }) {
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
         <Link href="/" className="flex items-center gap-3">
           <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white"><Sparkles size={20} /></span>
-          <span className="font-bold">Proofolio</span>
+          <span className="font-bold">Portfolio</span>
         </Link>
         <Button href="/dashboard/resume" variant="secondary"><Download size={16} /> Resume</Button>
       </header>

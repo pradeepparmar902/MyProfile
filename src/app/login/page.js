@@ -84,7 +84,7 @@ function LoginForm() {
         </Button>
       </div>
       <p className="mt-5 text-center text-sm text-slate-600">
-        New to Proofolio? <a className="font-semibold text-[#4F46E5]" href="/register">Create account</a>
+        New to Portfolio? <a className="font-semibold text-[#4F46E5]" href="/register">Create account</a>
       </p>
     </Card>
   );

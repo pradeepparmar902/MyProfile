@@ -37,7 +37,7 @@ export function DashboardSidebar() {
           <Sparkles size={20} />
         </span>
         <span>
-          <span className="block text-lg font-bold text-slate-950">Proofolio</span>
+          <span className="block text-lg font-bold text-slate-950">Portfolio</span>
           <span className="text-xs font-medium text-slate-500">Career identity</span>
         </span>
       </Link>
