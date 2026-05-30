@@ -14,6 +14,7 @@ export async function PUT(request, { params }) {
     skill: await db.skill.update({
       where: { id },
       data: {
+        isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         skillName: body.skillName || body.name,
         proficiencyLevel: normalizeEnum(body.proficiencyLevel || body.level, existing.proficiencyLevel),
         proofLink: body.proofLink || body.proof || "",

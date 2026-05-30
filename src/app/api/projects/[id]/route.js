@@ -14,6 +14,7 @@ export async function PUT(request, { params }) {
     project: await db.project.update({
       where: { id },
       data: {
+        isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         title: body.title,
         description: body.description || "",
         problemSolved: body.problemSolved || "",

@@ -57,7 +57,7 @@ function LoginForm() {
           <p className="text-sm text-slate-500">Continue building your career identity.</p>
         </div>
       </div>
-      <form className="grid gap-4" onSubmit={handleLogin}>
+      <div className="grid gap-4" onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}>
         <Field label="Email">
           <Input 
             name="email" 
@@ -79,10 +79,10 @@ function LoginForm() {
           />
         </Field>
         {error ? <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p> : null}
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button onClick={handleLogin} className="w-full" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </Button>
-      </form>
+      </div>
       <p className="mt-5 text-center text-sm text-slate-600">
         New to Proofolio? <a className="font-semibold text-[#4F46E5]" href="/register">Create account</a>
       </p>

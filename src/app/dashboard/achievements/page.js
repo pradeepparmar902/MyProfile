@@ -4,6 +4,7 @@ import { DashboardTopbar } from "@/components/layout/DashboardTopbar";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { AchievementActions } from "@/components/achievements/AchievementActions";
 import { categories } from "@/lib/data";
 import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -32,7 +33,7 @@ export default async function AchievementsPage() {
         </div>
         <div className="grid gap-4 lg:grid-cols-2">
           {achievements.length ? achievements.map((achievement) => (
-            <Card key={achievement.title} className="p-5">
+            <Card key={achievement.title} className={`p-5 ${achievement.isHidden ? "opacity-50 grayscale" : ""}`}>
               <div className="mb-3 flex flex-wrap gap-2">
                 <Badge>{achievement.category}</Badge>
                 <Badge>{achievement.status}</Badge>
@@ -43,9 +44,10 @@ export default async function AchievementsPage() {
               <div className="mt-4 flex flex-wrap gap-2">
                 {(achievement.skillsUsed || "").split(",").map((skill) => skill.trim()).filter(Boolean).map((skill) => <Badge key={skill}>{skill}</Badge>)}
               </div>
-              <div className="mt-5 flex gap-3">
+              <div className="mt-5 flex flex-wrap gap-3">
                 <Button href={`/dashboard/achievements/${achievement.id}`} variant="secondary">View</Button>
                 <Button href={`/dashboard/achievements/${achievement.id}/edit`} variant="ghost">Edit</Button>
+                <AchievementActions initialAchievement={achievement} />
               </div>
             </Card>
           )) : (

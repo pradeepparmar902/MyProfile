@@ -23,6 +23,8 @@ const items = [
   { label: "Internship", href: "/dashboard/internship", icon: BriefcaseBusiness },
   { label: "Profession - Job", href: "/dashboard/profession", icon: Building2 },
   { label: "Profession - Self Business / Training", href: "/dashboard/profession-self", icon: Building2 },
+  { label: "Out-of-Box Thinking", href: "/dashboard/outofbox", icon: Lightbulb },
+  { label: "Hobbies & Personality", href: "/dashboard/hobbies", icon: Award },
   { label: "Resume", href: "/dashboard/resume", icon: FileText },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];

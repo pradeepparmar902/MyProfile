@@ -141,6 +141,18 @@ export function SkillsManager({ initialSkills, initialMedia = {} }) {
     setSaving(false);
   }
 
+  async function toggleVisibility(item) {
+    const res = await fetch(`/api/skills/${item.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...item, isHidden: !item.isHidden }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setItems(items.map(i => i.id === item.id ? (data.skills || Object.values(data)[0]) : i));
+    }
+  }
+
   async function deleteSkill(id) {
     await fetch(`/api/skills/${id}`, { method: "DELETE" });
     setItems(items.filter((item) => item.id !== id));
@@ -245,7 +257,7 @@ export function SkillsManager({ initialSkills, initialMedia = {} }) {
         </div>
         <div className="grid gap-4 xl:grid-cols-2">
           {items.map((skill) => (
-            <Card key={skill.id} className="p-5">
+            <Card key={skill.id} className={`p-5 ${skill.isHidden ? "opacity-50 grayscale" : ""}`}>
               <div className="flex justify-between gap-4">
                 <div className="min-w-0">
                   <h3 className="truncate text-lg font-bold">{skill.skillName}</h3>
@@ -263,7 +275,8 @@ export function SkillsManager({ initialSkills, initialMedia = {} }) {
                   <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => startEdit(skill)} title="Edit skill">
                     <Pencil size={16} />
                   </button>
-                  <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteSkill(skill.id)} title="Delete skill">
+                  <button className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => toggleVisibility(skill)} title={skill.isHidden ? "Show on profile" : "Hide from profile"}>{skill.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+              <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteSkill(skill.id)} title="Delete skill">
                     <Trash2 size={16} />
                   </button>
                 </div>

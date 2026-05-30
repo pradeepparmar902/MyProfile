@@ -14,6 +14,7 @@ export async function PUT(request, { params }) {
     item: await db.professionSelf.update({
       where: { id },
       data: {
+        isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         companyName: body.companyName,
         designation: body.designation,
         employmentType: body.employmentType || "SELF_BUSINESS",

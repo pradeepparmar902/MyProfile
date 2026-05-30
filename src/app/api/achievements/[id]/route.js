@@ -14,6 +14,7 @@ export async function PUT(request, { params }) {
     achievement: await db.achievement.update({
       where: { id },
       data: {
+        isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         title: body.title,
         category: normalizeEnum(body.category, existing.category),
         problemStatement: body.problemStatement || "",

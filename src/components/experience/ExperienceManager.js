@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { ExternalLink, Pencil, Plus, Save, Trash2, X, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
@@ -122,6 +122,18 @@ export function ExperienceManager({ title, description, apiPath, relatedType, in
     setSaving(false);
   }
 
+  async function toggleVisibility(item) {
+    const res = await fetch(`${apiPath}/${item.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...item, isHidden: !item.isHidden }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setItems(items.map(i => i.id === item.id ? (Object.values(data)[0] || item) : i));
+    }
+  }
+
   async function deleteExperience(id) {
     await fetch(`${apiPath}/${id}`, { method: "DELETE" });
     setItems(items.filter((item) => item.id !== id));
@@ -228,7 +240,7 @@ export function ExperienceManager({ title, description, apiPath, relatedType, in
         </div>
         <div className="grid gap-4">
           {items.map((item) => (
-            <Card key={item.id} className="p-5">
+            <Card key={item.id} className={`p-5 ${item.isHidden ? "opacity-50 grayscale" : ""}`}>
               <div className="flex justify-between gap-4">
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#4F46E5]">{formatDate(item.joiningDate)} - {item.isCurrent ? "Present" : formatDate(item.completionDate)}</p>
@@ -248,6 +260,7 @@ export function ExperienceManager({ title, description, apiPath, relatedType, in
                   <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => startEdit(item)} title="Edit record">
                     <Pencil size={16} />
                   </button>
+                  <button className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => toggleVisibility(item)} title={item.isHidden ? "Show on profile" : "Hide from profile"}>{item.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}</button>
                   <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteExperience(item.id)} title="Delete record">
                     <Trash2 size={16} />
                   </button>

@@ -54,6 +54,18 @@ export function ProjectsManager({ initialProjects, initialMedia = {} }) {
     setEditingId(null);
   }
 
+  async function toggleVisibility(item) {
+    const res = await fetch(`/api/projects/${item.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...item, isHidden: !item.isHidden }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setItems(items.map(i => i.id === item.id ? (data.projects || Object.values(data)[0]) : i));
+    }
+  }
+
   async function deleteProject(id) {
     await fetch(`/api/projects/${id}`, { method: "DELETE" });
     setItems(items.filter((item) => item.id !== id));
@@ -80,7 +92,7 @@ export function ProjectsManager({ initialProjects, initialMedia = {} }) {
       </Card>
       <div className="grid gap-4">
         {items.map((project) => (
-          <Card key={project.id} className="p-5">
+          <Card key={project.id} className={`p-5 ${project.isHidden ? "opacity-50 grayscale" : ""}`}>
             {editingId === project.id ? (
               <form className="grid gap-4" onSubmit={(event) => updateProject(event, project.id)}>
                 <Field label="Project title"><Input name="title" defaultValue={project.title} required /></Field>
@@ -129,7 +141,8 @@ export function ProjectsManager({ initialProjects, initialMedia = {} }) {
                     <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => setEditingId(project.id)} title="Edit project">
                       <Pencil size={16} />
                     </button>
-                    <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteProject(project.id)} title="Delete project">
+                    <button className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => toggleVisibility(project)} title={project.isHidden ? "Show on profile" : "Hide from profile"}>{project.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+              <button className="grid size-10 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteProject(project.id)} title="Delete project">
                       <Trash2 size={16} />
                     </button>
                   </div>

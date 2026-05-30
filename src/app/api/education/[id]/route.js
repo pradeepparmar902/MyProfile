@@ -15,6 +15,7 @@ export async function PUT(request, { params }) {
     education: await db.education.update({
       where: { id },
       data: {
+        isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         institutionName: body.institutionName,
         degree: body.degree,
         fieldOfStudy: body.fieldOfStudy || "",

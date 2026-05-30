@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { Plus, Trash2, Share2, ExternalLink } from "lucide-react";
 
 function LinkedinIcon({ size = 16, className = "" }) {
@@ -50,6 +51,18 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
     setItems([data.education, ...items]);
     setMediaByEducation({ ...mediaByEducation, [data.education.id]: [] });
     formElement.reset();
+  }
+
+  async function toggleVisibility(item) {
+    const res = await fetch(`/api/education/${item.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...item, isHidden: !item.isHidden }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setItems(items.map(i => i.id === item.id ? (data.education || Object.values(data)[0]) : i));
+    }
   }
 
   async function deleteEducation(id) {
@@ -151,7 +164,7 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
 
       <div className="grid gap-4">
         {items.map((item) => (
-          <Card key={item.id} className="p-5">
+          <Card key={item.id} className={`p-5 ${item.isHidden ? "opacity-50 grayscale" : ""}`}>
             <div className="flex justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold text-[#4F46E5]">{item.startYear || ""} - {item.endYear || ""}</p>
@@ -160,11 +173,8 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
                 <p className="mt-2 text-sm text-slate-600">{item.grade}</p>
                 <p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p>
               </div>
-              <button
-                className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
-                onClick={() => deleteEducation(item.id)}
-                title="Delete education"
-              >
+              <button className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => toggleVisibility(item)} title={item.isHidden ? "Show on profile" : "Hide from profile"}>{item.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}</button>
+              <button className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" onClick={() => deleteEducation(item.id)} title="Delete">
                 <Trash2 size={16} />
               </button>
             </div>

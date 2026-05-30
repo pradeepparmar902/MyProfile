@@ -12,10 +12,16 @@ const TEMPLATES = [
   { key: "minimal", label: "Minimal", desc: "Ultra-clean lines" },
 ];
 
-export function ResumeBuilder({
-  user, profile, education, achievements, projects,
-  skills, internships, professions, professionsSelf,
-}) {
+export function ResumeBuilder(props) {
+  const user = props.user;
+  const profile = props.profile;
+  const education = props.education?.filter(x => !x.isHidden) || [];
+  const achievements = props.achievements?.filter(x => !x.isHidden) || [];
+  const projects = props.projects?.filter(x => !x.isHidden) || [];
+  const skills = props.skills?.filter(x => !x.isHidden) || [];
+  const internships = props.internships?.filter(x => !x.isHidden) || [];
+  const professions = props.professions?.filter(x => !x.isHidden) || [];
+  const professionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
   const [template, setTemplate] = useState("classic");
   const [visibleSections, setVisibleSections] = useState({
     education: true,
@@ -517,6 +523,13 @@ export function ResumeBuilder({
     minimal: <MinimalResume />,
   };
 
+  const handleDownloadPdf = () => {
+    const originalTitle = document.title;
+    document.title = `${name.replace(/\s+/g, "_")}_Resume`;
+    window.print();
+    document.title = originalTitle;
+  };
+
   return (
     <div className="grid gap-6 p-4 md:p-8 lg:grid-cols-[310px_1fr]">
       {/* Controls */}
@@ -556,13 +569,13 @@ export function ResumeBuilder({
           </div>
         </div>
 
-        <Button className="w-full" onClick={() => window.print()}>
-          <Printer size={15} /> Print / Save PDF
+        <Button className="w-full" onClick={handleDownloadPdf}>
+          <Printer size={15} /> Print / Save as PDF
         </Button>
       </Card>
 
       {/* Resume preview */}
-      <div className="print-page overflow-hidden rounded-xl">
+      <div id="resume-preview" className="print-page overflow-hidden rounded-xl">
         {resumeMap[template]}
       </div>
     </div>

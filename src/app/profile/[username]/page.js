@@ -19,6 +19,8 @@ export default async function PublicProfilePage({ params }) {
           achievements: { where: { status: "PUBLISHED" }, orderBy: { createdAt: "desc" } },
           projects: { orderBy: { createdAt: "desc" } },
           skills: { orderBy: { createdAt: "desc" } },
+          outOfBox: { orderBy: { createdAt: "desc" } },
+          hobbies: { orderBy: { createdAt: "desc" } },
         },
       },
     },
@@ -26,6 +28,13 @@ export default async function PublicProfilePage({ params }) {
 
   if (!profile || !profile.isPublic) notFound();
   await db.profileView.create({ data: { profileId: profile.id } });
+
+  profile.user.education = profile.user.education.filter((x) => !x.isHidden);
+  profile.user.achievements = profile.user.achievements.filter((x) => !x.isHidden);
+  profile.user.projects = profile.user.projects.filter((x) => !x.isHidden);
+  profile.user.skills = profile.user.skills.filter((x) => !x.isHidden);
+  profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden);
+  profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden);
 
   const initials = profile.user.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
@@ -101,6 +110,38 @@ export default async function PublicProfilePage({ params }) {
                 ))}
               </div>
             </Card>
+
+            {profile.user.outOfBox && profile.user.outOfBox.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Out-of-Box Thinking</h2>
+                <div className="mt-4 grid gap-4">
+                  {profile.user.outOfBox.map((item) => (
+                    <div key={item.id} className="rounded-lg border border-slate-200 bg-indigo-50/30 p-4">
+                      <h3 className="font-bold">{item.title}</h3>
+                      {item.context && <p className="mt-2 text-sm leading-6 text-slate-600"><span className="font-semibold text-slate-900">Context:</span> {item.context}</p>}
+                      {item.innovation && <p className="mt-2 text-sm leading-6 text-slate-600"><span className="font-semibold text-slate-900">Innovation:</span> {item.innovation}</p>}
+                      {item.result && <p className="mt-2 text-sm font-semibold text-emerald-700">Result: {item.result}</p>}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {profile.user.hobbies && profile.user.hobbies.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Hobbies & Personality</h2>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {profile.user.hobbies.map((item) => (
+                    <div key={item.id} className="rounded-lg border border-slate-200 p-4">
+                      <Badge variant="outline" className="mb-2">{item.category}</Badge>
+                      <h3 className="font-bold">{item.title}</h3>
+                      {item.description && <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>}
+                      {item.achievements && <p className="mt-2 text-xs font-semibold text-[#06B6D4]">{item.achievements}</p>}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
           </div>
           <aside className="grid h-fit gap-6">
             <Card className="p-6">

@@ -10,6 +10,8 @@ const collections = {
   professionSelf: "professionsSelf",
   profileView: "profileViews",
   media: "media",
+  outOfBox: "outOfBox",
+  hobby: "hobbies",
 };
 
 const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
@@ -254,6 +256,8 @@ async function hydrate(name, record, include) {
     if (selected.internships) hydratedUser.internships = await findMany("internship", { where: { userId: user.id }, orderBy: selected.internships.orderBy });
     if (selected.professions) hydratedUser.professions = await findMany("profession", { where: { userId: user.id }, orderBy: selected.professions.orderBy });
     if (selected.professionsSelf) hydratedUser.professionsSelf = await findMany("professionSelf", { where: { userId: user.id }, orderBy: selected.professionsSelf.orderBy });
+    if (selected.outOfBox) hydratedUser.outOfBox = await findMany("outOfBox", { where: { userId: user.id }, orderBy: selected.outOfBox.orderBy });
+    if (selected.hobbies) hydratedUser.hobbies = await findMany("hobby", { where: { userId: user.id }, orderBy: selected.hobbies.orderBy });
     return { ...record, user: hydratedUser };
   }
 
@@ -285,5 +289,7 @@ export const db = {
   professionSelf: model("professionSelf"),
   profileView: model("profileView"),
   media: model("media"),
+  outOfBox: model("outOfBox"),
+  hobby: model("hobby"),
   $transaction: (operations) => Promise.all(operations),
 };
