@@ -1,0 +1,28 @@
+import {
+  Award,
+  BookOpen,
+  BriefcaseBusiness,
+  Building2,
+  FileText,
+  Gauge,
+  GraduationCap,
+  Lightbulb,
+  Settings,
+  User,
+} from "lucide-react";
+
+export const navItems = [
+  { label: "Dashboard", href: "/dashboard", icon: Gauge },
+  { label: "Profile", href: "/dashboard/profile", icon: User },
+  { label: "Education", href: "/dashboard/education", icon: GraduationCap },
+  { label: "Achievements", href: "/dashboard/achievements", icon: Award },
+  { label: "Projects", href: "/dashboard/projects", icon: Lightbulb },
+  { label: "Skills", href: "/dashboard/skills", icon: BookOpen },
+  { label: "Internship", href: "/dashboard/internship", icon: BriefcaseBusiness },
+  { label: "Profession - Job", href: "/dashboard/profession", icon: Building2 },
+  { label: "Profession - Self Business / Training", href: "/dashboard/profession-self", icon: Building2 },
+  { label: "Out-of-Box Thinking", href: "/dashboard/outofbox", icon: Lightbulb },
+  { label: "Hobbies & Personality", href: "/dashboard/hobbies", icon: Award },
+  { label: "Resume", href: "/dashboard/resume", icon: FileText },
+  { label: "Settings", href: "/dashboard/settings", icon: Settings },
+];
