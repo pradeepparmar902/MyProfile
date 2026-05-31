@@ -21,7 +21,7 @@ export function MobileNav() {
     <div className="lg:hidden">
       <button 
         onClick={() => setIsOpen(true)}
-        className="mr-3 grid size-10 place-items-center rounded-lg hover:bg-slate-100"
+        className="fixed left-4 top-3 z-30 grid size-10 place-items-center rounded-lg hover:bg-slate-100"
       >
         <Menu size={20} />
       </button>
