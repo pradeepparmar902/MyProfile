@@ -29,7 +29,7 @@ export function MobileNav() {
       {mounted && isOpen && createPortal(
         <>
           <div 
-            className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-slate-900/20"
             onClick={() => setIsOpen(false)}
           />
           <div className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white px-4 py-5 shadow-2xl transition-transform">
@@ -59,7 +59,6 @@ export function MobileNav() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      onClick={() => setIsOpen(false)}
                       className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${isActive ? "bg-slate-100 text-slate-950" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}
                     >
                       <Icon size={18} />
