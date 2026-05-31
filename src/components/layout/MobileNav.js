@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sparkles } from "lucide-react";
@@ -9,7 +10,12 @@ import { LogoutButton } from "./LogoutButton";
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="lg:hidden">
@@ -20,7 +26,7 @@ export function MobileNav() {
         <Menu size={20} />
       </button>
 
-      {isOpen && (
+      {mounted && isOpen && createPortal(
         <>
           <div 
             className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm"
@@ -67,7 +73,8 @@ export function MobileNav() {
               <LogoutButton />
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </div>
   );
