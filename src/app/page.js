@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Award, BookOpen, BriefcaseBusiness, FileText, ShieldCheck, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Award, BookOpen, BriefcaseBusiness, FileText, ShieldCheck, Sparkles, CircleCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { DemoProfile } from "@/components/landing/DemoProfile";
 
@@ -61,8 +61,8 @@ export default function Home() {
           </div>
           
           <div className="mt-12 flex items-center gap-6 text-sm font-semibold text-slate-500">
-            <div className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Free to start</div>
-            <div className="flex items-center gap-2"><CheckCircle2 size={16} className="text-emerald-500" /> Auto-resume generation</div>
+            <div className="flex items-center gap-2"><CircleCheck size={16} className="text-emerald-500" /> Free to start</div>
+            <div className="flex items-center gap-2"><CircleCheck size={16} className="text-emerald-500" /> Auto-resume generation</div>
           </div>
         </div>
         
@@ -143,7 +143,7 @@ export default function Home() {
               <ul className="mt-8 space-y-4">
                 {plan.features.map(f => (
                   <li key={f} className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                    <CheckCircle2 size={18} className="text-indigo-500" /> {f}
+                    <CircleCheck size={18} className="text-indigo-500" /> {f}
                   </li>
                 ))}
               </ul>
