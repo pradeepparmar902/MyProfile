@@ -24,10 +24,6 @@ export default async function SettingsPage() {
     <>
       <DashboardTopbar title="Settings" />
       <div className="grid gap-8 p-4 md:p-8">
-        <ProfileEditor
-          user={{ id: user.id, name: user.name, email: user.email }}
-          profile={fullUser?.profile ? JSON.parse(JSON.stringify(fullUser.profile)) : null}
-        />
         <RecruiterLink username={fullUser?.profile?.username} />
         <LinkedInConnect isConnected={linkedinConnected} />
       </div>
