@@ -29,6 +29,7 @@ export function ResumeBuilder(props) {
   const [origin, setOrigin] = useState("");
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
   }, []);
   const [visibleSections, setVisibleSections] = useState({
@@ -558,10 +559,10 @@ export function ResumeBuilder(props) {
   );
 
   const resumeMap = {
-    classic: <ClassicResume />,
-    modern: <ModernResume />,
-    executive: <ExecutiveResume />,
-    minimal: <MinimalResume />,
+    classic: ClassicResume(),
+    modern: ModernResume(),
+    executive: ExecutiveResume(),
+    minimal: MinimalResume(),
   };
 
   const handleDownloadPdf = () => {

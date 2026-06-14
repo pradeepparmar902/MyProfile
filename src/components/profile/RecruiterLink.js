@@ -15,11 +15,6 @@ export function RecruiterLink({ username }) {
   const [error, setError] = useState("");
   const [origin, setOrigin] = useState("");
 
-  useEffect(() => {
-    setOrigin(window.location.host);
-    fetchInvites();
-  }, []);
-
   async function fetchInvites() {
     try {
       const res = await fetch("/api/profile/invites");
@@ -31,6 +26,13 @@ export function RecruiterLink({ username }) {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.host);
+    fetchInvites();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleCreate(e) {
     e.preventDefault();

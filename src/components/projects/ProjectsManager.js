@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Pencil, Plus, Trash2, X } from "lucide-react";
+import { ExternalLink, Pencil, Plus, Trash2, X, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
