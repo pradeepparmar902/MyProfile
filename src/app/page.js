@@ -19,7 +19,7 @@ export default function Home() {
       <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-indigo-400/20 blur-[120px] animate-pulse-slow mix-blend-multiply" />
       <div className="absolute top-[20%] right-[-10%] h-[600px] w-[600px] rounded-full bg-cyan-400/20 blur-[120px] animate-pulse-slow mix-blend-multiply" style={{ animationDelay: "2s" }} />
 
-      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 animate-fade-in-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
+      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
         <Link href="/" className="flex items-center gap-3 group">
           <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30 transition-transform group-hover:scale-105">
             <Sparkles size={20} className="fill-white/20" />
@@ -38,7 +38,7 @@ export default function Home() {
       </header>
 
       <section className="relative z-10 mx-auto grid max-w-7xl gap-16 px-6 pt-20 pb-24 lg:grid-cols-[1.1fr_0.9fr] lg:items-center xl:pt-28">
-        <div className="animate-fade-in-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
+        <div className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50/50 px-4 py-1.5 text-sm font-bold text-indigo-600 shadow-sm backdrop-blur-md">
             <Sparkles size={14} className="fill-indigo-600/20" />
             <span>The New Standard for Student Careers</span>
@@ -66,7 +66,7 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="relative mx-auto w-full max-w-lg lg:max-w-none animate-fade-in-up" style={{ animationDelay: "0.4s", opacity: 0 }}>
+        <div className="relative mx-auto w-full max-w-lg lg:max-w-none animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
           <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-tr from-indigo-500 to-cyan-400 blur-2xl opacity-20 animate-pulse-slow" />
           <div className="relative animate-float">
             <DemoProfile />
