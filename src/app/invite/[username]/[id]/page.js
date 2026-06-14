@@ -9,16 +9,16 @@ import { cookies } from "next/headers";
 import { SpecificInviteForm } from "@/components/profile/SpecificInviteForm";
 
 export default async function InviteProfilePage({ params }) {
-  const { token } = await params;
+  const { id } = await params;
   
-  const invite = await db.invite.findUnique({ where: { id: token } });
+  const invite = await db.invite.findUnique({ where: { id: id } });
   if (!invite) notFound();
 
   if (invite.type === "SPECIFIC") {
     const cookieStore = await cookies();
-    const verified = cookieStore.get(`invite_verified_${token}`);
+    const verified = cookieStore.get(`invite_verified_${id}`);
     if (!verified) {
-      return <SpecificInviteForm token={token} />;
+      return <SpecificInviteForm token={id} />;
     }
   }
 
