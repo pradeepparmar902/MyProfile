@@ -93,7 +93,7 @@ export function EducationManager({ initialEducation, initialMedia = [] }) {
         : "";
     const grade = item.grade ? `\nGrade: ${item.grade}` : "";
 
-    const text = `🎓 Excited to share my education journey!\n\nI studied ${degree}${field} at ${school}${years}.${grade}\n\nCheck out my full portfolio at datacraze.tech\n\n#Education #Learning #Growth`;
+    const text = `🎓 Excited to share my education journey!\n\nI studied ${degree}${field} at ${school}${years}.${grade}\n\nCheck out my full portfolio at credoras.org\n\n#Education #Learning #Growth`;
 
     const itemMedia = mediaByEducation[item.id] || [];
     const mediaUrls = itemMedia.filter(m => m.fileType === "IMAGE").map(m => m.fileUrl);
