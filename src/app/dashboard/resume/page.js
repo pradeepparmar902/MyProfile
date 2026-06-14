@@ -5,8 +5,14 @@ import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export default async function ResumePage() {
-  const user = await getSessionUser();
-  if (!user) redirect("/login");
+  const sessionUser = await getSessionUser();
+  if (!sessionUser) redirect("/login");
+
+  const fullUser = await db.user.findUnique({
+    where: { id: sessionUser.id },
+    include: { profile: true }
+  });
+  const user = fullUser || sessionUser;
 
   const [education, achievements, projects, skills, internships, professions, professionsSelf] =
     await Promise.all([
@@ -21,12 +27,18 @@ export default async function ResumePage() {
 
   const profile = user.profile;
 
+  const latestGeneralInvite = profile ? await db.invite.findFirst({
+    where: { profileId: profile.id, type: "GENERAL" },
+    orderBy: { createdAt: "desc" }
+  }) : null;
+
   return (
     <>
       <DashboardTopbar title="Resume Builder" />
       <ResumeBuilder
         user={JSON.parse(JSON.stringify(user))}
         profile={JSON.parse(JSON.stringify(profile || {}))}
+        invite={latestGeneralInvite ? JSON.parse(JSON.stringify(latestGeneralInvite)) : null}
         education={JSON.parse(JSON.stringify(education))}
         achievements={JSON.parse(JSON.stringify(achievements))}
         projects={JSON.parse(JSON.stringify(projects))}

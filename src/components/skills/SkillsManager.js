@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, FileText, ImageIcon, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { ExternalLink, Eye, EyeOff, FileText, ImageIcon, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";

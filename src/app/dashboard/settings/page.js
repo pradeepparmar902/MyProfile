@@ -3,13 +3,17 @@ import { DashboardTopbar } from "@/components/layout/DashboardTopbar";
 import { getSessionUser } from "@/lib/auth";
 import { ProfileEditor } from "@/components/profile/ProfileEditor";
 import { LinkedInConnect } from "@/components/linkedin/LinkedInConnect";
+import { RecruiterLink } from "@/components/profile/RecruiterLink";
 import { db } from "@/lib/db";
 
 export default async function SettingsPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
-  const fullUser = await db.user.findUnique({ where: { id: user.id } });
+  const fullUser = await db.user.findUnique({ 
+    where: { id: user.id },
+    include: { profile: true } 
+  });
   const linkedinConnected = !!(
     fullUser?.linkedinAccessToken &&
     fullUser?.linkedinTokenExpiry &&
@@ -22,8 +26,9 @@ export default async function SettingsPage() {
       <div className="grid gap-8 p-4 md:p-8">
         <ProfileEditor
           user={{ id: user.id, name: user.name, email: user.email }}
-          profile={user.profile ? JSON.parse(JSON.stringify(user.profile)) : null}
+          profile={fullUser?.profile ? JSON.parse(JSON.stringify(fullUser.profile)) : null}
         />
+        <RecruiterLink username={fullUser?.profile?.username} />
         <LinkedInConnect isConnected={linkedinConnected} />
       </div>
     </>

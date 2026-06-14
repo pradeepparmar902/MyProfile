@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Printer, LayoutTemplate } from "lucide-react";
+import { QRCodeSVG } from 'qrcode.react';
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
@@ -15,6 +16,7 @@ const TEMPLATES = [
 export function ResumeBuilder(props) {
   const user = props.user;
   const profile = props.profile;
+  const invite = props.invite;
   const education = props.education?.filter(x => !x.isHidden) || [];
   const achievements = props.achievements?.filter(x => !x.isHidden) || [];
   const projects = props.projects?.filter(x => !x.isHidden) || [];
@@ -22,7 +24,13 @@ export function ResumeBuilder(props) {
   const internships = props.internships?.filter(x => !x.isHidden) || [];
   const professions = props.professions?.filter(x => !x.isHidden) || [];
   const professionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
+  
   const [template, setTemplate] = useState("classic");
+  const [origin, setOrigin] = useState("");
+  
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
   const [visibleSections, setVisibleSections] = useState({
     education: true,
     achievements: true,
@@ -66,19 +74,29 @@ export function ResumeBuilder(props) {
   const linkedin = profile?.linkedinUrl || "";
   const portfolio = profile?.portfolioUrl || "";
 
+  const qrUrl = origin && invite && profile?.username ? `${origin}/invite/${profile.username}/${invite.id}` : null;
+
   /* ─── CLASSIC ─────────────────────────────────────────────────── */
   const ClassicResume = () => (
     <div className="mx-auto w-full max-w-3xl bg-white text-slate-900 shadow-xl border border-slate-200 print:shadow-none">
       {/* Header */}
-      <div className="bg-[#1e3a5f] px-10 py-8 text-white">
-        <h1 className="text-4xl font-extrabold tracking-tight">{name}</h1>
-        <p className="mt-1 text-lg font-medium text-blue-200">{headline}</p>
-        <div className="mt-3 flex flex-wrap gap-4 text-sm text-blue-100">
-          {email && <span>✉ {email}</span>}
-          {location && <span>📍 {location}</span>}
-          {linkedin && <span>🔗 LinkedIn</span>}
-          {portfolio && <span>🌐 Portfolio</span>}
+      <div className="bg-[#1e3a5f] px-10 py-8 text-white flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight">{name}</h1>
+          <p className="mt-1 text-lg font-medium text-blue-200">{headline}</p>
+          <div className="mt-3 flex flex-wrap gap-4 text-sm text-blue-100">
+            {email && <a href={`mailto:${email}`} className="hover:underline">✉ {email}</a>}
+            {location && <span>📍 {location}</span>}
+            {linkedin && <a href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`} target="_blank" rel="noreferrer" className="hover:underline">🔗 LinkedIn</a>}
+            {(qrUrl || portfolio) && <a href={qrUrl || (portfolio.startsWith('http') ? portfolio : `https://${portfolio}`)} target="_blank" rel="noreferrer" className="hover:underline">🌐 Portfolio</a>}
+          </div>
         </div>
+        {qrUrl && (
+          <div className="bg-white p-2 rounded-lg flex flex-col items-center gap-1 shrink-0">
+            <QRCodeSVG value={qrUrl} size={64} level="L" />
+            <span className="text-[8px] font-bold text-slate-800 uppercase tracking-wider">Scan Portfolio</span>
+          </div>
+        )}
       </div>
 
       <div className="px-10 py-8 grid gap-6">
@@ -187,12 +205,19 @@ export function ResumeBuilder(props) {
           <p className="mt-1 text-xs text-indigo-300 font-medium">{headline}</p>
         </div>
 
+        {qrUrl && (
+          <div className="bg-white p-2 rounded-xl self-start flex flex-col items-center gap-1.5 shadow-sm mt-2">
+            <QRCodeSVG value={qrUrl} size={80} level="L" />
+            <span className="text-[9px] font-black text-slate-800 uppercase tracking-widest">Scan Me</span>
+          </div>
+        )}
+
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Contact</p>
-          {email && <p className="text-xs text-slate-300 mb-1 break-all">✉ {email}</p>}
+          {email && <a href={`mailto:${email}`} className="text-xs text-slate-300 mb-1 break-all hover:underline block">✉ {email}</a>}
           {location && <p className="text-xs text-slate-300 mb-1">📍 {location}</p>}
-          {linkedin && <p className="text-xs text-slate-300 mb-1">🔗 LinkedIn</p>}
-          {portfolio && <p className="text-xs text-slate-300 mb-1">🌐 Portfolio</p>}
+          {linkedin && <a href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`} target="_blank" rel="noreferrer" className="text-xs text-slate-300 mb-1 hover:underline block">🔗 LinkedIn</a>}
+          {(qrUrl || portfolio) && <a href={qrUrl || (portfolio.startsWith('http') ? portfolio : `https://${portfolio}`)} target="_blank" rel="noreferrer" className="text-xs text-slate-300 mb-1 hover:underline block">🌐 Portfolio</a>}
         </div>
 
         {vis.skills && skills?.length > 0 && (
@@ -304,11 +329,19 @@ export function ResumeBuilder(props) {
           <h1 className="text-5xl font-black tracking-tight text-slate-950">{name}</h1>
           <p className="mt-2 text-base font-semibold text-amber-600 uppercase tracking-widest">{headline}</p>
         </div>
-        <div className="text-right text-xs text-slate-600 mt-1 grid gap-0.5">
-          {email && <span>{email}</span>}
-          {location && <span>{location}</span>}
-          {linkedin && <span>LinkedIn</span>}
-          {portfolio && <span>Portfolio</span>}
+        <div className="flex items-start gap-4">
+          <div className="text-right text-xs text-slate-600 mt-1 grid gap-0.5">
+            {email && <a href={`mailto:${email}`} className="hover:underline">{email}</a>}
+            {location && <span>{location}</span>}
+            {linkedin && <a href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`} target="_blank" rel="noreferrer" className="hover:underline">LinkedIn</a>}
+            {(qrUrl || portfolio) && <a href={qrUrl || (portfolio.startsWith('http') ? portfolio : `https://${portfolio}`)} target="_blank" rel="noreferrer" className="hover:underline">Portfolio</a>}
+          </div>
+          {qrUrl && (
+            <div className="flex flex-col items-center gap-1">
+              <QRCodeSVG value={qrUrl} size={64} level="L" />
+              <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">Scan Resume</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -411,16 +444,24 @@ export function ResumeBuilder(props) {
   /* ─── MINIMAL ──────────────────────────────────────────────────── */
   const MinimalResume = () => (
     <div className="mx-auto w-full max-w-2xl bg-white text-slate-900 shadow-xl border border-slate-100 print:shadow-none px-12 py-10">
-      <div className="mb-8">
-        <h1 className="text-4xl font-black tracking-tight text-slate-950">{name}</h1>
-        <p className="mt-1 text-sm text-slate-500 font-medium">{headline}</p>
-        <div className="mt-2 h-px bg-slate-200" />
-        <div className="mt-2 flex flex-wrap gap-4 text-xs text-slate-400">
-          {email && <span>{email}</span>}
-          {location && <span>{location}</span>}
-          {linkedin && <span>LinkedIn</span>}
-          {portfolio && <span>Portfolio</span>}
+      <div className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-black tracking-tight text-slate-950">{name}</h1>
+          <p className="mt-1 text-sm text-slate-500 font-medium">{headline}</p>
+          <div className="mt-2 h-px w-full bg-slate-200" />
+          <div className="mt-2 flex flex-wrap gap-4 text-xs text-slate-400">
+            {email && <a href={`mailto:${email}`} className="hover:underline">{email}</a>}
+            {location && <span>{location}</span>}
+            {linkedin && <a href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`} target="_blank" rel="noreferrer" className="hover:underline">LinkedIn</a>}
+            {(qrUrl || portfolio) && <a href={qrUrl || (portfolio.startsWith('http') ? portfolio : `https://${portfolio}`)} target="_blank" rel="noreferrer" className="hover:underline">Portfolio</a>}
+          </div>
         </div>
+        {qrUrl && (
+          <div className="flex flex-col items-center gap-1 shrink-0 ml-6">
+            <QRCodeSVG value={qrUrl} size={56} level="L" />
+            <span className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Scan Me</span>
+          </div>
+        )}
       </div>
 
       {bio && (

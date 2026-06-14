@@ -12,6 +12,7 @@ const collections = {
   media: "media",
   outOfBox: "outOfBox",
   hobby: "hobbies",
+  invite: "invites",
 };
 
 const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
@@ -68,8 +69,8 @@ function fromFirestoreDoc(doc) {
     Object.entries(doc.fields || {}).map(([key, value]) => [key, fromFirestoreValue(value)])
   );
   return {
-    id,
     ...data,
+    id,
     createdAt: data.createdAt ? new Date(data.createdAt) : null,
     updatedAt: data.updatedAt ? new Date(data.updatedAt) : null,
     viewedAt: data.viewedAt ? new Date(data.viewedAt) : null,
@@ -291,5 +292,6 @@ export const db = {
   media: model("media"),
   outOfBox: model("outOfBox"),
   hobby: model("hobby"),
+  invite: model("invite"),
   $transaction: (operations) => Promise.all(operations),
 };
