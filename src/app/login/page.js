@@ -42,7 +42,9 @@ function LoginForm() {
       router.refresh(); 
     } catch (err) {
       console.error("Login error:", err);
-      setError("Invalid email or password.");
+      // If it's a Firebase Auth error, it has a .code or .message
+      const errorMsg = err.code ? err.code.replace('auth/', '').split('-').join(' ') : err.message;
+      setError(`Login failed: ${errorMsg}`);
     } finally {
       setLoading(false);
     }
