@@ -40,10 +40,15 @@ export async function getSessionUser() {
     const userDoc = await adminDb.collection("users").doc(decodedClaims.uid).get();
     
     if (!userDoc.exists) {
+      const newUserData = {
+        email: decodedClaims.email || "",
+        name: decodedClaims.name || "User",
+        createdAt: new Date().toISOString(),
+      };
+      await adminDb.collection("users").doc(decodedClaims.uid).set(newUserData);
       return {
         id: decodedClaims.uid,
-        email: decodedClaims.email,
-        name: decodedClaims.name || "User",
+        ...newUserData,
       };
     }
     

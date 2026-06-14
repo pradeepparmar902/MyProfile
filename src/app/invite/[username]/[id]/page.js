@@ -42,6 +42,19 @@ export default async function InviteProfilePage({ params }) {
   });
 
   if (!profile) notFound();
+
+  // If the user document was missing from Firestore and fell back, fetch true name from Auth
+  if (!profile.user || profile.user.name === "User") {
+    try {
+      const { adminAuth } = await import("@/lib/firebase-admin");
+      const authUser = await adminAuth.getUser(profile.userId);
+      if (!profile.user) profile.user = { education: [], achievements: [], projects: [], skills: [], outOfBox: [], hobbies: [] };
+      profile.user.name = authUser.displayName || "Professional";
+      profile.user.email = authUser.email || "";
+    } catch (e) {
+      if (!profile.user) profile.user = { name: "Professional", email: "", education: [], achievements: [], projects: [], skills: [], outOfBox: [], hobbies: [] };
+    }
+  }
   
   // Track profile view
   await db.profileView.create({ data: { profileId: profile.id } });

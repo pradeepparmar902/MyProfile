@@ -242,8 +242,7 @@ async function hydrate(name, record, include) {
   }
 
   if (name === "profile" && include?.user) {
-    const user = await getById("user", record.userId);
-    if (!user) return record;
+    const user = (await getById("user", record.userId)) || { id: record.userId, name: "User", email: "" };
     const selected = include.user.select || {};
     const hydratedUser = {
       id: user.id,
