@@ -17,6 +17,7 @@ export async function PUT(request, { params }) {
       data: {
         isHidden: body.isHidden !== undefined ? Boolean(body.isHidden) : existing.isHidden,
         title: body.title !== undefined ? body.title : existing.title,
+        period: body.period !== undefined ? body.period : existing.period,
         description: body.description !== undefined ? body.description : existing.description,
         achievements: body.achievements !== undefined ? body.achievements : existing.achievements,
       },

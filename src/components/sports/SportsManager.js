@@ -55,6 +55,7 @@ export function SportsManager({ initialItems, initialMedia = {} }) {
         <p className="text-sm text-slate-500 mt-1">Log your sports involvement, teams, and related achievements.</p>
         <form className="mt-5 grid gap-4" onSubmit={addItem}>
           <Field label="Sport / Team Name"><Input name="title" placeholder="e.g. Varsity Basketball" required /></Field>
+          <Field label="Period / Duration"><Input name="period" placeholder="e.g. 2021 - 2023, or Spring 2023" /></Field>
           <Field label="Description"><Textarea name="description" placeholder="What role did you play? How long were you involved?" /></Field>
           <Field label="Achievements (Optional)"><Textarea name="achievements" placeholder="e.g. State Champions 2023, Team Captain" /></Field>
           
@@ -69,6 +70,7 @@ export function SportsManager({ initialItems, initialMedia = {} }) {
             <div className="flex justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
+                {item.period && <p className="text-sm font-semibold text-slate-500 mt-1">{item.period}</p>}
                 
                 {item.description && (
                   <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>

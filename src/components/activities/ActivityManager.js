@@ -55,6 +55,7 @@ export function ActivityManager({ initialItems, initialMedia = {} }) {
         <p className="text-sm text-slate-500 mt-1">Log your social activities, volunteering, clubs, and general involvement.</p>
         <form className="mt-5 grid gap-4" onSubmit={addItem}>
           <Field label="Activity / Organization Name"><Input name="title" placeholder="e.g. Red Cross Volunteer" required /></Field>
+          <Field label="Period / Duration"><Input name="period" placeholder="e.g. 2019 - 2022, or Summer 2021" /></Field>
           <Field label="Description"><Textarea name="description" placeholder="What did you do? What was your role?" /></Field>
           <Field label="Achievements (Optional)"><Textarea name="achievements" placeholder="e.g. Organized a blood drive for 500 people" /></Field>
           
@@ -69,6 +70,7 @@ export function ActivityManager({ initialItems, initialMedia = {} }) {
             <div className="flex justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
+                {item.period && <p className="text-sm font-semibold text-slate-500 mt-1">{item.period}</p>}
                 
                 {item.description && (
                   <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>

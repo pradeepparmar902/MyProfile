@@ -25,6 +25,7 @@ export async function POST(request) {
       userId: user.id,
       title: body.title,
       description: body.description || "",
+      period: body.period || "",
       achievements: body.achievements || "",
       isHidden: false,
     },

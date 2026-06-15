@@ -187,7 +187,10 @@ export default async function PublicProfilePage({ params }) {
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {profile.user.sports.map((sport) => (
                     <div key={sport.id} className="rounded-lg border border-slate-200 p-4 bg-emerald-50/30">
-                      <h3 className="font-bold text-emerald-900">{sport.title}</h3>
+                      <div className="flex justify-between items-start gap-4">
+                        <h3 className="font-bold text-emerald-900">{sport.title}</h3>
+                        {sport.period && <Badge variant="outline" className="shrink-0 bg-white/50">{sport.period}</Badge>}
+                      </div>
                       {sport.description && <p className="mt-2 text-sm leading-6 text-slate-700">{sport.description}</p>}
                       {sport.achievements && <p className="mt-2 text-sm font-semibold text-emerald-700">{sport.achievements}</p>}
                       {mediaByItem[sport.id] && mediaByItem[sport.id].length > 0 && (
@@ -211,7 +214,10 @@ export default async function PublicProfilePage({ params }) {
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
                   {profile.user.activities.map((activity) => (
                     <div key={activity.id} className="rounded-lg border border-slate-200 p-4 bg-sky-50/30">
-                      <h3 className="font-bold text-sky-900">{activity.title}</h3>
+                      <div className="flex justify-between items-start gap-4">
+                        <h3 className="font-bold text-sky-900">{activity.title}</h3>
+                        {activity.period && <Badge variant="outline" className="shrink-0 bg-white/50">{activity.period}</Badge>}
+                      </div>
                       {activity.description && <p className="mt-2 text-sm leading-6 text-slate-700">{activity.description}</p>}
                       {activity.achievements && <p className="mt-2 text-sm font-semibold text-sky-700">{activity.achievements}</p>}
                       {mediaByItem[activity.id] && mediaByItem[activity.id].length > 0 && (
