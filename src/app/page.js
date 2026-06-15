@@ -35,7 +35,6 @@ export default async function Home() {
         <nav className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
           <a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
           <a href="#how" className="hover:text-indigo-600 transition-colors">How it works</a>
-          <a href="#pricing" className="hover:text-indigo-600 transition-colors">Pricing</a>
         </nav>
         <div className="flex items-center gap-4">
           {user ? (
@@ -138,41 +137,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <section id="pricing" className="relative z-10 mx-auto max-w-7xl px-6 py-24 pb-32">
-        <div className="mb-16 text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight md:text-5xl">Simple, transparent pricing</h2>
-          <p className="mt-4 text-lg text-slate-600">Start for free, upgrade when you need more power.</p>
-        </div>
-        
-        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto items-center">
-          {[{name: "Free", price: "$0", desc: "Basic profile, achievements, and public link.", features: ["1 Public Profile", "Up to 5 Stories", "Basic Resume Builder"]}, 
-            {name: "Premium", price: "$4", desc: "Unlimited stories, analytics, and premium resume tools.", features: ["Unlimited Stories", "Custom Domains", "Profile Analytics", "Premium Templates"], popular: true}, 
-            {name: "College", price: "Custom", desc: "Bulk onboarding and placement visibility for institutions.", features: ["Bulk Onboarding", "Admin Dashboard", "Recruiter Access"]}].map((plan) => (
-            <div key={plan.name} className={`relative rounded-3xl bg-white p-8 shadow-sm transition-all ${plan.popular ? 'border-2 border-indigo-500 shadow-xl shadow-indigo-500/20 scale-105 z-10' : 'border border-slate-200 hover:shadow-lg'}`}>
-              {plan.popular && <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-1 text-sm font-bold text-white shadow-md">Most Popular</div>}
-              <h3 className="text-2xl font-bold">{plan.name}</h3>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold">{plan.price}</span>
-                {plan.price !== "Custom" && <span className="text-slate-500">/mo</span>}
-              </div>
-              <p className="mt-4 text-sm leading-relaxed text-slate-600">{plan.desc}</p>
-              
-              <ul className="mt-8 space-y-4">
-                {plan.features.map(f => (
-                  <li key={f} className="flex items-center gap-3 text-sm font-medium text-slate-700">
-                    <CircleCheck size={18} className="text-indigo-500" /> {f}
-                  </li>
-                ))}
-              </ul>
-              
-              <Button className={`mt-8 w-full ${plan.popular ? 'shadow-lg shadow-indigo-500/25' : 'bg-slate-900'}`} variant={plan.popular ? 'default' : 'secondary'}>
-                {plan.price === "Custom" ? "Contact Us" : "Get Started"}
-              </Button>
-            </div>
-          ))}
-        </div>
-      </section>
-      
       <footer className="border-t border-slate-200 bg-white py-12 text-center text-sm text-slate-500">
         <p>© {new Date().getFullYear()} Proofolio. All rights reserved.</p>
       </footer>
