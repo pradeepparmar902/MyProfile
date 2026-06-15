@@ -27,8 +27,8 @@ export default async function Home() {
 
       <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-6 py-6 animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
         <Link href="/" className="flex items-center gap-3 group">
-          <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30 transition-transform group-hover:scale-105">
-            <Sparkles size={20} className="fill-white/20" />
+          <span className="grid size-10 place-items-center rounded-xl bg-white shadow-lg shadow-indigo-500/10 overflow-hidden transition-transform group-hover:scale-105">
+            <img src="/logo.png" alt="Proofolio Logo" className="h-full w-full object-cover" />
           </span>
           <span className="text-xl font-bold tracking-tight">Proofolio</span>
         </Link>

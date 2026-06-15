@@ -41,14 +41,11 @@ export function MobileNav({ isAdmin = false, settings = {} }) {
           />
           <div className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white px-4 py-5 shadow-2xl transition-transform">
             <div className="mb-8 flex items-center justify-between px-2">
-              <Link href="/" className="flex items-center gap-3">
-                <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white">
-                  <Sparkles size={20} />
+              <Link href="/" className="flex items-center gap-3 px-2 group">
+                <span className="grid size-9 place-items-center rounded-xl bg-white shadow-md overflow-hidden transition-transform group-hover:scale-105">
+                  <img src="/logo.png" alt="Proofolio Logo" className="h-full w-full object-cover" />
                 </span>
-                <span>
-                  <span className="block text-lg font-bold text-slate-950">Portfolio</span>
-                  <span className="text-xs font-medium text-slate-500">Career identity</span>
-                </span>
+                <span className="text-xl font-bold tracking-tight text-slate-900">Proofolio</span>
               </Link>
               <button 
                 onClick={() => setIsOpen(false)}

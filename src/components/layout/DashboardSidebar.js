@@ -17,14 +17,11 @@ export function DashboardSidebar({ isAdmin = false, settings = {} }) {
 
   return (
     <aside className="no-print hidden min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
-      <Link href="/" className="mb-8 flex items-center gap-3 px-2">
-        <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+      <Link href="/" className="mb-6 flex items-center gap-3 group">
+        <span className="grid size-9 place-items-center rounded-xl bg-white shadow-md overflow-hidden transition-transform group-hover:scale-105">
+          <img src="/logo.png" alt="Proofolio Logo" className="h-full w-full object-cover" />
         </span>
-        <span>
-          <span className="block text-lg font-bold text-slate-950">Portfolio</span>
-          <span className="text-xs font-medium text-slate-500">Career identity</span>
-        </span>
+        <span className="text-xl font-bold tracking-tight text-slate-900">Proofolio</span>
       </Link>
       <nav className="grid gap-1">
         {navItems.map((item) => {
