@@ -6,12 +6,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sparkles } from "lucide-react";
 import { LogoutButton } from "./LogoutButton";
+import { getNavItems } from "./navItems";
 
-export function MobileNav({ isAdmin = false, navItems = [] }) {
+export function MobileNav({ isAdmin = false, settings = {} }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const [activePath, setActivePath] = useState(pathname);
+  const navItems = getNavItems(settings);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

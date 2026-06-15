@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "./LogoutButton";
+import { getNavItems } from "./navItems";
 
-export function DashboardSidebar({ isAdmin = false, navItems = [] }) {
+export function DashboardSidebar({ isAdmin = false, settings = {} }) {
   const pathname = usePathname();
   const [activePath, setActivePath] = useState(pathname);
+  const navItems = getNavItems(settings);
 
   useEffect(() => {
     setActivePath(pathname);
