@@ -12,6 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://credoras.org"),
   title: "Portfolio | Proof-Based Career Profiles",
   description:
     "Build a proof-backed career identity with achievement stories, projects, skills, and a recruiter-friendly public profile.",
