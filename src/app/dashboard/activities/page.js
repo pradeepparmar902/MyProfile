@@ -13,6 +13,20 @@ export default async function ActivitiesPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const media = await db.media.findMany({
+    where: {
+      userId: user.id,
+      relatedType: "ACTIVITY",
+      relatedId: { in: items.map((item) => item.id) },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const mediaByItem = media.reduce((groups, item) => {
+    groups[item.relatedId] = groups[item.relatedId] || [];
+    groups[item.relatedId].push(item);
+    return groups;
+  }, {});
+
   return (
     <>
       <DashboardTopbar 
@@ -25,7 +39,7 @@ export default async function ActivitiesPage() {
           </>
         }
       />
-      <ActivityManager initialItems={items} />
+      <ActivityManager initialItems={items} initialMedia={mediaByItem} />
     </>
   );
 }

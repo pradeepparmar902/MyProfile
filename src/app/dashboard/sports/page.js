@@ -13,6 +13,20 @@ export default async function SportsPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const media = await db.media.findMany({
+    where: {
+      userId: user.id,
+      relatedType: "SPORT",
+      relatedId: { in: items.map((item) => item.id) },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const mediaByItem = media.reduce((groups, item) => {
+    groups[item.relatedId] = groups[item.relatedId] || [];
+    groups[item.relatedId].push(item);
+    return groups;
+  }, {});
+
   return (
     <>
       <DashboardTopbar 
@@ -25,7 +39,7 @@ export default async function SportsPage() {
           </>
         }
       />
-      <SportsManager initialItems={items} />
+      <SportsManager initialItems={items} initialMedia={mediaByItem} />
     </>
   );
 }

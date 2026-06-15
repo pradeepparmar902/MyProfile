@@ -5,10 +5,12 @@ import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
+import { MediaGallery } from "@/components/media/MediaGallery";
 
-export function SportsManager({ initialItems }) {
+export function SportsManager({ initialItems, initialMedia = {} }) {
   const [items, setItems] = useState(initialItems || []);
   const [message, setMessage] = useState("");
+  const [mediaByItem, setMediaByItem] = useState(initialMedia);
 
   async function addItem(event) {
     event.preventDefault();
@@ -94,6 +96,17 @@ export function SportsManager({ initialItems }) {
                   <Trash2 size={16} />
                 </button>
               </div>
+            </div>
+            
+            <div className="mt-6 border-t border-slate-100 pt-4">
+              <MediaGallery
+                title="Upload proof"
+                relatedType="SPORT"
+                relatedId={item.id}
+                initialMedia={mediaByItem[item.id] || []}
+                categories={["Certificate", "Photo", "Award", "Other"]}
+                compact={true}
+              />
             </div>
           </Card>
         ))}

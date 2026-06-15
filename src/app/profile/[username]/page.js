@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { db } from "@/lib/db";
+import { MediaGallery } from "@/components/media/MediaGallery";
 
 export default async function PublicProfilePage({ params }) {
   const { username } = await params;
@@ -36,6 +37,15 @@ export default async function PublicProfilePage({ params }) {
     theme: "modern", showHobbies: true, showWishes: true, showSports: true, showActivities: true, showOutOfBox: true,
     showEducation: true, showAchievements: true, showProjects: true, showSkills: true, showInternship: true, showProfession: true, showProfessionSelf: true
   };
+
+  const allMedia = await db.media.findMany({
+    where: { userId: profile.user.id },
+  });
+  const mediaByItem = allMedia.reduce((groups, item) => {
+    groups[item.relatedId] = groups[item.relatedId] || [];
+    groups[item.relatedId].push(item);
+    return groups;
+  }, {});
 
   profile.user.education = globalSettings.showEducation ? profile.user.education.filter((x) => !x.isHidden) : [];
   profile.user.achievements = globalSettings.showAchievements ? profile.user.achievements.filter((x) => !x.isHidden) : [];
@@ -175,11 +185,20 @@ export default async function PublicProfilePage({ params }) {
               <Card className="p-6">
                 <h2 className="text-xl font-bold">Sports Activity</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  {profile.user.sports.map((item) => (
-                    <div key={item.id} className="rounded-lg border border-slate-200 p-4 bg-emerald-50/30">
-                      <h3 className="font-bold text-emerald-900">{item.title}</h3>
-                      {item.description && <p className="mt-2 text-sm leading-6 text-slate-700">{item.description}</p>}
-                      {item.achievements && <p className="mt-2 text-sm font-semibold text-emerald-700">{item.achievements}</p>}
+                  {profile.user.sports.map((sport) => (
+                    <div key={sport.id} className="rounded-lg border border-slate-200 p-4 bg-emerald-50/30">
+                      <h3 className="font-bold text-emerald-900">{sport.title}</h3>
+                      {sport.description && <p className="mt-2 text-sm leading-6 text-slate-700">{sport.description}</p>}
+                      {sport.achievements && <p className="mt-2 text-sm font-semibold text-emerald-700">{sport.achievements}</p>}
+                      {mediaByItem[sport.id] && mediaByItem[sport.id].length > 0 && (
+                        <div className="mt-4">
+                          <MediaGallery 
+                            readOnly={true} 
+                            initialMedia={mediaByItem[sport.id]} 
+                            compact={true} 
+                          />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -190,11 +209,20 @@ export default async function PublicProfilePage({ params }) {
               <Card className="p-6">
                 <h2 className="text-xl font-bold">Other Activity</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  {profile.user.activities.map((item) => (
-                    <div key={item.id} className="rounded-lg border border-slate-200 p-4 bg-sky-50/30">
-                      <h3 className="font-bold text-sky-900">{item.title}</h3>
-                      {item.description && <p className="mt-2 text-sm leading-6 text-slate-700">{item.description}</p>}
-                      {item.achievements && <p className="mt-2 text-sm font-semibold text-sky-700">{item.achievements}</p>}
+                  {profile.user.activities.map((activity) => (
+                    <div key={activity.id} className="rounded-lg border border-slate-200 p-4 bg-sky-50/30">
+                      <h3 className="font-bold text-sky-900">{activity.title}</h3>
+                      {activity.description && <p className="mt-2 text-sm leading-6 text-slate-700">{activity.description}</p>}
+                      {activity.achievements && <p className="mt-2 text-sm font-semibold text-sky-700">{activity.achievements}</p>}
+                      {mediaByItem[activity.id] && mediaByItem[activity.id].length > 0 && (
+                        <div className="mt-4">
+                          <MediaGallery 
+                            readOnly={true} 
+                            initialMedia={mediaByItem[activity.id]} 
+                            compact={true} 
+                          />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
