@@ -32,6 +32,12 @@ export function DashboardSidebar({ isAdmin = false, settings = {} }) {
     return () => window.removeEventListener("resize", checkScroll);
   }, [navItems]);
 
+  const scrollDown = () => {
+    if (navRef.current) {
+      navRef.current.scrollBy({ top: 150, behavior: "smooth" });
+    }
+  };
+
   return (
     <aside className="no-print hidden h-screen sticky top-0 w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
       <Link href="/" className="mb-6 flex shrink-0 items-center gap-3 group">
@@ -70,8 +76,12 @@ export function DashboardSidebar({ isAdmin = false, settings = {} }) {
         
         {/* Scroll Indicator */}
         {showScrollArrow && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-center pointer-events-none bg-gradient-to-t from-white via-white/80 to-transparent pt-8 pb-1">
-            <ChevronDown size={20} className="text-slate-400 animate-bounce" />
+          <div 
+            onClick={scrollDown}
+            className="absolute bottom-0 left-0 right-0 flex justify-center bg-gradient-to-t from-white via-white/90 to-transparent pt-8 pb-1 cursor-pointer hover:from-slate-50 transition-colors duration-300"
+            title="Scroll down for more options"
+          >
+            <ChevronDown size={24} className="text-slate-500 animate-bounce" />
           </div>
         )}
       </div>
