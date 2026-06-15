@@ -28,7 +28,16 @@ export default async function InternshipPage() {
 
   return (
     <>
-      <DashboardTopbar title="Internship" />
+      <DashboardTopbar 
+        title="Internship" 
+        guideContent={
+          <>
+            <p>List your official internships here.</p>
+            <p><strong>Work handled & Learnings:</strong> Don't just list your daily tasks. Mention what you learned, what tools you mastered, and how you contributed to the company.</p>
+            <p><strong>Proof Documents:</strong> Upload your offer letter, completion certificate, or screenshots of the work you delivered.</p>
+          </>
+        }
+      />
       <ExperienceManager
         title="Internship"
         description="Save internship company details, designation, dates, work handled, learnings, and proof documents."

@@ -30,7 +30,18 @@ export default async function OutOfBoxPage() {
 
   return (
     <>
-      <DashboardTopbar title="Out-of-Box Thinking" />
+      <DashboardTopbar 
+        title="Out-of-Box Thinking" 
+        guideContent={
+          <>
+            <p>Showcase moments where you thought differently.</p>
+            <p><strong>Context:</strong> What was the normal way of doing things?</p>
+            <p><strong>Innovation:</strong> What unique approach did you take?</p>
+            <p><strong>Result:</strong> How did your new idea improve the situation?</p>
+            <p><em>Example: "Instead of manually grading 100 papers, I wrote a quick Python script to auto-grade them, saving 10 hours."</em></p>
+          </>
+        }
+      />
       <OutOfBoxManager
         initialItems={JSON.parse(JSON.stringify(outOfBox))}
         initialMedia={JSON.parse(JSON.stringify(mediaByItem))}

@@ -27,7 +27,16 @@ export default async function SkillsPage() {
 
   return (
     <>
-      <DashboardTopbar title="Skills" />
+      <DashboardTopbar 
+        title="Skills With Proof" 
+        guideContent={
+          <>
+            <p>Instead of just claiming you know a skill, prove it!</p>
+            <p><strong>Skill Name:</strong> E.g. Python, Figma, Public Speaking.</p>
+            <p><strong>Proof Link:</strong> Add a link to a project, a certificate, a GitHub repo, or a design file that actually shows you using this skill.</p>
+          </>
+        }
+      />
       <SkillsManager
         initialSkills={JSON.parse(JSON.stringify(skills))}
         initialMedia={JSON.parse(JSON.stringify(mediaBySkill))}

@@ -28,7 +28,15 @@ export default async function ProfessionPage() {
 
   return (
     <>
-      <DashboardTopbar title="Profession - Job" />
+      <DashboardTopbar 
+        title="Profession - Job" 
+        guideContent={
+          <>
+            <p>Log your full-time or part-time job history here.</p>
+            <p>Focus on your <strong>responsibilities and achievements</strong> rather than just a job description. Use numbers where possible (e.g., "Managed a team of 5", "Increased sales by 15%").</p>
+          </>
+        }
+      />
       <ExperienceManager
         title="Profession - Job"
         description="Save professional work history, company details, designation, promotions, responsibilities, achievements, and proof files."

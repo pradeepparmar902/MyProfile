@@ -30,7 +30,16 @@ export default async function HobbiesPage() {
 
   return (
     <>
-      <DashboardTopbar title="Hobbies & Personality" />
+      <DashboardTopbar 
+        title="Hobbies & Personality" 
+        guideContent={
+          <>
+            <p>Showcase who you are outside of work and studies.</p>
+            <p>Employers look for interesting people. Do you paint? Play guitar? Run marathons?</p>
+            <p><strong>Description:</strong> Explain why you love this hobby and how often you do it.</p>
+          </>
+        }
+      />
       <HobbiesManager
         initialItems={JSON.parse(JSON.stringify(hobbies))}
         initialMedia={JSON.parse(JSON.stringify(mediaByItem))}

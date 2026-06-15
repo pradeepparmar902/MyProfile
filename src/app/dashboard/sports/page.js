@@ -15,7 +15,16 @@ export default async function SportsPage() {
 
   return (
     <>
-      <DashboardTopbar title="Sports Activity" />
+      <DashboardTopbar 
+        title="Sports Activity" 
+        guideContent={
+          <>
+            <p>Log your sports involvement to show teamwork, dedication, and leadership.</p>
+            <p><strong>Description:</strong> Mention your role (e.g. "Team Captain", "Starting Point Guard") and how many years you played.</p>
+            <p><strong>Achievements:</strong> Did you win any tournaments? Get MVP? Break any records?</p>
+          </>
+        }
+      />
       <SportsManager initialItems={items} />
     </>
   );

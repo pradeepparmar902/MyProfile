@@ -10,14 +10,11 @@ export default async function DashboardPage() {
   const user = await getSessionUser();
   if (!user) redirect("/login");
 
-  const [achievementCount, projectCount, skillCount, recentAchievements, profileViews] =
-    await Promise.all([
-      db.achievement.count({ where: { userId: user.id } }),
-      db.project.count({ where: { userId: user.id } }),
-      db.skill.count({ where: { userId: user.id } }),
-      db.achievement.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" }, take: 3 }),
-      user.profile ? db.profileView.count({ where: { profileId: user.profile.id } }) : Promise.resolve(0),
-    ]);
+  const achievementCount = await db.achievement.count({ where: { userId: user.id } });
+  const projectCount = await db.project.count({ where: { userId: user.id } });
+  const skillCount = await db.skill.count({ where: { userId: user.id } });
+  const recentAchievements = await db.achievement.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" }, take: 3 });
+  const profileViews = user.profile ? await db.profileView.count({ where: { profileId: user.profile.id } }) : 0;
 
   const completed = [
     user.name,
@@ -40,7 +37,16 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <DashboardTopbar title="Dashboard" />
+      <DashboardTopbar 
+        title="Dashboard" 
+        guideContent={
+          <>
+            <p>Welcome to your Student Workspace!</p>
+            <p>This is your command center. From here, you can see your profile completion progress and recent achievements.</p>
+            <p>Use the sidebar navigation to fill out your details step-by-step. When you are ready, use the <strong>View Public Profile</strong> button at the top right to see how it looks to the world!</p>
+          </>
+        }
+      />
       <div className="grid gap-6 p-4 md:p-8">
         <Card className="p-6">
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">

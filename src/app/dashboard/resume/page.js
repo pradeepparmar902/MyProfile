@@ -14,16 +14,13 @@ export default async function ResumePage() {
   });
   const user = fullUser || sessionUser;
 
-  const [education, achievements, projects, skills, internships, professions, professionsSelf] =
-    await Promise.all([
-      db.education.findMany({ where: { userId: user.id }, orderBy: { startYear: "desc" } }),
-      db.achievement.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      db.project.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      db.skill.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      db.internship.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      db.profession.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-      db.professionSelf.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } }),
-    ]);
+  const education = await db.education.findMany({ where: { userId: user.id }, orderBy: { startYear: "desc" } });
+  const achievements = await db.achievement.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const projects = await db.project.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const skills = await db.skill.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const internships = await db.internship.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const professions = await db.profession.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const professionsSelf = await db.professionSelf.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
 
   const profile = user.profile;
 
@@ -34,7 +31,16 @@ export default async function ResumePage() {
 
   return (
     <>
-      <DashboardTopbar title="Resume Builder" />
+      <DashboardTopbar 
+        title="Resume Builder" 
+        guideContent={
+          <>
+            <p>Generate a professional ATS-friendly PDF resume based on your profile.</p>
+            <p><strong>Visibility:</strong> Use the "eye" icon (visibility toggle) on your other dashboard pages to hide items you don't want on your resume.</p>
+            <p><strong>Design:</strong> Select a template that fits your industry and click Download PDF.</p>
+          </>
+        }
+      />
       <ResumeBuilder
         user={JSON.parse(JSON.stringify(user))}
         profile={JSON.parse(JSON.stringify(profile || {}))}

@@ -15,7 +15,16 @@ export default async function ActivitiesPage() {
 
   return (
     <>
-      <DashboardTopbar title="Other Activity" />
+      <DashboardTopbar 
+        title="Other Activity" 
+        guideContent={
+          <>
+            <p>Log your social activities, clubs, community service, and other engagements.</p>
+            <p><strong>Description:</strong> What did the organization do? What was your specific contribution?</p>
+            <p><strong>Achievements:</strong> Did you organize an event? Raise funds? Help a certain number of people?</p>
+          </>
+        }
+      />
       <ActivityManager initialItems={items} />
     </>
   );

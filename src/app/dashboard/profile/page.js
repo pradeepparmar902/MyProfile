@@ -15,7 +15,16 @@ export default async function ProfileBuilderPage() {
 
   return (
     <>
-      <DashboardTopbar title="Profile Builder" />
+      <DashboardTopbar 
+        title="Profile Builder" 
+        guideContent={
+          <>
+            <p><strong>Headline:</strong> Keep it short and impactful. For example: "Aspiring Product Manager | CS Student at University of Tech".</p>
+            <p><strong>Bio:</strong> Share a brief story about who you are, what you are passionate about, and what you are looking for next in your career.</p>
+            <p><strong>Career Goal:</strong> Be specific. "Looking for a Summer 2024 Software Engineering Internship".</p>
+          </>
+        }
+      />
       <div className="grid gap-8 p-4 md:p-8">
         <ProfileEditor
           user={{ id: fullUser.id, name: fullUser.name, email: fullUser.email }}

@@ -30,7 +30,16 @@ export default async function ProfessionSelfPage() {
 
   return (
     <>
-      <DashboardTopbar title="Profession - Self Business / Training" />
+      <DashboardTopbar 
+        title="Profession - Self Business / Training" 
+        guideContent={
+          <>
+            <p>Are you an entrepreneur, freelancer, or trainer? Log your business details here.</p>
+            <p><strong>Business Highlights:</strong> Did you register a company? Gain clients? What services or products do you offer?</p>
+            <p>Make sure to upload links to your business website or portfolio pieces!</p>
+          </>
+        }
+      />
       <SelfBusinessManager
         title="Profession - Self Business / Training"
         description="Save your business details, freelancing projects, professional trainings, key milestones, and outcomes."

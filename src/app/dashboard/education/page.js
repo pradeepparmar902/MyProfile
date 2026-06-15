@@ -27,7 +27,17 @@ export default async function EducationPage() {
 
   return (
     <>
-      <DashboardTopbar title="Education" />
+      <DashboardTopbar 
+        title="Education History" 
+        guideContent={
+          <>
+            <p>List your high school, college, or university degrees.</p>
+            <p><strong>Institution:</strong> Where did you study?</p>
+            <p><strong>Degree/Field:</strong> E.g., B.Tech in Computer Science.</p>
+            <p><strong>Description:</strong> Briefly mention major coursework, societies you were part of, or scholarships you won.</p>
+          </>
+        }
+      />
       <EducationManager
         initialEducation={JSON.parse(JSON.stringify(education))}
         initialMedia={JSON.parse(JSON.stringify(mediaByEducation))}

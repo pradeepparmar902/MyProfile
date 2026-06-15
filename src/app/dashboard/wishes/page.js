@@ -15,7 +15,17 @@ export default async function WishesPage() {
 
   return (
     <>
-      <DashboardTopbar title="My Wish / Career Vision" />
+      <DashboardTopbar 
+        title="My Wish / Career Vision" 
+        guideContent={
+          <>
+            <p>What is your ultimate career goal? What are you working towards?</p>
+            <p><strong>Currently Achieved Steps:</strong> List things you've already done to get closer to this goal (e.g. "Completed my B.Tech").</p>
+            <p><strong>Future Steps:</strong> List what you still need to do (e.g. "Get AWS Certified", "Gain 2 years experience").</p>
+            <p><em>Note: This section is for your digital profile only, it won't appear on your formal PDF Resume.</em></p>
+          </>
+        }
+      />
       <WishManager initialItems={items} />
     </>
   );

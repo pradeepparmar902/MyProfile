@@ -19,7 +19,21 @@ export default async function AchievementsPage() {
 
   return (
     <>
-      <DashboardTopbar title="Achievements" />
+      <DashboardTopbar 
+        title="Achievements" 
+        guideContent={
+          <>
+            <p>Write stories about things you built, led, or improved.</p>
+            <p><strong>Use the STAR Method:</strong></p>
+            <ul>
+              <li><strong>Situation:</strong> What was the context?</li>
+              <li><strong>Task/Problem:</strong> What needed to be solved?</li>
+              <li><strong>Action:</strong> What exactly did YOU do?</li>
+              <li><strong>Result:</strong> What was the measurable impact? (e.g. "Increased speed by 20%").</li>
+            </ul>
+          </>
+        }
+      />
       <div className="p-4 md:p-8">
         <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>

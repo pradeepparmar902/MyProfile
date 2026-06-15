@@ -27,7 +27,19 @@ export default async function ProjectsPage() {
 
   return (
     <>
-      <DashboardTopbar title="Projects" />
+      <DashboardTopbar 
+        title="Projects" 
+        guideContent={
+          <>
+            <p>List your personal or academic side-projects.</p>
+            <p><strong>Title:</strong> Keep it clear (e.g. "E-Commerce App").</p>
+            <p><strong>Description:</strong> What did you build and why?</p>
+            <p><strong>Tech Stack:</strong> List the languages and frameworks used (e.g. "React, Node.js").</p>
+            <p><strong>Outcome:</strong> What is the current status? Is it live? How many users?</p>
+            <p>Don't forget to attach links or screenshots!</p>
+          </>
+        }
+      />
       <ProjectsManager
         initialProjects={JSON.parse(JSON.stringify(projects))}
         initialMedia={JSON.parse(JSON.stringify(mediaByProject))}
