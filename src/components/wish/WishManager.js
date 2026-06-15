@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Eye, EyeOff, Target, CheckCircle2, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Target, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
