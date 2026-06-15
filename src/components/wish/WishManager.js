@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, Eye, EyeOff, Target, CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
@@ -64,45 +64,74 @@ export function WishManager({ initialItems }) {
 
       <div className="grid gap-4">
         {items.map((item) => (
-          <Card key={item.id} className={`p-5 ${item.isHidden ? "opacity-50 grayscale" : ""}`}>
-            <div className="flex justify-between gap-4">
-              <div>
-                <h3 className="text-lg font-bold text-slate-900">{item.title}</h3>
-                
-                {item.achievedSteps && (
-                  <div className="mt-3">
-                    <p className="text-xs font-semibold text-emerald-600 uppercase tracking-widest">Achieved Steps</p>
-                    <p className="mt-1 text-sm leading-6 text-emerald-900">{item.achievedSteps}</p>
+          <Card key={item.id} className={`p-6 ${item.isHidden ? "opacity-50 grayscale" : ""}`}>
+            <div className="flex justify-end gap-2 mb-4 absolute top-4 right-4 z-20">
+              <button
+                className="grid size-8 place-items-center rounded-lg bg-white/50 hover:bg-white text-slate-700 shadow-sm transition-colors"
+                onClick={() => toggleVisibility(item)}
+                title={item.isHidden ? "Show on profile" : "Hide from profile"}
+              >
+                {item.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+              <button
+                className="grid size-8 place-items-center rounded-lg bg-white/50 hover:bg-red-50 text-red-600 shadow-sm transition-colors"
+                onClick={() => deleteItem(item.id)}
+                title="Delete entry"
+              >
+                <Trash2 size={16} />
+              </button>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 md:items-stretch mt-4">
+              {/* Left Side: GOAL (Orange) */}
+              <div className="flex-1 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-5 text-white shadow-md relative overflow-hidden group">
+                <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-10 transform transition-transform group-hover:scale-110">
+                  <Target size={100} />
+                </div>
+                <div className="relative z-10">
+                  <div className="flex items-center gap-2 mb-2 text-orange-100 text-xs font-bold uppercase tracking-widest">
+                    <Target size={14} /> Goal / Wish List
                   </div>
-                )}
-                {item.futureSteps && (
-                  <div className="mt-3">
-                    <p className="text-xs font-semibold text-indigo-600 uppercase tracking-widest">Future Steps</p>
-                    <p className="mt-1 text-sm leading-6 text-indigo-900">{item.futureSteps}</p>
-                  </div>
-                )}
-                {item.thoughts && (
-                  <div className="mt-3">
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">My Thoughts</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-700 italic">"{item.thoughts}"</p>
-                  </div>
-                )}
+                  <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                  {item.futureSteps && (
+                    <p className="text-orange-50 leading-relaxed text-sm">
+                      <strong className="text-white">Plan:</strong> {item.futureSteps}
+                    </p>
+                  )}
+                  {item.thoughts && (
+                    <div className="mt-4 bg-black/10 rounded-lg p-3 border-l-4 border-orange-300">
+                      <p className="text-orange-50 italic text-sm">"{item.thoughts}"</p>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex shrink-0 gap-1">
-                <button
-                  className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
-                  onClick={() => toggleVisibility(item)}
-                  title={item.isHidden ? "Show on profile" : "Hide from profile"}
-                >
-                  {item.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-                <button
-                  className="grid size-10 shrink-0 place-items-center rounded-lg text-slate-500 hover:bg-slate-100"
-                  onClick={() => deleteItem(item.id)}
-                  title="Delete entry"
-                >
-                  <Trash2 size={16} />
-                </button>
+
+              {/* Connector Line */}
+              <div className="hidden md:flex flex-col justify-center items-center px-1">
+                <ArrowRight className="text-slate-300" size={24} />
+              </div>
+
+              {/* Right Side: ACHIEVED (Purple) */}
+              <div className="flex-1">
+                {item.achievedSteps ? (
+                  <div className="h-full bg-gradient-to-br from-fuchsia-600 to-purple-700 rounded-2xl p-5 text-white shadow-md relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-10 transform transition-transform group-hover:scale-110">
+                      <CheckCircle2 size={100} />
+                    </div>
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-2 text-purple-200 text-xs font-bold uppercase tracking-widest">
+                        <CheckCircle2 size={14} /> Achieved / Where we are
+                      </div>
+                      <p className="text-purple-50 leading-relaxed font-medium text-sm">
+                        {item.achievedSteps}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-5 flex flex-col items-center justify-center text-slate-400">
+                    <p className="text-sm font-medium">Journey just beginning</p>
+                  </div>
+                )}
               </div>
             </div>
           </Card>
