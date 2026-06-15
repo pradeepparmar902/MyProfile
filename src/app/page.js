@@ -12,7 +12,13 @@ const features = [
   { title: "Career Identity", text: "Build a long-term professional identity that grows with the student.", icon: Sparkles },
 ];
 
-export default function Home() {
+import { getSessionUser } from "@/lib/auth";
+
+// ... Inside the component, we'll fetch user ...
+export default async function Home() {
+  const user = await getSessionUser();
+  const isAdmin = user?.email === "pradeepparmar902@gmail.com";
+
   return (
     <main className="relative min-h-screen bg-slate-50 text-slate-950 overflow-hidden selection:bg-indigo-500/30">
       {/* Background Gradients */}
@@ -32,8 +38,19 @@ export default function Home() {
           <a href="#pricing" className="hover:text-indigo-600 transition-colors">Pricing</a>
         </nav>
         <div className="flex items-center gap-4">
-          <Button href="/login" variant="ghost" className="font-semibold">Login</Button>
-          <Button href="/register" className="shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-indigo-500/40">Create Profile</Button>
+          {user ? (
+            <>
+              {isAdmin && (
+                <Button href="/admin" variant="ghost" className="font-semibold text-indigo-600">Admin Panel</Button>
+              )}
+              <Button href="/dashboard" className="shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-indigo-500/40">Go to Dashboard</Button>
+            </>
+          ) : (
+            <>
+              <Button href="/login" variant="ghost" className="font-semibold">Login</Button>
+              <Button href="/register" className="shadow-lg shadow-indigo-500/25 transition-all hover:-translate-y-0.5 hover:shadow-indigo-500/40">Create Profile</Button>
+            </>
+          )}
         </div>
       </header>
 
