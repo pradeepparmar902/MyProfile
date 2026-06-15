@@ -6,20 +6,17 @@ export async function GET() {
   const user = await getSessionUser();
   if (!user) return error("Unauthorized", 401);
 
-  const [achievementCount, projectCount, skillCount, recentAchievements, profileViews] =
-    await Promise.all([
-      db.achievement.count({ where: { userId: user.id } }),
-      db.project.count({ where: { userId: user.id } }),
-      db.skill.count({ where: { userId: user.id } }),
-      db.achievement.findMany({
-        where: { userId: user.id },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-      }),
-      user.profile
-        ? db.profileView.count({ where: { profileId: user.profile.id } })
-        : Promise.resolve(0),
-    ]);
+  const achievementCount = await db.achievement.count({ where: { userId: user.id } });
+  const projectCount = await db.project.count({ where: { userId: user.id } });
+  const skillCount = await db.skill.count({ where: { userId: user.id } });
+  const recentAchievements = await db.achievement.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+  });
+  const profileViews = user.profile
+    ? await db.profileView.count({ where: { profileId: user.profile.id } })
+    : 0;
 
   const profile = user.profile;
   const completed = [

@@ -31,6 +31,14 @@
       "namedRegex": "^/api/achievements/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/activities/[id]",
+      "regex": "^/api/activities/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/activities/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/education/[id]",
       "regex": "^/api/education/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -119,6 +127,22 @@
       "namedRegex": "^/api/skills/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/sports/[id]",
+      "regex": "^/api/sports/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/sports/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/wishes/[id]",
+      "regex": "^/api/wishes/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/wishes/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/dashboard/achievements/[id]",
       "regex": "^/dashboard/achievements/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -172,10 +196,40 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/admin",
+      "regex": "^/admin(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin(?:/)?$"
+    },
+    {
+      "page": "/admin/settings",
+      "regex": "^/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/settings(?:/)?$"
+    },
+    {
+      "page": "/admin/users",
+      "regex": "^/admin/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/users(?:/)?$"
+    },
+    {
       "page": "/api/achievements",
       "regex": "^/api/achievements(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/achievements(?:/)?$"
+    },
+    {
+      "page": "/api/activities",
+      "regex": "^/api/activities(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/activities(?:/)?$"
+    },
+    {
+      "page": "/api/admin/settings",
+      "regex": "^/api/admin/settings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/settings(?:/)?$"
     },
     {
       "page": "/api/auth/linkedin",
@@ -316,6 +370,18 @@
       "namedRegex": "^/api/skills(?:/)?$"
     },
     {
+      "page": "/api/sports",
+      "regex": "^/api/sports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/sports(?:/)?$"
+    },
+    {
+      "page": "/api/wishes",
+      "regex": "^/api/wishes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/wishes(?:/)?$"
+    },
+    {
       "page": "/dashboard",
       "regex": "^/dashboard(?:/)?$",
       "routeKeys": {},
@@ -332,6 +398,12 @@
       "regex": "^/dashboard/achievements/new(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/dashboard/achievements/new(?:/)?$"
+    },
+    {
+      "page": "/dashboard/activities",
+      "regex": "^/dashboard/activities(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/activities(?:/)?$"
     },
     {
       "page": "/dashboard/education",
@@ -398,6 +470,18 @@
       "regex": "^/dashboard/skills(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/dashboard/skills(?:/)?$"
+    },
+    {
+      "page": "/dashboard/sports",
+      "regex": "^/dashboard/sports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/sports(?:/)?$"
+    },
+    {
+      "page": "/dashboard/wishes",
+      "regex": "^/dashboard/wishes(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/wishes(?:/)?$"
     },
     {
       "page": "/favicon.ico",

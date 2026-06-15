@@ -14,7 +14,8 @@
 /coverage
 
 # next.js
-/.next/
+.next/cache/
+
 /out/
 
 # production
@@ -51,3 +52,7 @@ firebase-dev-rules.txt
 
 # scripts
 /scripts/
+
+
+.next/cache/
+.next/dev/
