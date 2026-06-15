@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Download, Link2, Mail, MapPin, Sparkles } from "lucide-react";
+import { Download, Link2, Mail, MapPin, Sparkles, Target, CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -202,19 +202,70 @@ export default async function PublicProfilePage({ params }) {
             )}
 
             {profile.user.wishes && profile.user.wishes.length > 0 && (
-              <Card className="p-6">
-                <h2 className="text-xl font-bold flex items-center gap-2"><Sparkles className="text-amber-500" size={20} /> Career Vision & Goals</h2>
-                <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="mt-8 mb-4">
+                <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                  <Sparkles className="text-amber-500" size={28} /> Career Vision & Goals
+                </h2>
+                <div className="space-y-6">
                   {profile.user.wishes.map((item) => (
-                    <div key={item.id} className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
-                      <h3 className="font-bold text-amber-900">{item.title}</h3>
-                      {item.achievedSteps && <p className="mt-3 text-sm leading-6 text-slate-700"><span className="font-semibold text-emerald-700">Achieved:</span> {item.achievedSteps}</p>}
-                      {item.futureSteps && <p className="mt-2 text-sm leading-6 text-slate-700"><span className="font-semibold text-indigo-700">Next Steps:</span> {item.futureSteps}</p>}
-                      {item.thoughts && <p className="mt-3 text-sm italic leading-6 text-amber-800">"{item.thoughts}"</p>}
+                    <div key={item.id} className="flex flex-col md:flex-row gap-4 md:items-stretch">
+                      {/* Left Side: GOAL (Orange) */}
+                      <div className="flex-1 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 -mr-6 -mt-6 opacity-10 transform transition-transform group-hover:scale-110">
+                          <Target size={120} />
+                        </div>
+                        <div className="relative z-10">
+                          <div className="flex items-center gap-2 mb-3 text-orange-100 text-xs font-bold uppercase tracking-widest">
+                            <Target size={14} /> Goal / Wish List
+                          </div>
+                          <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
+                          {item.futureSteps && (
+                            <p className="text-orange-50 leading-relaxed text-sm">
+                              <strong className="text-white">Plan:</strong> {item.futureSteps}
+                            </p>
+                          )}
+                          {item.thoughts && (
+                            <div className="mt-4 bg-black/10 rounded-lg p-3 border-l-4 border-orange-300">
+                              <p className="text-orange-50 italic text-sm">"{item.thoughts}"</p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Connector Line (Desktop Only) */}
+                      <div className="hidden md:flex flex-col justify-center items-center px-1">
+                        <ArrowRight className="text-slate-300" size={28} />
+                      </div>
+
+                      {/* Right Side: ACHIEVED (Purple) */}
+                      <div className="flex-1">
+                        {item.achievedSteps ? (
+                          <div className="h-full bg-gradient-to-br from-fuchsia-600 to-purple-700 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 -mr-6 -mt-6 opacity-10 transform transition-transform group-hover:scale-110">
+                              <CheckCircle2 size={120} />
+                            </div>
+                            <div className="relative z-10">
+                              <div className="flex items-center gap-2 mb-3 text-purple-200 text-xs font-bold uppercase tracking-widest">
+                                <CheckCircle2 size={14} /> Achieved / Where we are
+                              </div>
+                              <p className="text-purple-50 leading-relaxed font-medium">
+                                {item.achievedSteps}
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="h-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-6 flex flex-col items-center justify-center text-slate-400">
+                            <div className="bg-slate-100 rounded-full p-3 mb-2">
+                              <Sparkles size={20} className="text-slate-300" />
+                            </div>
+                            <p className="text-sm font-medium">Journey just beginning</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
-              </Card>
+              </div>
             )}
           </div>
           <aside className="grid h-fit gap-6">
