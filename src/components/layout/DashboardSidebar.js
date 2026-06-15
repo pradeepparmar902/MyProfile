@@ -33,7 +33,7 @@ export function DashboardSidebar({ isAdmin = false, settings = {} }) {
   }, [navItems]);
 
   return (
-    <aside className="no-print hidden min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
+    <aside className="no-print hidden h-screen sticky top-0 w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
       <Link href="/" className="mb-6 flex shrink-0 items-center gap-3 group">
         <span className="grid size-9 place-items-center rounded-xl bg-white shadow-md overflow-hidden transition-transform group-hover:scale-105">
           <img src="/logo.png" alt="Proofolio Logo" className="h-full w-full object-cover" />
