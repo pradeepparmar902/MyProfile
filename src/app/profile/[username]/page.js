@@ -265,6 +265,13 @@ export default async function PublicProfilePage({ params }) {
                     </div>
                   ))}
                 </div>
+                
+                <div className="mt-8 text-center p-6 bg-amber-50/80 border border-amber-200 rounded-2xl shadow-sm">
+                  <p className="text-amber-800 font-medium flex items-center justify-center gap-2">
+                    <Sparkles className="text-amber-500 animate-pulse" size={20} /> 
+                    More exciting options and detailed career tracking for this section will follow soon!
+                  </p>
+                </div>
               </div>
             )}
           </div>
