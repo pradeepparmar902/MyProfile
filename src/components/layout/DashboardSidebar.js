@@ -34,7 +34,7 @@ export function DashboardSidebar() {
               key={item.href}
               href={item.href}
               onClick={() => setActivePath(item.href)}
-              className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+              className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold ${
                 isActive 
                   ? "bg-slate-100 text-slate-950" 
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
