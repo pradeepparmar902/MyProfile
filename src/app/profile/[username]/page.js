@@ -21,6 +21,7 @@ export default async function PublicProfilePage({ params }) {
           skills: { orderBy: { createdAt: "desc" } },
           outOfBox: { orderBy: { createdAt: "desc" } },
           hobbies: { orderBy: { createdAt: "desc" } },
+          wishes: { orderBy: { createdAt: "desc" } },
         },
       },
     },
@@ -35,6 +36,7 @@ export default async function PublicProfilePage({ params }) {
   profile.user.skills = profile.user.skills.filter((x) => !x.isHidden);
   profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden);
   profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden);
+  profile.user.wishes = (profile.user.wishes || []).filter((x) => !x.isHidden);
 
   const initials = profile.user.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
@@ -137,6 +139,22 @@ export default async function PublicProfilePage({ params }) {
                       <h3 className="font-bold">{item.title}</h3>
                       {item.description && <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>}
                       {item.achievements && <p className="mt-2 text-xs font-semibold text-[#06B6D4]">{item.achievements}</p>}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {profile.user.wishes && profile.user.wishes.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold flex items-center gap-2"><Sparkles className="text-amber-500" size={20} /> Career Vision & Goals</h2>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {profile.user.wishes.map((item) => (
+                    <div key={item.id} className="rounded-xl border border-amber-200 bg-amber-50/50 p-5">
+                      <h3 className="font-bold text-amber-900">{item.title}</h3>
+                      {item.achievedSteps && <p className="mt-3 text-sm leading-6 text-slate-700"><span className="font-semibold text-emerald-700">Achieved:</span> {item.achievedSteps}</p>}
+                      {item.futureSteps && <p className="mt-2 text-sm leading-6 text-slate-700"><span className="font-semibold text-indigo-700">Next Steps:</span> {item.futureSteps}</p>}
+                      {item.thoughts && <p className="mt-3 text-sm italic leading-6 text-amber-800">"{item.thoughts}"</p>}
                     </div>
                   ))}
                 </div>

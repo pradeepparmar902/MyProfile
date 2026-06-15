@@ -12,6 +12,7 @@ const collections = {
   media: "media",
   outOfBox: "outOfBox",
   hobby: "hobbies",
+  wish: "wishes",
   invite: "invites",
 };
 
@@ -258,6 +259,7 @@ async function hydrate(name, record, include) {
     if (selected.professionsSelf) hydratedUser.professionsSelf = await findMany("professionSelf", { where: { userId: user.id }, orderBy: selected.professionsSelf.orderBy });
     if (selected.outOfBox) hydratedUser.outOfBox = await findMany("outOfBox", { where: { userId: user.id }, orderBy: selected.outOfBox.orderBy });
     if (selected.hobbies) hydratedUser.hobbies = await findMany("hobby", { where: { userId: user.id }, orderBy: selected.hobbies.orderBy });
+    if (selected.wishes) hydratedUser.wishes = await findMany("wish", { where: { userId: user.id }, orderBy: selected.wishes.orderBy });
     return { ...record, user: hydratedUser };
   }
 
@@ -291,6 +293,7 @@ export const db = {
   media: model("media"),
   outOfBox: model("outOfBox"),
   hobby: model("hobby"),
+  wish: model("wish"),
   invite: model("invite"),
   $transaction: (operations) => Promise.all(operations),
 };
