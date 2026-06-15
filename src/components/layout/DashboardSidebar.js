@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems as items } from "./navItems";
@@ -7,6 +8,11 @@ import { LogoutButton } from "./LogoutButton";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
+  const [activePath, setActivePath] = useState(pathname);
+
+  useEffect(() => {
+    setActivePath(pathname);
+  }, [pathname]);
 
   return (
     <aside className="no-print hidden min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
@@ -22,11 +28,12 @@ export function DashboardSidebar() {
       <nav className="grid gap-1">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
+          const isActive = activePath === item.href || (item.href !== "/dashboard" && activePath.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setActivePath(item.href)}
               className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
                 isActive 
                   ? "bg-slate-100 text-slate-950" 

@@ -12,11 +12,16 @@ export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const [activePath, setActivePath] = useState(pathname);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setActivePath(pathname);
+  }, [pathname]);
 
   return (
     <div className="lg:hidden">
@@ -55,11 +60,15 @@ export function MobileNav() {
               <div className="grid gap-1 pb-4">
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
+                  const isActive = activePath === item.href || (item.href !== "/dashboard" && activePath.startsWith(`${item.href}/`));
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
+                      onClick={() => {
+                        setActivePath(item.href);
+                        setIsOpen(false);
+                      }}
                       className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${isActive ? "bg-slate-100 text-slate-950" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}
                     >
                       <Icon size={18} />
