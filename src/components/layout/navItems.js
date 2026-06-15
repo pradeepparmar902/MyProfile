@@ -22,6 +22,8 @@ export const navItems = [
   { label: "Profession - Job", href: "/dashboard/profession", icon: Building2 },
   { label: "Profession - Self Business / Training", href: "/dashboard/profession-self", icon: Building2 },
   { label: "Out-of-Box Thinking", href: "/dashboard/outofbox", icon: Lightbulb },
+  { label: "Sports Activity", href: "/dashboard/sports", icon: Award },
+  { label: "Other Activity", href: "/dashboard/activities", icon: Award },
   { label: "Hobbies & Personality", href: "/dashboard/hobbies", icon: Award },
   { label: "My Wish / Career Vision", href: "/dashboard/wishes", icon: Lightbulb },
   { label: "Resume", href: "/dashboard/resume", icon: FileText },

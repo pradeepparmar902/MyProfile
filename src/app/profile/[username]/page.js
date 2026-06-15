@@ -22,6 +22,8 @@ export default async function PublicProfilePage({ params }) {
           outOfBox: { orderBy: { createdAt: "desc" } },
           hobbies: { orderBy: { createdAt: "desc" } },
           wishes: { orderBy: { createdAt: "desc" } },
+          sports: { orderBy: { createdAt: "desc" } },
+          activities: { orderBy: { createdAt: "desc" } },
         },
       },
     },
@@ -37,6 +39,8 @@ export default async function PublicProfilePage({ params }) {
   profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden);
   profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden);
   profile.user.wishes = (profile.user.wishes || []).filter((x) => !x.isHidden);
+  profile.user.sports = (profile.user.sports || []).filter((x) => !x.isHidden);
+  profile.user.activities = (profile.user.activities || []).filter((x) => !x.isHidden);
 
   const initials = profile.user.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
@@ -139,6 +143,36 @@ export default async function PublicProfilePage({ params }) {
                       <h3 className="font-bold">{item.title}</h3>
                       {item.description && <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>}
                       {item.achievements && <p className="mt-2 text-xs font-semibold text-[#06B6D4]">{item.achievements}</p>}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {profile.user.sports && profile.user.sports.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Sports Activity</h2>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {profile.user.sports.map((item) => (
+                    <div key={item.id} className="rounded-lg border border-slate-200 p-4 bg-emerald-50/30">
+                      <h3 className="font-bold text-emerald-900">{item.title}</h3>
+                      {item.description && <p className="mt-2 text-sm leading-6 text-slate-700">{item.description}</p>}
+                      {item.achievements && <p className="mt-2 text-sm font-semibold text-emerald-700">{item.achievements}</p>}
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {profile.user.activities && profile.user.activities.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Other Activity</h2>
+                <div className="mt-4 grid gap-4 md:grid-cols-2">
+                  {profile.user.activities.map((item) => (
+                    <div key={item.id} className="rounded-lg border border-slate-200 p-4 bg-sky-50/30">
+                      <h3 className="font-bold text-sky-900">{item.title}</h3>
+                      {item.description && <p className="mt-2 text-sm leading-6 text-slate-700">{item.description}</p>}
+                      {item.achievements && <p className="mt-2 text-sm font-semibold text-sky-700">{item.achievements}</p>}
                     </div>
                   ))}
                 </div>
