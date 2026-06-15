@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { navItems as items } from "./navItems";
 import { LogoutButton } from "./LogoutButton";
 
 export function DashboardSidebar() {
+  const pathname = usePathname();
+
   return (
     <aside className="no-print hidden min-h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-white px-4 py-5 lg:flex">
       <Link href="/" className="mb-8 flex items-center gap-3 px-2">
@@ -17,11 +22,16 @@ export function DashboardSidebar() {
       <nav className="grid gap-1">
         {items.map((item) => {
           const Icon = item.icon;
+          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                isActive 
+                  ? "bg-slate-100 text-slate-950" 
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              }`}
             >
               <Icon size={18} />
               {item.label}

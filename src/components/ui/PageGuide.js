@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Info, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export function PageGuide({ title, children }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
@@ -17,8 +23,8 @@ export function PageGuide({ title, children }) {
         <Info size={18} />
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      {mounted && isOpen && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
           <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl md:p-8">
             <button
               onClick={() => setIsOpen(false)}
@@ -39,7 +45,8 @@ export function PageGuide({ title, children }) {
               <Button onClick={() => setIsOpen(false)}>Got it!</Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
