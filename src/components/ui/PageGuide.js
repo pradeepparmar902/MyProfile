@@ -24,26 +24,42 @@ export function PageGuide({ title, children }) {
       </button>
 
       {mounted && isOpen && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-          <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl md:p-8">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 grid size-8 place-items-center rounded-full text-slate-500 hover:bg-slate-100"
-            >
-              <X size={20} />
-            </button>
-            <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-full bg-indigo-100 text-indigo-600">
-                <Info size={24} />
-              </span>
-              <h2 className="text-xl font-bold text-slate-900">Guide: {title}</h2>
+        <div className="fixed inset-0 z-[100] flex justify-end">
+          {/* Invisible backdrop that closes the panel when clicking outside, but doesn't blur the screen */}
+          <div className="fixed inset-0 bg-transparent" onClick={() => setIsOpen(false)} />
+          
+          {/* Right side panel sliding in */}
+          <div className="relative h-full w-full max-w-sm flex flex-col bg-white shadow-2xl animate-in slide-in-from-right-full duration-300 ease-out border-l border-slate-200">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5 bg-slate-50/50">
+              <div className="flex items-center gap-3">
+                <span className="grid size-8 place-items-center rounded-full bg-indigo-100 text-indigo-600">
+                  <Info size={18} />
+                </span>
+                <h2 className="text-base font-bold text-slate-900">Guide: {title}</h2>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="grid size-8 place-items-center rounded-lg text-slate-500 hover:bg-slate-200 transition-colors"
+                title="Close panel"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <div className="mt-6 prose prose-slate prose-sm max-w-none text-slate-600 leading-relaxed">
-              {children}
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto px-6 py-6">
+              <div className="prose prose-slate prose-sm max-w-none text-slate-700 leading-relaxed">
+                {children}
+              </div>
             </div>
-            <div className="mt-8 flex justify-end">
-              <Button onClick={() => setIsOpen(false)}>Got it!</Button>
+
+            {/* Footer */}
+            <div className="border-t border-slate-100 p-5 bg-slate-50/50">
+              <Button onClick={() => setIsOpen(false)} className="w-full">Got it!</Button>
             </div>
+            
           </div>
         </div>,
         document.body
