@@ -32,32 +32,41 @@ export default async function PublicProfilePage({ params }) {
   if (!profile || !profile.isPublic) notFound();
   await db.profileView.create({ data: { profileId: profile.id } });
 
+  const globalSettings = await db.setting.findFirst({}) || {
+    theme: "modern", showHobbies: true, showWishes: true, showSports: true, showActivities: true, showOutOfBox: true
+  };
+
   profile.user.education = profile.user.education.filter((x) => !x.isHidden);
   profile.user.achievements = profile.user.achievements.filter((x) => !x.isHidden);
   profile.user.projects = profile.user.projects.filter((x) => !x.isHidden);
   profile.user.skills = profile.user.skills.filter((x) => !x.isHidden);
-  profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden);
-  profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden);
-  profile.user.wishes = (profile.user.wishes || []).filter((x) => !x.isHidden);
-  profile.user.sports = (profile.user.sports || []).filter((x) => !x.isHidden);
-  profile.user.activities = (profile.user.activities || []).filter((x) => !x.isHidden);
+  profile.user.outOfBox = globalSettings.showOutOfBox ? profile.user.outOfBox.filter((x) => !x.isHidden) : [];
+  profile.user.hobbies = globalSettings.showHobbies ? profile.user.hobbies.filter((x) => !x.isHidden) : [];
+  profile.user.wishes = globalSettings.showWishes ? (profile.user.wishes || []).filter((x) => !x.isHidden) : [];
+  profile.user.sports = globalSettings.showSports ? (profile.user.sports || []).filter((x) => !x.isHidden) : [];
+  profile.user.activities = globalSettings.showActivities ? (profile.user.activities || []).filter((x) => !x.isHidden) : [];
 
   const initials = profile.user.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 
+  const isClassic = globalSettings.theme === "classic";
+  const isMinimal = globalSettings.theme === "minimal";
+
   return (
-    <main className="bg-[#F9FAFB] text-slate-950">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
+    <main className={`bg-[#F9FAFB] text-slate-950 min-h-screen ${isClassic ? "font-serif" : "font-sans"}`}>
+      <header className={`mx-auto flex max-w-6xl items-center justify-between px-4 py-5 ${isMinimal ? "border-b border-slate-200" : ""}`}>
         <Link href="/" className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-lg bg-[#4F46E5] text-white"><Sparkles size={20} /></span>
+          <span className={`grid size-10 place-items-center rounded-lg ${isClassic ? "bg-slate-800" : isMinimal ? "bg-slate-100 text-slate-900 border" : "bg-[#4F46E5] text-white"}`}>
+            <Sparkles size={20} className={isMinimal ? "text-slate-600" : ""} />
+          </span>
           <span className="font-bold">Portfolio</span>
         </Link>
-        <Button href="/dashboard/resume" variant="secondary"><Download size={16} /> Resume</Button>
+        <Button href="/dashboard/resume" variant={isMinimal ? "outline" : "secondary"}><Download size={16} /> Resume</Button>
       </header>
       <section className="mx-auto max-w-6xl px-4 pb-16 pt-8">
-        <Card className="p-6 md:p-8">
+        <Card className={`p-6 md:p-8 ${isMinimal ? "shadow-none border-2" : ""}`}>
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
             <div className="flex gap-5">
-              <div className="grid size-20 shrink-0 place-items-center rounded-lg bg-[#4F46E5] text-2xl font-bold text-white">{initials}</div>
+              <div className={`grid size-20 shrink-0 place-items-center rounded-lg text-2xl font-bold ${isClassic ? "bg-slate-800 text-white" : isMinimal ? "bg-slate-100 text-slate-800 border" : "bg-[#4F46E5] text-white"}`}>{initials}</div>
               <div>
                 <h1 className="text-3xl font-bold">{profile.user.name}</h1>
                 <p className="mt-2 max-w-2xl leading-7 text-slate-600">{profile.headline}</p>

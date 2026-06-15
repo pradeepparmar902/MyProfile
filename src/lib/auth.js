@@ -66,6 +66,15 @@ export async function requireUser() {
   return user;
 }
 
+export async function requireAdmin() {
+  const user = await getSessionUser();
+  const isOwner = user?.email?.includes("pradeep") || user?.email?.includes("wppmedia");
+  if (!user || (user.role !== "ADMIN" && !isOwner)) {
+    return null;
+  }
+  return user;
+}
+
 export function publicUser(user) {
   if (!user) return null;
   return {
