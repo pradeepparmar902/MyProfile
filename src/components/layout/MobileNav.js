@@ -5,10 +5,9 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Sparkles } from "lucide-react";
-import { navItems } from "./navItems";
 import { LogoutButton } from "./LogoutButton";
 
-export function MobileNav({ isAdmin = false }) {
+export function MobileNav({ isAdmin = false, navItems = [] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();

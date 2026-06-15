@@ -11,6 +11,13 @@ export function SettingsManager({ initialSettings }) {
   const [isSaving, setIsSaving] = useState(false);
   const [settings, setSettings] = useState({
     theme: initialSettings?.theme || "modern",
+    showEducation: initialSettings?.showEducation ?? true,
+    showAchievements: initialSettings?.showAchievements ?? true,
+    showProjects: initialSettings?.showProjects ?? true,
+    showSkills: initialSettings?.showSkills ?? true,
+    showInternship: initialSettings?.showInternship ?? true,
+    showProfession: initialSettings?.showProfession ?? true,
+    showProfessionSelf: initialSettings?.showProfessionSelf ?? true,
     showHobbies: initialSettings?.showHobbies ?? true,
     showWishes: initialSettings?.showWishes ?? true,
     showSports: initialSettings?.showSports ?? true,
@@ -44,14 +51,14 @@ export function SettingsManager({ initialSettings }) {
   };
 
   const ToggleRow = ({ label, description, settingKey }) => (
-    <div className="flex items-center justify-between py-4 border-b border-slate-100 last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
       <div>
         <p className="font-semibold text-slate-900">{label}</p>
         <p className="text-sm text-slate-500">{description}</p>
       </div>
       <button
         onClick={() => handleToggle(settingKey)}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
           settings[settingKey] ? "bg-indigo-600" : "bg-slate-300"
         }`}
       >
@@ -107,40 +114,33 @@ export function SettingsManager({ initialSettings }) {
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-2">
           <span className="grid size-10 place-items-center rounded-lg bg-indigo-100 text-indigo-600">
-            {settings.showHobbies ? <Eye size={20} /> : <EyeOff size={20} />}
+            {Object.values(settings).some(v => v === false) ? <EyeOff size={20} /> : <Eye size={20} />}
           </span>
           <div>
             <h2 className="text-xl font-bold text-slate-900">Global Content Visibility</h2>
-            <p className="text-sm text-slate-500">Hide or unhide specific profile sections for the entire platform.</p>
+            <p className="text-sm text-slate-500">Hide or unhide specific profile sections and menu buttons for the entire platform.</p>
           </div>
         </div>
 
-        <div className="mt-6">
-          <ToggleRow 
-            label="Hobbies & Personality" 
-            description="Allow students to display their hobbies on their public profile."
-            settingKey="showHobbies" 
-          />
-          <ToggleRow 
-            label="Career Wishes" 
-            description="Allow students to display their future career goals."
-            settingKey="showWishes" 
-          />
-          <ToggleRow 
-            label="Sports Activities" 
-            description="Allow students to display sports achievements."
-            settingKey="showSports" 
-          />
-          <ToggleRow 
-            label="Other Activities" 
-            description="Allow students to display extracurricular clubs and volunteering."
-            settingKey="showActivities" 
-          />
-          <ToggleRow 
-            label="Out of Box Thinking" 
-            description="Allow students to display innovative problem-solving stories."
-            settingKey="showOutOfBox" 
-          />
+        <div className="mt-6 grid md:grid-cols-2 gap-x-8 gap-y-0">
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-900 mb-2 mt-4">Core Sections</h3>
+            <ToggleRow label="Education" description="Academic history" settingKey="showEducation" />
+            <ToggleRow label="Achievements" description="STAR method stories" settingKey="showAchievements" />
+            <ToggleRow label="Projects" description="Side-projects" settingKey="showProjects" />
+            <ToggleRow label="Skills" description="Proof-backed skills" settingKey="showSkills" />
+            <ToggleRow label="Internships" description="Official internships" settingKey="showInternship" />
+            <ToggleRow label="Profession (Job)" description="Employment history" settingKey="showProfession" />
+            <ToggleRow label="Profession (Self)" description="Business/Training" settingKey="showProfessionSelf" />
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-900 mb-2 mt-4">Extra Sections</h3>
+            <ToggleRow label="Hobbies & Personality" description="Personal interests" settingKey="showHobbies" />
+            <ToggleRow label="Career Wishes" description="Future goals" settingKey="showWishes" />
+            <ToggleRow label="Sports Activities" description="Athletic involvement" settingKey="showSports" />
+            <ToggleRow label="Other Activities" description="Clubs & volunteering" settingKey="showActivities" />
+            <ToggleRow label="Out of Box Thinking" description="Creative problem solving" settingKey="showOutOfBox" />
+          </div>
         </div>
       </Card>
 

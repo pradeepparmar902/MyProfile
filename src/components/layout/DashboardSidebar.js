@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { navItems as items } from "./navItems";
 import { LogoutButton } from "./LogoutButton";
 
-export function DashboardSidebar({ isAdmin = false }) {
+export function DashboardSidebar({ isAdmin = false, navItems = [] }) {
   const pathname = usePathname();
   const [activePath, setActivePath] = useState(pathname);
 
@@ -26,7 +25,7 @@ export function DashboardSidebar({ isAdmin = false }) {
         </span>
       </Link>
       <nav className="grid gap-1">
-        {items.map((item) => {
+        {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activePath === item.href || (item.href !== "/dashboard" && activePath.startsWith(`${item.href}/`));
           return (

@@ -33,13 +33,18 @@ export default async function PublicProfilePage({ params }) {
   await db.profileView.create({ data: { profileId: profile.id } });
 
   const globalSettings = await db.setting.findFirst({}) || {
-    theme: "modern", showHobbies: true, showWishes: true, showSports: true, showActivities: true, showOutOfBox: true
+    theme: "modern", showHobbies: true, showWishes: true, showSports: true, showActivities: true, showOutOfBox: true,
+    showEducation: true, showAchievements: true, showProjects: true, showSkills: true, showInternship: true, showProfession: true, showProfessionSelf: true
   };
 
-  profile.user.education = profile.user.education.filter((x) => !x.isHidden);
-  profile.user.achievements = profile.user.achievements.filter((x) => !x.isHidden);
-  profile.user.projects = profile.user.projects.filter((x) => !x.isHidden);
-  profile.user.skills = profile.user.skills.filter((x) => !x.isHidden);
+  profile.user.education = globalSettings.showEducation ? profile.user.education.filter((x) => !x.isHidden) : [];
+  profile.user.achievements = globalSettings.showAchievements ? profile.user.achievements.filter((x) => !x.isHidden) : [];
+  profile.user.projects = globalSettings.showProjects ? profile.user.projects.filter((x) => !x.isHidden) : [];
+  profile.user.skills = globalSettings.showSkills ? profile.user.skills.filter((x) => !x.isHidden) : [];
+  profile.user.internships = globalSettings.showInternship ? (profile.user.internships || []).filter((x) => !x.isHidden) : [];
+  profile.user.professions = globalSettings.showProfession ? (profile.user.professions || []).filter((x) => !x.isHidden) : [];
+  profile.user.professionsSelf = globalSettings.showProfessionSelf ? (profile.user.professionsSelf || []).filter((x) => !x.isHidden) : [];
+  
   profile.user.outOfBox = globalSettings.showOutOfBox ? profile.user.outOfBox.filter((x) => !x.isHidden) : [];
   profile.user.hobbies = globalSettings.showHobbies ? profile.user.hobbies.filter((x) => !x.isHidden) : [];
   profile.user.wishes = globalSettings.showWishes ? (profile.user.wishes || []).filter((x) => !x.isHidden) : [];
@@ -88,43 +93,51 @@ export default async function PublicProfilePage({ params }) {
               <p className="mt-3 leading-7 text-slate-600">{profile.bio || "This student is building their career story."}</p>
               {profile.careerGoal ? <p className="mt-3 leading-7 text-slate-600"><span className="font-semibold text-slate-900">Career goal:</span> {profile.careerGoal}</p> : null}
             </Card>
-            <Card className="p-6">
-              <h2 className="text-xl font-bold">Education</h2>
-              <div className="mt-4 grid gap-4">
-                {profile.user.education.map((item) => (
-                  <div key={item.id} className="border-l-2 border-[#4F46E5] pl-4">
-                    <p className="font-bold">{item.institutionName}</p>
-                    <p className="text-sm text-slate-600">{item.degree} · {item.startYear || ""} - {item.endYear || ""}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-            <section>
-              <h2 className="mb-4 text-xl font-bold">Achievement Stories</h2>
-              <div className="grid gap-4">
-                {profile.user.achievements.map((achievement) => (
-                  <Card key={achievement.id} className="p-5">
-                    <Badge>{achievement.category}</Badge>
-                    <h3 className="mt-4 text-lg font-bold">{achievement.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-600">{achievement.problemStatement}</p>
-                    <p className="mt-3 text-sm font-semibold text-slate-900">{achievement.result}</p>
-                  </Card>
-                ))}
-              </div>
-            </section>
-            <Card className="p-6">
-              <h2 className="text-xl font-bold">Projects</h2>
-              <div className="mt-4 grid gap-4">
-                {profile.user.projects.map((project) => (
-                  <div key={project.id} className="rounded-lg border border-slate-200 p-4">
-                    <h3 className="font-bold">{project.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{project.description}</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-900">{project.outcome}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            {profile.user.education && profile.user.education.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Education</h2>
+                <div className="mt-4 grid gap-4">
+                  {profile.user.education.map((item) => (
+                    <div key={item.id} className="border-l-2 border-[#4F46E5] pl-4">
+                      <p className="font-bold">{item.institutionName}</p>
+                      <p className="text-sm text-slate-600">{item.degree} · {item.startYear || ""} - {item.endYear || ""}</p>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {profile.user.achievements && profile.user.achievements.length > 0 && (
+              <section>
+                <h2 className="mb-4 text-xl font-bold">Achievement Stories</h2>
+                <div className="grid gap-4">
+                  {profile.user.achievements.map((achievement) => (
+                    <Card key={achievement.id} className="p-5">
+                      <Badge>{achievement.category}</Badge>
+                      <h3 className="mt-4 text-lg font-bold">{achievement.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-slate-600">{achievement.problemStatement}</p>
+                      <p className="mt-3 text-sm font-semibold text-slate-900">{achievement.result}</p>
+                    </Card>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {profile.user.projects && profile.user.projects.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Projects</h2>
+                <div className="mt-4 grid gap-4">
+                  {profile.user.projects.map((project) => (
+                    <div key={project.id} className="rounded-lg border border-slate-200 p-4">
+                      <h3 className="font-bold">{project.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-600">{project.description}</p>
+                      <p className="mt-2 text-sm font-semibold text-slate-900">{project.outcome}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
 
             {profile.user.outOfBox && profile.user.outOfBox.length > 0 && (
               <Card className="p-6">
@@ -205,17 +218,19 @@ export default async function PublicProfilePage({ params }) {
             )}
           </div>
           <aside className="grid h-fit gap-6">
-            <Card className="p-6">
-              <h2 className="text-xl font-bold">Skills With Proof</h2>
-              <div className="mt-4 grid gap-3">
-                {profile.user.skills.map((skill) => (
-                  <div key={skill.id} className="rounded-lg bg-slate-50 p-3">
-                    <p className="font-semibold">{skill.skillName}</p>
-                    <p className="text-sm text-slate-600">{skill.proficiencyLevel} {skill.proofLink ? `· ${skill.proofLink}` : ""}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            {profile.user.skills && profile.user.skills.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-xl font-bold">Skills With Proof</h2>
+                <div className="mt-4 grid gap-3">
+                  {profile.user.skills.map((skill) => (
+                    <div key={skill.id} className="rounded-lg bg-slate-50 p-3">
+                      <p className="font-semibold">{skill.skillName}</p>
+                      <p className="text-sm text-slate-600">{skill.proficiencyLevel} {skill.proofLink ? `· ${skill.proofLink}` : ""}</p>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
           </aside>
         </div>
       </section>
