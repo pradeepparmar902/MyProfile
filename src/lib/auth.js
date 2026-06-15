@@ -68,7 +68,7 @@ export async function requireUser() {
 
 export async function requireAdmin() {
   const user = await getSessionUser();
-  const isOwner = user?.email?.includes("pradeep") || user?.email?.includes("wppmedia");
+  const isOwner = user?.email === "pradeepparmar902@gmail.com";
   if (!user || (user.role !== "ADMIN" && !isOwner)) {
     return null;
   }
