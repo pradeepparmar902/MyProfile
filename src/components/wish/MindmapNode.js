@@ -138,7 +138,7 @@ export default function MindmapNode({ id, data, selected }) {
 
         {/* Bottom Left Start Date */}
         <div 
-          className={`absolute -bottom-2.5 left-2 cursor-pointer z-30 transition-opacity duration-200 ${data.startDate ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          className="absolute -bottom-2.5 left-2 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
           title="Start Date"
         >
@@ -149,7 +149,7 @@ export default function MindmapNode({ id, data, selected }) {
 
         {/* Bottom Right Target Date */}
         <div 
-          className={`absolute -bottom-2.5 right-2 cursor-pointer z-30 transition-opacity duration-200 ${data.endDate ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          className="absolute -bottom-2.5 right-2 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
           title="Target Date"
         >
