@@ -8,23 +8,64 @@ import { useRouter } from "next/navigation";
 export function WishManager({ initialItems }) {
   const router = useRouter();
   const [wishes, setWishes] = useState(initialItems || []);
-  const [activeWishId, setActiveWishId] = useState(
-    initialItems?.length > 0 ? initialItems[0].id : 'new'
-  );
+  const [activeWishId, setActiveWishId] = useState(initialItems && initialItems.length > 0 ? initialItems[0].id : 'new');
+  const [draggedWishId, setDraggedWishId] = useState(null);
 
-  // Update wishes when initialItems changes (e.g. after router.refresh)
   useEffect(() => {
     if (initialItems) {
-      setWishes(initialItems);
+      let orderedItems = [...initialItems];
+      const savedOrder = localStorage.getItem('wishTabsOrder');
+      if (savedOrder) {
+        try {
+          const orderMap = JSON.parse(savedOrder);
+          orderedItems.sort((a, b) => {
+            const idxA = orderMap.indexOf(a.id);
+            const idxB = orderMap.indexOf(b.id);
+            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+            if (idxA !== -1) return -1;
+            if (idxB !== -1) return 1;
+            return 0;
+          });
+        } catch (e) {}
+      }
+      setWishes(orderedItems);
       // If active wish was a temporary one, switch to the newly saved real one.
-      // This happens because the DB returns a new ID. We can just pick the first item if active is missing.
-      if (!initialItems.find(w => w.id === activeWishId)) {
-        setActiveWishId(initialItems.length > 0 ? initialItems[0].id : 'new');
+      if (!orderedItems.find(w => w.id === activeWishId)) {
+        setActiveWishId(orderedItems.length > 0 ? orderedItems[0].id : 'new');
       }
     }
   }, [initialItems]);
 
   const activeWish = wishes.find(w => w.id === activeWishId) || { id: 'new', title: 'Untitled Roadmap' };
+
+  const handleDragStart = (e, id) => {
+    setDraggedWishId(id);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', id); // Firefox compatibility
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, targetId) => {
+    e.preventDefault();
+    if (!draggedWishId || draggedWishId === targetId) return;
+
+    const draggedIdx = wishes.findIndex(w => w.id === draggedWishId);
+    const targetIdx = wishes.findIndex(w => w.id === targetId);
+
+    if (draggedIdx === -1 || targetIdx === -1) return;
+
+    const newWishes = [...wishes];
+    const [draggedItem] = newWishes.splice(draggedIdx, 1);
+    newWishes.splice(targetIdx, 0, draggedItem);
+
+    setWishes(newWishes);
+    setDraggedWishId(null);
+    localStorage.setItem('wishTabsOrder', JSON.stringify(newWishes.map(w => w.id)));
+  };
 
   const handleAddNew = () => {
     const tempId = `new-${Date.now()}`;
@@ -67,12 +108,17 @@ export function WishManager({ initialItems }) {
           {wishes.map((wish) => (
             <button
               key={wish.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, wish.id)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, wish.id)}
+              onDragEnd={() => setDraggedWishId(null)}
               onClick={() => setActiveWishId(wish.id)}
-              className={`px-5 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-grab active:cursor-grabbing ${
                 activeWishId === wish.id
                   ? 'bg-slate-900 text-white shadow-md'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              } ${draggedWishId === wish.id ? 'opacity-50 border-2 border-dashed border-slate-300' : 'opacity-100 border border-transparent'}`}
             >
               {wish.title || 'Untitled Roadmap'}
             </button>
