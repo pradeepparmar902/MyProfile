@@ -189,23 +189,27 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
   }, [getNodes, getEdges, setNodes, setEdges]);
 
-  // Update node data dynamically (for callbacks) now that they are defined
+  // Update node data dynamically for newly created nodes
+  const nodeCount = nodes.length;
   useEffect(() => {
     setNodes((nds) =>
-      nds.map((n) => ({
-        ...n,
-        data: {
-          ...n.data,
-          onLabelChange,
-          onColorChange,
-          onDelete: deleteNode,
-          onAddChildRight: addChildNodeRight,
-          onAddChildBottom: addChildNodeBottom,
-          onMoreInfo,
-        },
-      }))
+      nds.map((n) => {
+        if (n.data.onColorChange) return n; // Already injected
+        return {
+          ...n,
+          data: {
+            ...n.data,
+            onLabelChange,
+            onColorChange,
+            onDelete: deleteNode,
+            onAddChildRight: addChildNodeRight,
+            onAddChildBottom: addChildNodeBottom,
+            onMoreInfo,
+          },
+        };
+      })
     );
-  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNodeRight, addChildNodeBottom, onMoreInfo]);
+  }, [nodeCount, setNodes, onLabelChange, onColorChange, deleteNode, addChildNodeRight, addChildNodeBottom, onMoreInfo]);
 
   // Handle Keyboard Shortcuts
   const onKeyDown = useCallback((event) => {
