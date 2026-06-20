@@ -33,9 +33,11 @@ export function WishManager({ initialItems }) {
     setActiveWishId(tempId);
   };
 
-  const handleWishSaved = (mindmapData, isNew) => {
+  const handleWishSaved = (mindmapData, isNew, newTitle) => {
     if (isNew) {
       router.refresh();
+    } else if (newTitle) {
+      setWishes(prev => prev.map(w => w.id === activeWishId ? { ...w, title: newTitle } : w));
     }
   };
 

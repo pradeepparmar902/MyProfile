@@ -305,7 +305,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     }
     
     setIsSaving(false);
-    if (onSave) onSave(mindmapData, wish.id.startsWith('new'));
+    if (onSave) onSave(mindmapData, wish.id.startsWith('new'), titleValue);
   };
 
   // Autosave Effect

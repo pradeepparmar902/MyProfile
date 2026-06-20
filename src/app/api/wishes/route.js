@@ -27,6 +27,7 @@ export async function POST(request) {
       thoughts: body.thoughts || "",
       achievedSteps: body.achievedSteps || "",
       futureSteps: body.futureSteps || "",
+      mindmapData: body.mindmapData || "",
       isHidden: false,
     },
   });
