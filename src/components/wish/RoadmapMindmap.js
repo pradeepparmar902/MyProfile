@@ -49,22 +49,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   
   const [edges, , onEdgesChange] = useEdgesState(initialData?.edges || []);
 
-  // Update node data dynamically (for callbacks)
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((n) => ({
-        ...n,
-        data: {
-          ...n.data,
-          onLabelChange,
-          onColorChange,
-          onDelete: deleteNode,
-          onAddChild: addChildNode,
-          onAddSibling: addSiblingNode,
-        },
-      }))
-    );
-  }, []);
+  // Callbacks are defined below
 
   const onLabelChange = useCallback((id, newLabel) => {
     setNodes((nds) =>
@@ -147,6 +132,23 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       addChildNode(parentEdge.source);
     }
   }, [getNodes, getEdges, addChildNode]);
+
+  // Update node data dynamically (for callbacks) now that they are defined
+  useEffect(() => {
+    setNodes((nds) =>
+      nds.map((n) => ({
+        ...n,
+        data: {
+          ...n.data,
+          onLabelChange,
+          onColorChange,
+          onDelete: deleteNode,
+          onAddChild: addChildNode,
+          onAddSibling: addSiblingNode,
+        },
+      }))
+    );
+  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNode, addSiblingNode]);
 
   // Handle Keyboard Shortcuts
   const onKeyDown = useCallback((event) => {
