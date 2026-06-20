@@ -49,6 +49,7 @@ export function getNavItems(settings = {}) {
     { icon: Heart, label: "Hobbies", href: "/dashboard/hobbies", show: showHobbies },
     { icon: Sparkles, label: "My Roadmap", href: "/dashboard/wishes", show: showWishes },
     { icon: FileText, label: "Resume", href: "/dashboard/resume" },
+    { icon: BookOpen, label: "User Manual", href: "/dashboard/manual" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
   ];
 

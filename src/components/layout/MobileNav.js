@@ -43,9 +43,9 @@ export function MobileNav({ isAdmin = false, settings = {} }) {
             <div className="mb-8 flex items-center justify-between px-2">
               <Link href="/" className="flex items-center gap-3 px-2 group">
                 <span className="grid size-9 place-items-center rounded-xl bg-white shadow-md overflow-hidden transition-transform group-hover:scale-105">
-                  <img src="/logo.png" alt="Proofolio Logo" className="h-full w-full object-cover" />
+                  <img src="/logo.png" alt="Portfolio Logo" className="h-full w-full object-cover" />
                 </span>
-                <span className="text-xl font-bold tracking-tight text-slate-900">Proofolio</span>
+                <span className="text-xl font-bold tracking-tight text-slate-900">Portfolio</span>
               </Link>
               <button 
                 onClick={() => setIsOpen(false)}

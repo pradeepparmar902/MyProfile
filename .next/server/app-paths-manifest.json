@@ -57,6 +57,7 @@
   "/dashboard/education/page": "app/dashboard/education/page.js",
   "/dashboard/hobbies/page": "app/dashboard/hobbies/page.js",
   "/dashboard/internship/page": "app/dashboard/internship/page.js",
+  "/dashboard/manual/page": "app/dashboard/manual/page.js",
   "/dashboard/outofbox/page": "app/dashboard/outofbox/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/dashboard/profession-self/page": "app/dashboard/profession-self/page.js",

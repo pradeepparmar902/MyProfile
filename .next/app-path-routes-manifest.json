@@ -57,6 +57,7 @@
   "/dashboard/education/page": "/dashboard/education",
   "/dashboard/hobbies/page": "/dashboard/hobbies",
   "/dashboard/internship/page": "/dashboard/internship",
+  "/dashboard/manual/page": "/dashboard/manual",
   "/dashboard/outofbox/page": "/dashboard/outofbox",
   "/dashboard/page": "/dashboard",
   "/dashboard/profession-self/page": "/dashboard/profession-self",
