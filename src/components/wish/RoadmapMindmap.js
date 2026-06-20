@@ -82,6 +82,8 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   }, [setNodes, setEdges, activeNodeId]);
 
   const onConnect = useCallback((params) => {
+    if (params.source === params.target) return; // Prevent self-connections
+    
     // Determine color based on source node
     const sourceNode = getNodes().find(n => n.id === params.source);
     const color = sourceNode?.data?.color || '#3b82f6';
@@ -104,6 +106,8 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   }, [setEdges, getNodes]);
 
   const onReconnect = useCallback((oldEdge, newConnection) => {
+    if (newConnection.source === newConnection.target) return; // Prevent self-connections
+    
     setEdges((els) => {
       // If reconnecting to a new target, remove any existing connection to that target
       const filtered = els.filter(e => e.id !== oldEdge.id && e.target !== newConnection.target);
@@ -213,15 +217,17 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
   }, [getNodes, getEdges, setNodes, setEdges]);
 
-  // Retroactively fix existing edges to be custom and reconnectable
+  // Retroactively fix existing edges and remove self-connections
   useEffect(() => {
     setEdges((eds) => 
-      eds.map(e => {
-        if (e.type !== 'custom' || e.reconnectable !== true) {
-          return { ...e, type: 'custom', reconnectable: true };
-        }
-        return e;
-      })
+      eds
+        .filter(e => e.source !== e.target) // Drop self-connections
+        .map(e => {
+          if (e.type !== 'custom' || e.reconnectable !== true) {
+            return { ...e, type: 'custom', reconnectable: true };
+          }
+          return e;
+        })
     );
   }, [setEdges]);
 
