@@ -40,6 +40,7 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
   const [isSaving, setIsSaving] = useState(false);
   const [activeNodeId, setActiveNodeId] = useState(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [titleValue, setTitleValue] = useState(wish.title || 'Untitled Roadmap');
   const reactFlowWrapper = useRef(null);
 
@@ -349,7 +350,7 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
           </div>
           {onDelete && (
             <button
-              onClick={onDelete}
+              onClick={() => setIsConfirmingDelete(true)}
               className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
               title="Delete Roadmap"
             >
@@ -453,6 +454,35 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isConfirmingDelete && (
+        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm rounded-2xl">
+          <div className="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-white mb-2">Delete Roadmap?</h3>
+            <p className="text-slate-300 mb-6">
+              Are you sure you want to permanently delete the <strong className="text-white">"{titleValue}"</strong> roadmap? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setIsConfirmingDelete(false)}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  setIsConfirmingDelete(false);
+                  onDelete();
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-500 transition-colors shadow-lg shadow-red-900/20"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

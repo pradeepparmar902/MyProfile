@@ -42,8 +42,6 @@ export function WishManager({ initialItems }) {
   };
 
   const handleDeleteWish = async () => {
-    if (!confirm("Are you sure you want to delete this roadmap? This cannot be undone.")) return;
-    
     if (!activeWishId.startsWith('new')) {
       await fetch(`/api/wishes/${activeWishId}`, { method: 'DELETE' });
     }
