@@ -104,7 +104,7 @@ export default function MindmapNode({ id, data, selected }) {
       <div 
         className={`px-5 py-3 rounded-xl shadow-md min-w-[120px] max-w-[250px] transition-colors border-2`}
         style={{ 
-          backgroundColor: isRoot ? currentColor : '#1e293b', 
+          backgroundColor: currentColor, 
           borderColor: currentColor,
           boxShadow: selected ? `0 0 0 4px ${currentColor}40` : '0 4px 6px -1px rgb(0 0 0 / 0.1)',
         }}
