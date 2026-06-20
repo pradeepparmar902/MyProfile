@@ -102,7 +102,7 @@ export function WishManager({ initialItems }) {
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 mb-8">
+    <div className="w-full max-w-full overflow-hidden flex flex-col gap-4 mb-8">
       <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-1">
         <div className="flex gap-2 items-center overflow-x-auto whitespace-nowrap pb-1">
           {wishes.map((wish) => (

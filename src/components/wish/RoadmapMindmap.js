@@ -390,11 +390,12 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
             connectionMode={ConnectionMode.Loose}
-            translateExtent={[[-5000, -100], [5000, 10000]]}
+            translateExtent={[[-800, -500], [2000, 2000]]}
             fitView
             fitViewOptions={{ padding: 0.2 }}
             minZoom={0.2}
-            panOnScroll={true}
+            maxZoom={1.5}
+            panOnScroll={false}
             className="bg-[#0f172a]" // Deep dark slate background
             defaultEdgeOptions={{ type: 'custom', animated: true }}
           >
