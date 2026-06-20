@@ -1,6 +1,6 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/dashboard/sports/page.js")
 R.c("server/chunks/ssr/[root-of-the-server]__06__s5q._.js")
-R.c("server/chunks/ssr/_0u-o6av._.js")
+R.c("server/chunks/ssr/_04e6dmc._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_esm_build_templates_app-page_0.x7sc7.js")
 R.c("server/chunks/ssr/node_modules_next_dist_06u0kr8._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__0tnao7a._.js")

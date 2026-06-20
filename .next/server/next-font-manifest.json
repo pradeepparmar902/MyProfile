@@ -8,6 +8,10 @@
       "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
       "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
     ],
+    "[project]/src/app/admin/plans/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
+    ],
     "[project]/src/app/admin/settings/page": [
       "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
       "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
@@ -33,6 +37,10 @@
       "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
     ],
     "[project]/src/app/dashboard/activities/page": [
+      "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
+      "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
+    ],
+    "[project]/src/app/dashboard/billing/page": [
       "static/media/caa3a2e1cccd8315-s.p.09~u27dqhyhd6.woff2",
       "static/media/797e433ab948586e-s.p.08e28id.o-okb.woff2"
     ],

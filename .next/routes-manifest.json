@@ -39,6 +39,22 @@
       "namedRegex": "^/api/activities/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/admin/plans/[id]",
+      "regex": "^/api/admin/plans/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/plans/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/admin/users/[id]/plan",
+      "regex": "^/api/admin/users/([^/]+?)/plan(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/admin/users/(?<nxtPid>[^/]+?)/plan(?:/)?$"
+    },
+    {
       "page": "/api/education/[id]",
       "regex": "^/api/education/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -218,6 +234,12 @@
       "namedRegex": "^/admin(?:/)?$"
     },
     {
+      "page": "/admin/plans",
+      "regex": "^/admin/plans(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/admin/plans(?:/)?$"
+    },
+    {
       "page": "/admin/settings",
       "regex": "^/admin/settings(?:/)?$",
       "routeKeys": {},
@@ -240,6 +262,12 @@
       "regex": "^/api/activities(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/activities(?:/)?$"
+    },
+    {
+      "page": "/api/admin/plans",
+      "regex": "^/api/admin/plans(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/admin/plans(?:/)?$"
     },
     {
       "page": "/api/admin/settings",
@@ -426,6 +454,12 @@
       "regex": "^/dashboard/activities(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/dashboard/activities(?:/)?$"
+    },
+    {
+      "page": "/dashboard/billing",
+      "regex": "^/dashboard/billing(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/billing(?:/)?$"
     },
     {
       "page": "/dashboard/education",

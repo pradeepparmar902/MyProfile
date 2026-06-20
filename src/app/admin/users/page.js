@@ -8,12 +8,14 @@ import { UserPlanSelector } from "@/components/admin/UserPlanSelector";
 export default async function AdminUsersPage() {
   await requireAdmin();
 
-  const users = await db.user.findMany({ orderBy: { createdAt: "desc" } });
-  const profiles = await db.profile.findMany({});
-  const achievements = await db.achievement.findMany({});
-  const projects = await db.project.findMany({});
-  const outOfBox = await db.outOfBox.findMany({});
-  const plans = await db.plan.findMany({});
+  const [users, profiles, achievements, projects, outOfBox, plans] = await Promise.all([
+    db.user.findMany({ orderBy: { createdAt: "desc" } }),
+    db.profile.findMany({}),
+    db.achievement.findMany({}),
+    db.project.findMany({}),
+    db.outOfBox.findMany({}),
+    db.plan.findMany({})
+  ]);
 
   const userStats = users.map((user) => {
     const profile = profiles.find((p) => p.userId === user.id);
