@@ -22,7 +22,7 @@ export default async function PublicProfilePage({ params }) {
           skills: { orderBy: { createdAt: "desc" } },
           outOfBox: { orderBy: { createdAt: "desc" } },
           hobbies: { orderBy: { createdAt: "desc" } },
-          wishes: { orderBy: { createdAt: "desc" } },
+          roadmaps: { orderBy: { createdAt: "desc" } },
           sports: { orderBy: { createdAt: "desc" } },
           activities: { orderBy: { createdAt: "desc" } },
         },
@@ -34,7 +34,7 @@ export default async function PublicProfilePage({ params }) {
   await db.profileView.create({ data: { profileId: profile.id } });
 
   const globalSettings = await db.setting.findFirst({}) || {
-    theme: "modern", showHobbies: true, showWishes: true, showSports: true, showActivities: true, showOutOfBox: true,
+    theme: "modern", showHobbies: true, showRoadmaps: true, showSports: true, showActivities: true, showOutOfBox: true,
     showEducation: true, showAchievements: true, showProjects: true, showSkills: true, showInternship: true, showProfession: true, showProfessionSelf: true
   };
 
@@ -57,7 +57,7 @@ export default async function PublicProfilePage({ params }) {
   
   profile.user.outOfBox = globalSettings.showOutOfBox ? profile.user.outOfBox.filter((x) => !x.isHidden) : [];
   profile.user.hobbies = globalSettings.showHobbies ? profile.user.hobbies.filter((x) => !x.isHidden) : [];
-  profile.user.wishes = globalSettings.showWishes ? (profile.user.wishes || []).filter((x) => !x.isHidden) : [];
+  profile.user.roadmaps = globalSettings.showRoadmaps ? (profile.user.roadmaps || []).filter((x) => !x.isHidden) : [];
   profile.user.sports = globalSettings.showSports ? (profile.user.sports || []).filter((x) => !x.isHidden) : [];
   profile.user.activities = globalSettings.showActivities ? (profile.user.activities || []).filter((x) => !x.isHidden) : [];
 
@@ -235,13 +235,13 @@ export default async function PublicProfilePage({ params }) {
               </Card>
             )}
 
-            {profile.user.wishes && profile.user.wishes.length > 0 && (
+            {profile.user.roadmaps && profile.user.roadmaps.length > 0 && (
               <div className="mt-8 mb-4">
                 <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
                   <Sparkles className="text-amber-500" size={28} /> Career Vision & Goals
                 </h2>
                 <div className="space-y-6">
-                  {profile.user.wishes.map((item) => (
+                  {profile.user.roadmaps.map((item) => (
                     <div key={item.id} className="flex flex-col md:flex-row gap-4 md:items-stretch">
                       {/* Left Side: GOAL (Orange) */}
                       <div className="flex-1 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden group">
@@ -250,7 +250,7 @@ export default async function PublicProfilePage({ params }) {
                         </div>
                         <div className="relative z-10">
                           <div className="flex items-center gap-2 mb-3 text-orange-100 text-xs font-bold uppercase tracking-widest">
-                            <Target size={14} /> Goal / Wish List
+                            <Target size={14} /> Goal / Roadmap List
                           </div>
                           <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
                           {item.futureSteps && (

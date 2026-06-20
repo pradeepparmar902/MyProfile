@@ -28,7 +28,7 @@ export function getNavItems(settings = {}) {
   const showProfession = settings.showProfession ?? true;
   const showProfessionSelf = settings.showProfessionSelf ?? true;
   const showHobbies = settings.showHobbies ?? true;
-  const showWishes = settings.showWishes ?? true;
+  const showRoadmaps = settings.showRoadmaps ?? true;
   const showSports = settings.showSports ?? true;
   const showActivities = settings.showActivities ?? true;
   const showOutOfBox = settings.showOutOfBox ?? true;
@@ -47,7 +47,7 @@ export function getNavItems(settings = {}) {
     { icon: Target, label: "Sports Activity", href: "/dashboard/sports", show: showSports },
     { icon: Users, label: "Other Activity", href: "/dashboard/activities", show: showActivities },
     { icon: Heart, label: "Hobbies", href: "/dashboard/hobbies", show: showHobbies },
-    { icon: Sparkles, label: "My Roadmap", href: "/dashboard/wishes", show: showWishes },
+    { icon: Sparkles, label: "My Roadmap", href: "/dashboard/roadmaps", show: showRoadmaps },
     { icon: FileText, label: "Resume", href: "/dashboard/resume" },
     { icon: BookOpen, label: "User Manual", href: "/dashboard/manual" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },

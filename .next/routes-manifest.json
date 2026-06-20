@@ -127,6 +127,14 @@
       "namedRegex": "^/api/resumes/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
+      "page": "/api/roadmaps/[id]",
+      "regex": "^/api/roadmaps/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/roadmaps/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/api/skills/[id]",
       "regex": "^/api/skills/([^/]+?)(?:/)?$",
       "routeKeys": {
@@ -141,14 +149,6 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/sports/(?<nxtPid>[^/]+?)(?:/)?$"
-    },
-    {
-      "page": "/api/wishes/[id]",
-      "regex": "^/api/wishes/([^/]+?)(?:/)?$",
-      "routeKeys": {
-        "nxtPid": "nxtPid"
-      },
-      "namedRegex": "^/api/wishes/(?<nxtPid>[^/]+?)(?:/)?$"
     },
     {
       "page": "/dashboard/achievements/[id]",
@@ -386,6 +386,12 @@
       "namedRegex": "^/api/resumes(?:/)?$"
     },
     {
+      "page": "/api/roadmaps",
+      "regex": "^/api/roadmaps(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/roadmaps(?:/)?$"
+    },
+    {
       "page": "/api/skills",
       "regex": "^/api/skills(?:/)?$",
       "routeKeys": {},
@@ -396,12 +402,6 @@
       "regex": "^/api/sports(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/sports(?:/)?$"
-    },
-    {
-      "page": "/api/wishes",
-      "regex": "^/api/wishes(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/api/wishes(?:/)?$"
     },
     {
       "page": "/dashboard",
@@ -488,6 +488,12 @@
       "namedRegex": "^/dashboard/resume(?:/)?$"
     },
     {
+      "page": "/dashboard/roadmaps",
+      "regex": "^/dashboard/roadmaps(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/roadmaps(?:/)?$"
+    },
+    {
       "page": "/dashboard/settings",
       "regex": "^/dashboard/settings(?:/)?$",
       "routeKeys": {},
@@ -504,12 +510,6 @@
       "regex": "^/dashboard/sports(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/dashboard/sports(?:/)?$"
-    },
-    {
-      "page": "/dashboard/wishes",
-      "regex": "^/dashboard/wishes(?:/)?$",
-      "routeKeys": {},
-      "namedRegex": "^/dashboard/wishes(?:/)?$"
     },
     {
       "page": "/icon.png",

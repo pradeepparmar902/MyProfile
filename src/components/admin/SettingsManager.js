@@ -19,7 +19,7 @@ export function SettingsManager({ initialSettings }) {
     showProfession: initialSettings?.showProfession ?? true,
     showProfessionSelf: initialSettings?.showProfessionSelf ?? true,
     showHobbies: initialSettings?.showHobbies ?? true,
-    showWishes: initialSettings?.showWishes ?? true,
+    showRoadmaps: initialSettings?.showRoadmaps ?? true,
     showSports: initialSettings?.showSports ?? true,
     showActivities: initialSettings?.showActivities ?? true,
     showOutOfBox: initialSettings?.showOutOfBox ?? true,
@@ -136,7 +136,7 @@ export function SettingsManager({ initialSettings }) {
           <div className="space-y-1">
             <h3 className="font-bold text-slate-900 mb-2 mt-4">Extra Sections</h3>
             <ToggleRow label="Hobbies & Personality" description="Personal interests" settingKey="showHobbies" />
-            <ToggleRow label="Career Wishes" description="Future goals" settingKey="showWishes" />
+            <ToggleRow label="Career Roadmaps" description="Future goals" settingKey="showRoadmaps" />
             <ToggleRow label="Sports Activities" description="Athletic involvement" settingKey="showSports" />
             <ToggleRow label="Other Activities" description="Clubs & volunteering" settingKey="showActivities" />
             <ToggleRow label="Out of Box Thinking" description="Creative problem solving" settingKey="showOutOfBox" />

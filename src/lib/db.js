@@ -12,7 +12,7 @@ const collections = {
   media: "media",
   outOfBox: "outOfBox",
   hobby: "hobbies",
-  wish: "wishes",
+  roadmap: "roadmaps",
   sport: "sports",
   activity: "activities",
   invite: "invites",
@@ -263,7 +263,7 @@ async function hydrate(name, record, include) {
     if (selected.professionsSelf) hydratedUser.professionsSelf = await findMany("professionSelf", { where: { userId: user.id }, orderBy: selected.professionsSelf.orderBy });
     if (selected.outOfBox) hydratedUser.outOfBox = await findMany("outOfBox", { where: { userId: user.id }, orderBy: selected.outOfBox.orderBy });
     if (selected.hobbies) hydratedUser.hobbies = await findMany("hobby", { where: { userId: user.id }, orderBy: selected.hobbies.orderBy });
-    if (selected.wishes) hydratedUser.wishes = await findMany("wish", { where: { userId: user.id }, orderBy: selected.wishes.orderBy });
+    if (selected.roadmaps) hydratedUser.roadmaps = await findMany("roadmap", { where: { userId: user.id }, orderBy: selected.roadmaps.orderBy });
     if (selected.sports) hydratedUser.sports = await findMany("sport", { where: { userId: user.id }, orderBy: selected.sports.orderBy });
     if (selected.activities) hydratedUser.activities = await findMany("activity", { where: { userId: user.id }, orderBy: selected.activities.orderBy });
     return { ...record, user: hydratedUser };
@@ -299,7 +299,7 @@ export const db = {
   media: model("media"),
   outOfBox: model("outOfBox"),
   hobby: model("hobby"),
-  wish: model("wish"),
+  roadmap: model("roadmap"),
   sport: model("sport"),
   activity: model("activity"),
   invite: model("invite"),
