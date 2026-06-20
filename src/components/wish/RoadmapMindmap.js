@@ -82,7 +82,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     
     setEdges((eds) => addEdge({ 
       ...params, 
-      type: 'bezier', 
+      type: 'smoothstep', 
       animated: true, 
       style: { stroke: color, strokeWidth: 3 } 
     }, eds));
@@ -138,7 +138,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       id: `e-${sourceId}-${newNodeId}`,
       source: sourceId,
       target: newNodeId,
-      type: 'bezier',
+      type: 'smoothstep',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
     };
@@ -277,7 +277,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
             minZoom={0.2}
             panOnScroll={true}
             className="bg-[#0f172a]" // Deep dark slate background
-            defaultEdgeOptions={{ type: 'bezier', animated: true }}
+            defaultEdgeOptions={{ type: 'smoothstep', animated: true }}
           >
             <Background color="#334155" gap={24} size={2} />
             <Controls className="bg-slate-800 text-slate-300 border-slate-700 fill-slate-300" />
