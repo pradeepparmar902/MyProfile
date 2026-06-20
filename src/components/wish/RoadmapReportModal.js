@@ -79,8 +79,10 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
   }, [nodes]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-700 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200 print:static print:block print:bg-white print:p-0">
+      
+      {/* Dashboard Screen Wrapper (Hidden on Print) */}
+      <div className="bg-slate-900 border border-slate-700 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden print:hidden">
         
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-800 bg-slate-900/50">
@@ -107,8 +109,8 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full">
+        {/* Dashboard Content (Hidden on Print) */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-8 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full print:hidden">
           
           {/* Top Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -269,6 +271,77 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
           )}
 
         </div>
+
+        {/* Executive Print View (Hidden on Screen, Visible on Print) */}
+        <div className="hidden print:block print:w-full print:relative print:bg-white text-black font-serif p-10 max-w-[8.5in] mx-auto text-sm">
+          <div className="border-b-2 border-black pb-4 mb-6">
+            <h1 className="text-3xl font-bold uppercase tracking-widest text-slate-900">Executive Management Report</h1>
+            <p className="text-lg text-slate-600 mt-2">Project Roadmap: {wishTitle || 'Untitled'}</p>
+            <p className="text-sm text-slate-500 mt-1">Generated: {new Date().toLocaleDateString()} at {new Date().toLocaleTimeString()}</p>
+          </div>
+
+          <div className="mb-8 bg-slate-50 p-4 border border-slate-200">
+            <h2 className="text-xl font-bold text-slate-800 mb-2 border-b border-slate-300 pb-1">Executive Summary</h2>
+            <p className="text-slate-700 leading-relaxed">
+              This roadmap encompasses a total of <strong>{reportData.total}</strong> strategic steps. 
+              Currently, <strong>{reportData.achieved}</strong> steps have been successfully achieved, resulting in an overall project completion rate of <strong>{reportData.completionRate}%</strong>. 
+              There are <strong>{reportData.inProgress}</strong> steps actively in progress, and <strong>{reportData.notStarted}</strong> steps awaiting initiation. 
+              Critically, there {reportData.overdue.length === 1 ? 'is' : 'are'} <strong>{reportData.overdue.length}</strong> overdue action item{reportData.overdue.length === 1 ? '' : 's'} that require immediate management attention to prevent cascading delays.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-slate-800 mb-4 border-b border-slate-300 pb-1">Strategic Step Analysis & Advisories</h2>
+            
+            {[...reportData.overdue, ...reportData.inProgressList, ...reportData.notStartedList, ...reportData.completedSteps].map((step, idx) => {
+              
+              let advisory = { decision: '', advise: '' };
+              if (step.status === 'Achieved') {
+                advisory = { decision: "No Action Required.", advise: "Step successfully completed. Ensure lessons learned are recorded." };
+              } else if (step.overdueReason === 'Missed Target Date') {
+                advisory = { decision: "Critical Timeline Breach.", advise: "Immediate intervention required. Re-evaluate the target deadline and allocate additional resources to clear blockers." };
+              } else if (step.overdueReason === 'Missed Start Date') {
+                advisory = { decision: "Delayed Kick-off.", advise: "This phase has missed its scheduled start date. Schedule a kick-off meeting immediately to realign stakeholders." };
+              } else if (step.status === 'In Progress') {
+                advisory = { decision: "Monitor Execution.", advise: "Active progress is being made. Maintain momentum and conduct regular status checks against the target date." };
+              } else {
+                advisory = { decision: "Preparation Phase.", advise: "Task is pending. Review resource availability and finalize prerequisites prior to the scheduled start date." };
+              }
+
+              return (
+                <div key={step.id} className="border border-slate-300 p-4 break-inside-avoid">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-bold text-slate-900">{idx + 1}. {step.title}</h3>
+                    <div className="text-right">
+                      <span className={`px-2 py-1 text-[10px] uppercase font-bold border ${step.status === 'Achieved' ? 'border-emerald-500 text-emerald-700' : step.overdueReason ? 'border-red-500 text-red-700 bg-red-50' : 'border-slate-400 text-slate-600'}`}>
+                        {step.overdueReason || step.status}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-3 text-xs text-slate-600 border-b border-slate-200 pb-2">
+                    <div><strong>Start Date:</strong> {step.startDate}</div>
+                    <div><strong>Target Date:</strong> {step.endDate}</div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <p className="text-sm">
+                      <strong className="text-slate-800">Decision Point:</strong> <span className="text-slate-700">{advisory.decision}</span>
+                    </p>
+                    <p className="text-sm">
+                      <strong className="text-slate-800">Advisory Action:</strong> <span className="text-slate-700">{advisory.advise}</span>
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          
+          <div className="mt-8 pt-4 border-t border-slate-300 text-center text-xs text-slate-500">
+            End of Management Report • Generated confidentially via Portfolio Platform
+          </div>
+        </div>
+
       </div>
     </div>
   );

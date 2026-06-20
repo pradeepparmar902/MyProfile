@@ -324,8 +324,8 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
   }, [nodes, edges, titleValue]);
 
   return (
-    <div className={`relative ${wish.isInline ? "w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"}`} onKeyDown={onKeyDown}>
-      <Panel position="top-right" className="m-4 pointer-events-auto flex flex-wrap gap-2 items-center justify-end z-50">
+    <div className={`relative ${wish.isInline ? "w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"} print:static print:overflow-visible print:bg-white`} onKeyDown={onKeyDown}>
+      <Panel position="top-right" className="m-4 pointer-events-auto flex flex-wrap gap-2 items-center justify-end z-50 print:hidden">
         <div className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-lg px-3 py-1.5 shadow-lg">
           {isEditingTitle ? (
             <input
@@ -401,7 +401,7 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
       )}
 
       {/* Canvas */}
-      <div className="flex-1 w-full h-full flex relative" ref={reactFlowWrapper}>
+      <div className="flex-1 w-full h-full flex relative print:hidden" ref={reactFlowWrapper}>
         <div className="flex-1 h-full relative">
           <ReactFlow
             nodes={nodes}

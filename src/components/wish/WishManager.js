@@ -104,8 +104,8 @@ export function WishManager({ initialItems }) {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden flex flex-col gap-4 mb-8 relative">
-      <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-1">
+    <div className="w-full max-w-full overflow-hidden print:overflow-visible flex flex-col gap-4 mb-8 relative">
+      <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-1 print:hidden">
         <div className="flex gap-2 items-center overflow-x-auto whitespace-nowrap pb-1">
           {wishes.map((wish) => (
             <button
@@ -139,7 +139,7 @@ export function WishManager({ initialItems }) {
 
       {/* Delete Confirmation Modal */}
       {isConfirmingDelete && (
-        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm rounded-2xl">
+        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm rounded-2xl print:hidden">
           <div className="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in fade-in zoom-in duration-200">
             <h3 className="text-xl font-bold text-white mb-2">Delete Roadmap?</h3>
             <p className="text-slate-300 mb-6">
@@ -164,10 +164,7 @@ export function WishManager({ initialItems }) {
       )}
 
       {/* Mindmap Canvas Wrapper */}
-      <div 
-        className="w-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200"
-        style={{ height: 'calc(100vh - 240px)', minHeight: '500px' }}
-      >
+      <div className="w-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200 print:overflow-visible print:border-none print:shadow-none h-[calc(100vh-240px)] min-h-[500px] print:h-auto print:min-h-0">
         <RoadmapMindmap 
           key={activeWish.id} 
           wish={{...activeWish, isInline: true}} 
