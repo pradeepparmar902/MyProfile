@@ -18,9 +18,14 @@ import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
 import { Save, X, Loader2 } from 'lucide-react';
 import MindmapNode from './MindmapNode';
+import CustomEdge from './CustomEdge';
 
 const nodeTypes = {
   mindmap: MindmapNode,
+};
+
+const edgeTypes = {
+  custom: CustomEdge,
 };
 
 // Initial layout settings
@@ -82,7 +87,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     
     setEdges((eds) => addEdge({ 
       ...params, 
-      type: 'smoothstep', 
+      type: 'custom', 
       animated: true, 
       style: { stroke: color, strokeWidth: 3 },
       reconnectable: 'target'
@@ -135,7 +140,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       target: newNodeId,
       sourceHandle: 'right-source',
       targetHandle: 'left-target',
-      type: 'smoothstep',
+      type: 'custom',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
       reconnectable: 'target',
@@ -178,7 +183,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       target: newNodeId,
       sourceHandle: 'bottom-source',
       targetHandle: 'top-target',
-      type: 'smoothstep',
+      type: 'custom',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
       reconnectable: 'target',
@@ -189,12 +194,12 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
   }, [getNodes, getEdges, setNodes, setEdges]);
 
-  // Retroactively fix existing edges to be smoothstep and reconnectable
+  // Retroactively fix existing edges to be custom and reconnectable
   useEffect(() => {
     setEdges((eds) => 
       eds.map(e => {
-        if (e.type !== 'smoothstep' || e.reconnectable !== 'target') {
-          return { ...e, type: 'smoothstep', reconnectable: 'target' };
+        if (e.type !== 'custom' || e.reconnectable !== 'target') {
+          return { ...e, type: 'custom', reconnectable: 'target' };
         }
         return e;
       })
@@ -315,7 +320,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
             minZoom={0.2}
             panOnScroll={true}
             className="bg-[#0f172a]" // Deep dark slate background
-            defaultEdgeOptions={{ type: 'smoothstep', animated: true }}
+            defaultEdgeOptions={{ type: 'custom', animated: true }}
           >
             <Background color="#334155" gap={24} size={2} />
             <Controls className="bg-slate-800 text-slate-300 border-slate-700 fill-slate-300" />
