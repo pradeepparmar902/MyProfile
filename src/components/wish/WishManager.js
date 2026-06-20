@@ -41,6 +41,27 @@ export function WishManager({ initialItems }) {
     }
   };
 
+  const handleDeleteWish = async () => {
+    if (!confirm("Are you sure you want to delete this roadmap? This cannot be undone.")) return;
+    
+    if (!activeWishId.startsWith('new')) {
+      await fetch(`/api/wishes/${activeWishId}`, { method: 'DELETE' });
+    }
+    
+    const remainingWishes = wishes.filter(w => w.id !== activeWishId);
+    setWishes(remainingWishes);
+    
+    if (remainingWishes.length > 0) {
+      setActiveWishId(remainingWishes[0].id);
+    } else {
+      const tempId = `new-${Date.now()}`;
+      setWishes([{ id: tempId, title: 'Untitled Roadmap' }]);
+      setActiveWishId(tempId);
+    }
+    
+    router.refresh();
+  };
+
   return (
     <div className="w-full flex flex-col h-full gap-4">
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-2">
@@ -76,6 +97,7 @@ export function WishManager({ initialItems }) {
           wish={{...activeWish, isInline: true}} 
           onClose={() => {}} 
           onSave={handleWishSaved}
+          onDelete={handleDeleteWish}
         />
       </div>
     </div>

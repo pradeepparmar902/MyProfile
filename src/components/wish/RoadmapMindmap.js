@@ -17,7 +17,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
-import { Save, X, Loader2, Check } from 'lucide-react';
+import { Save, X, Loader2, Check, Trash2 } from 'lucide-react';
 import MindmapNode from './MindmapNode';
 import CustomEdge from './CustomEdge';
 
@@ -35,7 +35,7 @@ const NODE_HEIGHT = 50;
 const X_OFFSET = 250;
 const Y_OFFSET = 80;
 
-function MindmapCanvas({ wish, onClose, onSave }) {
+function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
   const { getNodes, getEdges, setNodes, setEdges } = useReactFlow();
   const [isSaving, setIsSaving] = useState(false);
   const [activeNodeId, setActiveNodeId] = useState(null);
@@ -324,27 +324,38 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     <div className={wish.isInline ? "w-full h-[700px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"} onKeyDown={onKeyDown}>
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shadow-lg">
-        <div>
-          {isEditingTitle ? (
-            <input
-              type="text"
-              value={titleValue}
-              onChange={(e) => setTitleValue(e.target.value)}
-              onBlur={() => setIsEditingTitle(false)}
-              onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
-              className="bg-slate-800 text-xl font-bold text-white px-2 py-1 rounded border border-blue-500 outline-none w-64 mb-1"
-              autoFocus
-            />
-          ) : (
-            <h2 
-              className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors mb-1 group flex items-center gap-2"
-              onClick={() => setIsEditingTitle(true)}
-              title="Click to rename"
+        <div className="flex justify-between items-start gap-4">
+          <div>
+            {isEditingTitle ? (
+              <input
+                type="text"
+                value={titleValue}
+                onChange={(e) => setTitleValue(e.target.value)}
+                onBlur={() => setIsEditingTitle(false)}
+                onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+                className="bg-slate-800 text-xl font-bold text-white px-2 py-1 rounded border border-blue-500 outline-none w-64 mb-1"
+                autoFocus
+              />
+            ) : (
+              <h2 
+                className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors mb-1 group flex items-center gap-2"
+                onClick={() => setIsEditingTitle(true)}
+                title="Click to rename"
+              >
+                {titleValue} <span className="opacity-0 group-hover:opacity-100 text-sm font-normal text-blue-400">✏️</span>
+              </h2>
+            )}
+            <p className="text-sm text-slate-400">Press Tab to add a child step, Enter to add a sibling step.</p>
+          </div>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
+              title="Delete Roadmap"
             >
-              {titleValue} <span className="opacity-0 group-hover:opacity-100 text-sm font-normal text-blue-400">✏️</span>
-            </h2>
+              <Trash2 size={18} />
+            </button>
           )}
-          <p className="text-sm text-slate-400">Press Tab to add a child step, Enter to add a sibling step.</p>
         </div>
         <div className="flex gap-3">
           {!wish.isInline && (
@@ -446,10 +457,11 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   );
 }
 
-export default function RoadmapMindmap(props) {
+export default function RoadmapMindmap({ wish, onClose, onSave, onDelete }) {
+  if (!wish) return null;
   return (
     <ReactFlowProvider>
-      <MindmapCanvas {...props} />
+      <MindmapCanvas wish={wish} onClose={onClose} onSave={onSave} onDelete={onDelete} />
     </ReactFlowProvider>
   );
 }
