@@ -430,14 +430,34 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
                 <div>
                   <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Status</label>
                   <select 
-                    value={nodes.find(n => n.id === activeNodeId).data.status || 'Not Started'}
+                    value={nodes.find(n => n.id === activeNodeId).data.status || 'Not yet started'}
                     onChange={(e) => updateNodeData(activeNodeId, 'status', e.target.value)}
                     className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="Not Started">Not Started</option>
+                    <option value="Not yet started">Not yet started</option>
                     <option value="In Progress">In Progress</option>
                     <option value="Achieved">Achieved</option>
                   </select>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Start Date</label>
+                    <input 
+                      type="date"
+                      value={nodes.find(n => n.id === activeNodeId).data.startDate || ''}
+                      onChange={(e) => updateNodeData(activeNodeId, 'startDate', e.target.value)}
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Target Date</label>
+                    <input 
+                      type="date"
+                      value={nodes.find(n => n.id === activeNodeId).data.endDate || ''}
+                      onChange={(e) => updateNodeData(activeNodeId, 'endDate', e.target.value)}
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Notes / Description</label>

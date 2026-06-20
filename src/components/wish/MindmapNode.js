@@ -127,12 +127,37 @@ export default function MindmapNode({ id, data, selected }) {
         )}
         
         {/* Status dot */}
-        {data.status && (
+        {data.status && data.status !== 'Not yet started' && (
           <div 
             className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-[#1e293b] ${getStatusColor(data.status)}`}
             title={data.status}
           />
         )}
+
+        {/* Meta Buttons */}
+        <div className="flex flex-wrap gap-1 justify-center mt-2 opacity-90 text-[10px]">
+          <button 
+            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors text-white"
+            title="Start Date"
+          >
+            🗓 {data.startDate || 'Set Start'}
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors text-white"
+            title="Target Date"
+          >
+            🏁 {data.endDate || 'Set Target'}
+          </button>
+          <button 
+            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors max-w-[90px] truncate text-white"
+            title="Status"
+          >
+            {data.status === 'Achieved' ? '✅' : data.status === 'In Progress' ? '⏳' : '⭕'} {data.status || 'Not yet started'}
+          </button>
+        </div>
 
         {/* Target Sockets (Plug In Points) */}
         <Handle 
