@@ -128,7 +128,7 @@ export default function MindmapNode({ id, data, selected }) {
         
         {/* Top Middle Status */}
         <div 
-          className="absolute -top-3 left-1/2 -translate-x-1/2 cursor-pointer z-30"
+          className={`absolute -top-3 left-1/2 -translate-x-1/2 cursor-pointer z-30 transition-opacity duration-200 ${(!data.status || data.status === 'Not yet started') ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
         >
           <div className={`text-[8px] font-bold px-1.5 py-[1px] rounded-full border shadow-sm whitespace-nowrap text-white ${getStatusColor(data.status)} border-black/20`}>
