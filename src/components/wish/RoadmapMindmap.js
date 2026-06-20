@@ -340,7 +340,9 @@ function MindmapCanvas({ wish, onClose, onSave }) {
             onConnect={onConnect}
             onReconnect={onReconnect}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             connectionMode={ConnectionMode.Loose}
+            translateExtent={[[-5000, -100], [5000, 10000]]}
             fitView
             fitViewOptions={{ padding: 0.2 }}
             minZoom={0.2}
