@@ -102,7 +102,7 @@ export default function MindmapNode({ id, data, selected }) {
 
       {/* Main Node Content */}
       <div 
-        className={`px-5 py-3 rounded-xl shadow-md min-w-[120px] max-w-[250px] transition-colors border-2`}
+        className={`px-4 py-2.5 rounded-xl shadow-md min-w-[140px] max-w-[250px] transition-colors border-2 relative`}
         style={{ 
           backgroundColor: currentColor, 
           borderColor: currentColor,
@@ -126,37 +126,36 @@ export default function MindmapNode({ id, data, selected }) {
           </div>
         )}
         
-        {/* Status dot */}
-        {data.status && data.status !== 'Not yet started' && (
-          <div 
-            className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-[#1e293b] ${getStatusColor(data.status)}`}
-            title={data.status}
-          />
-        )}
-
-        {/* Meta Buttons */}
-        <div className="flex flex-wrap gap-1 justify-center mt-2 opacity-90 text-[10px]">
-          <button 
-            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
-            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors text-white"
-            title="Start Date"
-          >
-            🗓 {data.startDate || 'Set Start'}
-          </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
-            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors text-white"
-            title="Target Date"
-          >
-            🏁 {data.endDate || 'Set Target'}
-          </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
-            className="bg-black/20 hover:bg-black/40 px-1.5 py-0.5 rounded flex items-center gap-1 transition-colors max-w-[90px] truncate text-white"
-            title="Status"
-          >
+        {/* Top Middle Status */}
+        <div 
+          className="absolute -top-3 left-1/2 -translate-x-1/2 cursor-pointer z-30"
+          onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+        >
+          <div className={`text-[9px] font-bold px-2 py-0.5 rounded-full border shadow-sm whitespace-nowrap text-white ${getStatusColor(data.status)} border-black/20`}>
             {data.status === 'Achieved' ? '✅' : data.status === 'In Progress' ? '⏳' : '⭕'} {data.status || 'Not yet started'}
-          </button>
+          </div>
+        </div>
+
+        {/* Bottom Left Start Date */}
+        <div 
+          className={`absolute -bottom-2.5 left-2 cursor-pointer z-30 transition-opacity duration-200 ${data.startDate ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+          title="Start Date"
+        >
+          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[9px] px-1.5 py-0.5 rounded border border-slate-600 shadow-sm flex items-center gap-1">
+            🗓 {data.startDate || 'Start'}
+          </div>
+        </div>
+
+        {/* Bottom Right Target Date */}
+        <div 
+          className={`absolute -bottom-2.5 right-2 cursor-pointer z-30 transition-opacity duration-200 ${data.endDate ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+          onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
+          title="Target Date"
+        >
+          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[9px] px-1.5 py-0.5 rounded border border-slate-600 shadow-sm flex items-center gap-1">
+            🏁 {data.endDate || 'Target'}
+          </div>
         </div>
 
         {/* Target Sockets (Plug In Points) */}
