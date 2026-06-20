@@ -85,17 +85,26 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     const sourceNode = getNodes().find(n => n.id === params.source);
     const color = sourceNode?.data?.color || '#3b82f6';
     
-    setEdges((eds) => addEdge({ 
-      ...params, 
-      type: 'custom', 
-      animated: true, 
-      style: { stroke: color, strokeWidth: 3 },
-      reconnectable: true
-    }, eds));
+    setEdges((eds) => {
+      // Mindmap nodes should only have ONE incoming connection (one parent)
+      const filteredEdges = eds.filter(e => e.target !== params.target);
+      
+      return addEdge({ 
+        ...params, 
+        type: 'custom', 
+        animated: true, 
+        style: { stroke: color, strokeWidth: 3 },
+        reconnectable: true
+      }, filteredEdges);
+    });
   }, [setEdges, getNodes]);
 
   const onReconnect = useCallback((oldEdge, newConnection) => {
-    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+    setEdges((els) => {
+      // If reconnecting to a new target, remove any existing connection to that target
+      const filtered = els.filter(e => e.id === oldEdge.id || e.target !== newConnection.target);
+      return reconnectEdge(oldEdge, newConnection, filtered);
+    });
   }, [setEdges]);
 
   const onMoreInfo = useCallback((id) => {
