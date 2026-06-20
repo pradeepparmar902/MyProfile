@@ -17,9 +17,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
-import { Save, X, Loader2, Check, Trash2 } from 'lucide-react';
+import { Save, X, Loader2, Check, Trash2, FileText } from 'lucide-react';
 import MindmapNode from './MindmapNode';
 import CustomEdge from './CustomEdge';
+import RoadmapReportModal from './RoadmapReportModal';
 
 const nodeTypes = {
   mindmap: MindmapNode,
@@ -41,6 +42,7 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
   const [activeNodeId, setActiveNodeId] = useState(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
   const [titleValue, setTitleValue] = useState(wish.title || 'Untitled Roadmap');
   const reactFlowWrapper = useRef(null);
 
@@ -380,7 +382,23 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
             </>
           )}
         </div>
+
+        <button
+          onClick={() => setIsReportOpen(true)}
+          className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 backdrop-blur-md border border-blue-500 rounded-lg transition-colors shadow-lg shadow-blue-900/20"
+        >
+          <FileText size={14} /> Report
+        </button>
       </Panel>
+
+      {/* Report Modal */}
+      {isReportOpen && (
+        <RoadmapReportModal
+          nodes={nodes}
+          wishTitle={titleValue}
+          onClose={() => setIsReportOpen(false)}
+        />
+      )}
 
       {/* Canvas */}
       <div className="flex-1 w-full h-full flex relative" ref={reactFlowWrapper}>
