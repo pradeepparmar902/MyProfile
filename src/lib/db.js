@@ -17,6 +17,7 @@ const collections = {
   activity: "activities",
   invite: "invites",
   setting: "settings",
+  resume: "resumes",
 };
 
 const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
@@ -303,5 +304,6 @@ export const db = {
   activity: model("activity"),
   invite: model("invite"),
   setting: model("setting"),
+  resume: model("resume"),
   $transaction: (operations) => Promise.all(operations),
 };
