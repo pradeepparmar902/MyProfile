@@ -17,7 +17,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
-import { Save, X, Loader2 } from 'lucide-react';
+import { Save, X, Loader2, Check } from 'lucide-react';
 import MindmapNode from './MindmapNode';
 import CustomEdge from './CustomEdge';
 
@@ -305,8 +305,20 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     }
     
     setIsSaving(false);
-    if (onSave) onSave(mindmapData);
+    if (onSave) onSave(mindmapData, wish.id.startsWith('new'));
   };
+
+  // Autosave Effect
+  useEffect(() => {
+    // Only auto-save if nodes exist
+    if (!nodes || nodes.length === 0) return;
+
+    const timeoutId = setTimeout(() => {
+      handleSave();
+    }, 1500); // 1.5 second debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [nodes, edges, titleValue]);
 
   return (
     <div className={wish.isInline ? "w-full h-[700px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"} onKeyDown={onKeyDown}>
@@ -343,14 +355,13 @@ function MindmapCanvas({ wish, onClose, onSave }) {
               <X size={16} /> Close
             </button>
           )}
-          <button
-            onClick={handleSave}
-            disabled={isSaving}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-colors disabled:opacity-50"
-          >
-            {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-            Save Roadmap
-          </button>
+          <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-800 rounded-lg border border-slate-700">
+            {isSaving ? (
+              <><Loader2 size={14} className="animate-spin" /> Autosaving...</>
+            ) : (
+              <><Check size={14} className="text-emerald-500" /> Saved</>
+            )}
+          </div>
         </div>
       </div>
 

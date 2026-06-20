@@ -33,8 +33,10 @@ export function WishManager({ initialItems }) {
     setActiveWishId(tempId);
   };
 
-  const handleWishSaved = () => {
-    router.refresh();
+  const handleWishSaved = (mindmapData, isNew) => {
+    if (isNew) {
+      router.refresh();
+    }
   };
 
   return (
