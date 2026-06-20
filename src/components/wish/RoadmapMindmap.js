@@ -13,6 +13,7 @@ import {
   MiniMap,
   useReactFlow,
   Panel,
+  ConnectionMode,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { v4 as uuidv4 } from 'uuid';
@@ -324,6 +325,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
             onConnect={onConnect}
             onReconnect={onReconnect}
             nodeTypes={nodeTypes}
+            connectionMode={ConnectionMode.Loose}
             fitView
             fitViewOptions={{ padding: 0.2 }}
             minZoom={0.2}
