@@ -1,0 +1,3 @@
+{
+  "/api/outofbox/[id]/route": "app/api/outofbox/[id]/route.js"
+}

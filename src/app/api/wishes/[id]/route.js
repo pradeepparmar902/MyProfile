@@ -20,6 +20,7 @@ export async function PUT(request, { params }) {
         thoughts: body.thoughts !== undefined ? body.thoughts : existing.thoughts,
         achievedSteps: body.achievedSteps !== undefined ? body.achievedSteps : existing.achievedSteps,
         futureSteps: body.futureSteps !== undefined ? body.futureSteps : existing.futureSteps,
+        mindmapData: body.mindmapData !== undefined ? body.mindmapData : existing.mindmapData,
       },
     }),
   });

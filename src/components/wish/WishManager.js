@@ -5,10 +5,12 @@ import { Plus, Trash2, Eye, EyeOff, Target, CheckCircle2, ArrowRight, Sparkles }
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Textarea } from "@/components/ui/Field";
+import RoadmapMindmap from "./RoadmapMindmap";
 
 export function WishManager({ initialItems }) {
   const [items, setItems] = useState(initialItems || []);
   const [message, setMessage] = useState("");
+  const [activeRoadmap, setActiveRoadmap] = useState(null);
 
   async function addItem(event) {
     event.preventDefault();
@@ -143,14 +145,36 @@ export function WishManager({ initialItems }) {
         )}
         
         {items.length > 0 && (
-          <div className="mt-4 text-center p-6 bg-amber-50/80 border border-amber-200 rounded-2xl shadow-sm">
-            <p className="text-amber-800 font-medium flex items-center justify-center gap-2">
-              <Sparkles className="text-amber-500 animate-pulse" size={20} /> 
-              More exciting options and detailed career tracking for this section will follow soon!
+          <div className="mt-4 text-center p-6 bg-slate-50/80 border border-slate-200 rounded-2xl shadow-sm">
+            <h4 className="font-semibold text-slate-800 mb-2">Build Your Visual Roadmap</h4>
+            <p className="text-sm text-slate-600 mb-4 max-w-lg mx-auto">
+              Click the button below to open the interactive mindmap canvas. You can visually break down your goals, add milestones, and track your progress in real-time.
             </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {items.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveRoadmap(item)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm font-medium transition-colors flex items-center gap-2"
+                >
+                  <Sparkles size={16} /> Roadmap for: {item.title}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
+
+      {/* Fullscreen Mindmap Modal */}
+      {activeRoadmap && (
+        <RoadmapMindmap
+          wish={activeRoadmap}
+          onClose={() => setActiveRoadmap(null)}
+          onSave={(mindmapData) => {
+            setItems(items.map(i => i.id === activeRoadmap.id ? { ...i, mindmapData: JSON.stringify(mindmapData) } : i));
+          }}
+        />
+      )}
     </div>
   );
 }
