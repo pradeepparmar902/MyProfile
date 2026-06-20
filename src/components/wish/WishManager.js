@@ -104,7 +104,7 @@ export function WishManager({ initialItems }) {
   return (
     <div className="w-full flex flex-col h-full gap-4">
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-2">
-        <div className="flex gap-2 items-center overflow-x-auto">
+        <div className="flex gap-2 items-center flex-wrap">
           {wishes.map((wish) => (
             <button
               key={wish.id}
@@ -126,7 +126,7 @@ export function WishManager({ initialItems }) {
           
           <button
             onClick={handleAddNew}
-            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors border border-blue-100"
+            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors border border-blue-100 shrink-0"
             title="Create New Roadmap"
           >
             <Plus size={18} />
@@ -135,7 +135,8 @@ export function WishManager({ initialItems }) {
         </div>
       </div>
 
-      <div className="w-full h-[calc(100vh-220px)] min-h-[500px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+      {/* Mindmap Canvas Wrapper */}
+      <div className="w-full h-[650px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200">
         <RoadmapMindmap 
           key={activeWish.id} 
           wish={{...activeWish, isInline: true}} 
