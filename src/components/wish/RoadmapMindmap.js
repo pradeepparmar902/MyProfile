@@ -90,7 +90,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'custom', 
       animated: true, 
       style: { stroke: color, strokeWidth: 3 },
-      reconnectable: 'target'
+      reconnectable: true
     }, eds));
   }, [setEdges, getNodes]);
 
@@ -143,7 +143,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'custom',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
-      reconnectable: 'target',
+      reconnectable: true,
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -186,7 +186,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'custom',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
-      reconnectable: 'target',
+      reconnectable: true,
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -198,8 +198,8 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   useEffect(() => {
     setEdges((eds) => 
       eds.map(e => {
-        if (e.type !== 'custom' || e.reconnectable !== 'target') {
-          return { ...e, type: 'custom', reconnectable: 'target' };
+        if (e.type !== 'custom' || e.reconnectable !== true) {
+          return { ...e, type: 'custom', reconnectable: true };
         }
         return e;
       })

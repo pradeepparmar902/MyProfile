@@ -32,15 +32,11 @@ export default function CustomEdge({
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={{ ...style, strokeWidth: selected ? 5 : 3 }} />
-      
-      {/* Invisible thicker path for easier interaction */}
-      <path
-        d={edgePath}
-        fill="none"
-        strokeOpacity={0}
-        strokeWidth={20}
-        className="react-flow__edge-interaction"
+      <BaseEdge 
+        path={edgePath} 
+        markerEnd={markerEnd} 
+        style={{ ...style, strokeWidth: selected ? 5 : 3 }} 
+        interactionWidth={20}
       />
 
       {selected && (
