@@ -424,11 +424,6 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
           >
             <Background color="#334155" gap={24} size={2} />
             <Controls className="bg-slate-800 text-slate-300 border-slate-700 fill-slate-300" />
-            <MiniMap 
-              nodeColor={(n) => n.data.color || '#3b82f6'} 
-              maskColor="#0f172a80"
-              className="bg-slate-900 border border-slate-800"
-            />
           </ReactFlow>
         </div>
 
