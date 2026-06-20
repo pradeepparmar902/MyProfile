@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Handle, Position, NodeToolbar } from '@xyflow/react';
-import { Plus, Edit2, Palette, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Palette, Trash2, Info } from 'lucide-react';
 
 export default function MindmapNode({ id, data, selected }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -65,6 +65,14 @@ export default function MindmapNode({ id, data, selected }) {
           title="Edit text"
         >
           <Edit2 size={16} />
+        </button>
+        
+        <button 
+          onClick={() => data.onMoreInfo && data.onMoreInfo(id)}
+          className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors"
+          title="More Information / Status"
+        >
+          <Info size={16} />
         </button>
         
         {/* Color Picker Buttons */}
@@ -135,16 +143,14 @@ export default function MindmapNode({ id, data, selected }) {
               <Plus size={14} />
             </button>
             
-            {/* Add Sibling (Bottom) - Only for non-root nodes */}
-            {!isRoot && (
-              <button
-                onClick={() => data.onAddSibling && data.onAddSibling(id)}
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
-                title="Add Sibling (Enter)"
-              >
-                <Plus size={14} />
-              </button>
-            )}
+            {/* Add Sibling (Bottom) */}
+            <button
+              onClick={() => data.onAddSibling && data.onAddSibling(id)}
+              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
+              title="Add Sibling (Enter)"
+            >
+              <Plus size={14} />
+            </button>
           </>
         )}
       </div>

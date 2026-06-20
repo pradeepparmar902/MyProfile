@@ -31,6 +31,7 @@ const Y_OFFSET = 80;
 function MindmapCanvas({ wish, onClose, onSave }) {
   const { project, getNodes, getEdges, setNodes, setEdges } = useReactFlow();
   const [isSaving, setIsSaving] = useState(false);
+  const [activeNodeId, setActiveNodeId] = useState(null);
   const reactFlowWrapper = useRef(null);
 
   // Initialize nodes and edges from wish.mindmapData or use defaults
@@ -42,7 +43,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
         id: 'root',
         type: 'mindmap',
         position: { x: 100, y: 300 },
-        data: { label: wish.title, isRoot: true, color: '#3b82f6' },
+        data: { label: wish.title, isRoot: true, color: '#3b82f6', status: 'In Progress', notes: '' },
       },
     ]
   );
@@ -70,7 +71,18 @@ function MindmapCanvas({ wish, onClose, onSave }) {
   const deleteNode = useCallback((id) => {
     setNodes((nds) => nds.filter((n) => n.id !== id));
     setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
-  }, [setNodes, setEdges]);
+    if (activeNodeId === id) setActiveNodeId(null);
+  }, [setNodes, setEdges, activeNodeId]);
+
+  const onMoreInfo = useCallback((id) => {
+    setActiveNodeId(id);
+  }, []);
+
+  const updateNodeData = useCallback((id, key, value) => {
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, [key]: value } } : n))
+    );
+  }, [setNodes]);
 
   // Find the lowest Y position among children to place the new node below them
   const getChildYPosition = (sourceId, sourcePosition) => {
@@ -145,10 +157,11 @@ function MindmapCanvas({ wish, onClose, onSave }) {
           onDelete: deleteNode,
           onAddChild: addChildNode,
           onAddSibling: addSiblingNode,
+          onMoreInfo,
         },
       }))
     );
-  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNode, addSiblingNode]);
+  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNode, addSiblingNode, onMoreInfo]);
 
   // Handle Keyboard Shortcuts
   const onKeyDown = useCallback((event) => {
@@ -214,27 +227,76 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       </div>
 
       {/* Canvas */}
-      <div className="flex-1 w-full h-full" ref={reactFlowWrapper}>
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          nodeTypes={nodeTypes}
-          fitView
-          fitViewOptions={{ padding: 0.2 }}
-          minZoom={0.2}
-          className="bg-[#0f172a]" // Deep dark slate background
-          defaultEdgeOptions={{ type: 'bezier', animated: true }}
-        >
-          <Background color="#334155" gap={24} size={2} />
-          <Controls className="bg-slate-800 text-slate-300 border-slate-700 fill-slate-300" />
-          <MiniMap 
-            nodeColor={(n) => n.data.color || '#3b82f6'} 
-            maskColor="#0f172a80"
-            className="bg-slate-900 border border-slate-800"
-          />
-        </ReactFlow>
+      <div className="flex-1 w-full h-full flex relative" ref={reactFlowWrapper}>
+        <div className="flex-1 h-full relative">
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            fitView
+            fitViewOptions={{ padding: 0.2 }}
+            minZoom={0.2}
+            panOnScroll={true}
+            className="bg-[#0f172a]" // Deep dark slate background
+            defaultEdgeOptions={{ type: 'bezier', animated: true }}
+          >
+            <Background color="#334155" gap={24} size={2} />
+            <Controls className="bg-slate-800 text-slate-300 border-slate-700 fill-slate-300" />
+            <MiniMap 
+              nodeColor={(n) => n.data.color || '#3b82f6'} 
+              maskColor="#0f172a80"
+              className="bg-slate-900 border border-slate-800"
+            />
+          </ReactFlow>
+        </div>
+
+        {/* Side Panel for Node Details */}
+        {activeNodeId && (
+          <div className="w-80 bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col z-20 transition-all">
+            <div className="flex items-center justify-between p-4 border-b border-slate-800">
+              <h3 className="font-semibold text-white">Node Details</h3>
+              <button onClick={() => setActiveNodeId(null)} className="text-slate-400 hover:text-white">
+                <X size={16} />
+              </button>
+            </div>
+            {nodes.find(n => n.id === activeNodeId) && (
+              <div className="p-4 flex flex-col gap-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Title</label>
+                  <input 
+                    value={nodes.find(n => n.id === activeNodeId).data.label}
+                    onChange={(e) => updateNodeData(activeNodeId, 'label', e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Status</label>
+                  <select 
+                    value={nodes.find(n => n.id === activeNodeId).data.status || 'Not Started'}
+                    onChange={(e) => updateNodeData(activeNodeId, 'status', e.target.value)}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Achieved">Achieved</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1 block">Notes / Description</label>
+                  <textarea 
+                    value={nodes.find(n => n.id === activeNodeId).data.notes || ''}
+                    onChange={(e) => updateNodeData(activeNodeId, 'notes', e.target.value)}
+                    rows={6}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                    placeholder="Add details, links, or progress notes..."
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

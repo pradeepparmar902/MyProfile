@@ -113,7 +113,7 @@ export function WishManager({ initialItems }) {
                 <ArrowRight className="text-slate-300" size={24} />
               </div>
 
-              {/* Right Side: ACHIEVED (Purple) */}
+              {/* Right Side: ACHIEVED (Purple) or Roadmap Summary */}
               <div className="flex-1">
                 {item.achievedSteps ? (
                   <div className="h-full bg-gradient-to-br from-fuchsia-600 to-purple-700 rounded-2xl p-5 text-white shadow-md relative overflow-hidden group">
@@ -128,6 +128,20 @@ export function WishManager({ initialItems }) {
                         {item.achievedSteps}
                       </p>
                     </div>
+                  </div>
+                ) : item.mindmapData ? (
+                  <div className="h-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-5 flex flex-col justify-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-5 text-slate-400">
+                      <Target size={100} />
+                    </div>
+                    <h4 className="font-semibold text-slate-800 mb-1">Interactive Roadmap Active</h4>
+                    <p className="text-sm text-slate-500 mb-3">You have {JSON.parse(item.mindmapData).nodes?.length - 1 || 0} milestones defined.</p>
+                    <button
+                      onClick={() => setActiveRoadmap(item)}
+                      className="px-4 py-2 w-max bg-white border border-slate-200 hover:border-blue-400 hover:text-blue-600 rounded-lg text-sm font-medium transition-colors shadow-sm"
+                    >
+                      View Roadmap
+                    </button>
                   </div>
                 ) : (
                   <div className="h-full bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl p-5 flex flex-col items-center justify-center text-slate-400">
