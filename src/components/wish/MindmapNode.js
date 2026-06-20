@@ -134,36 +134,51 @@ export default function MindmapNode({ id, data, selected }) {
           />
         )}
 
-        {/* Quick Add Buttons (shown on hover or select) */}
+        {/* Target Sockets (Plug In Points) */}
+        <Handle 
+          type="target" 
+          position={Position.Top} 
+          id="top-target" 
+          className="!w-4 !h-4 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
+          title="Connect here"
+        />
+        <Handle 
+          type="target" 
+          position={Position.Left} 
+          id="left-target" 
+          className="!w-4 !h-4 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
+          title="Connect here"
+        />
+
+        {/* Quick Add Buttons / Source Plugs (Drag to connect, Click to auto-add) */}
         {(selected || isRoot) && (
           <>
-            {/* Add Child (Right) */}
-            <button
+            {/* Add Child / Source Plug (Right) */}
+            <Handle
+              type="source"
+              position={Position.Right}
+              id="right-source"
               onClick={() => data.onAddChild && data.onAddChild(id)}
-              className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
-              title="Add Child (Tab)"
+              className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+              title="Click to add Child, Drag to connect"
             >
-              <Plus size={14} />
-            </button>
+              <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            </Handle>
             
-            {/* Add Sibling (Bottom) */}
-            <button
+            {/* Add Sibling / Source Plug (Bottom) */}
+            <Handle
+              type="source"
+              position={Position.Bottom}
+              id="bottom-source"
               onClick={() => data.onAddSibling && data.onAddSibling(id)}
-              className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
-              title="Add Sibling (Enter)"
+              className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+              title="Click to add Sibling, Drag to connect"
             >
-              <Plus size={14} />
-            </button>
+              <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            </Handle>
           </>
         )}
       </div>
-
-      {/* Connection Points (Drag to connect) */}
-      <Handle type="target" position={Position.Top} id="top-target" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
-      <Handle type="target" position={Position.Left} id="left-target" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
-      
-      <Handle type="source" position={Position.Bottom} id="bottom-source" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
-      <Handle type="source" position={Position.Right} id="right-source" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
     </div>
   );
 }
