@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Plus, X, Trash2 } from "lucide-react";
 import RoadmapMindmap from "./RoadmapMindmap";
 import { useRouter } from "next/navigation";
 
@@ -10,6 +10,7 @@ export function WishManager({ initialItems }) {
   const [wishes, setWishes] = useState(initialItems || []);
   const [activeWishId, setActiveWishId] = useState(initialItems && initialItems.length > 0 ? initialItems[0].id : 'new');
   const [draggedWishId, setDraggedWishId] = useState(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   useEffect(() => {
     if (initialItems) {
@@ -83,6 +84,7 @@ export function WishManager({ initialItems }) {
   };
 
   const handleDeleteWish = async () => {
+    setIsConfirmingDelete(false);
     if (!activeWishId.startsWith('new')) {
       await fetch(`/api/wishes/${activeWishId}`, { method: 'DELETE' });
     }
@@ -102,7 +104,7 @@ export function WishManager({ initialItems }) {
   };
 
   return (
-    <div className="w-full max-w-full overflow-hidden flex flex-col gap-4 mb-8">
+    <div className="w-full max-w-full overflow-hidden flex flex-col gap-4 mb-8 relative">
       <div className="bg-white p-3 rounded-xl shadow-sm border border-slate-100 mb-1">
         <div className="flex gap-2 items-center overflow-x-auto whitespace-nowrap pb-1">
           {wishes.map((wish) => (
@@ -114,13 +116,22 @@ export function WishManager({ initialItems }) {
               onDrop={(e) => handleDrop(e, wish.id)}
               onDragEnd={() => setDraggedWishId(null)}
               onClick={() => setActiveWishId(wish.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-grab active:cursor-grabbing ${
+              className={`group flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-grab active:cursor-grabbing ${
                 activeWishId === wish.id
                   ? 'bg-slate-900 text-white shadow-md'
                   : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               } ${draggedWishId === wish.id ? 'opacity-50 border-2 border-dashed border-slate-300' : 'opacity-100 border border-transparent'}`}
             >
-              {wish.title || 'Untitled Roadmap'}
+              <span>{wish.title || 'Untitled Roadmap'}</span>
+              {activeWishId === wish.id && (
+                <div 
+                  onClick={(e) => { e.stopPropagation(); setIsConfirmingDelete(true); }}
+                  className="p-0.5 rounded text-slate-400 hover:bg-slate-700 hover:text-red-400 transition-colors"
+                  title="Delete Tab"
+                >
+                  <X size={14} />
+                </div>
+              )}
             </button>
           ))}
           
@@ -134,6 +145,32 @@ export function WishManager({ initialItems }) {
           </button>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {isConfirmingDelete && (
+        <div className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm rounded-2xl">
+          <div className="bg-slate-800 border border-slate-700 p-6 rounded-2xl shadow-2xl max-w-sm w-full mx-4 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-white mb-2">Delete Roadmap?</h3>
+            <p className="text-slate-300 mb-6">
+              Are you sure you want to permanently delete the <strong className="text-white">"{activeWish.title || 'Untitled Roadmap'}"</strong> roadmap? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => setIsConfirmingDelete(false)}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDeleteWish}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-500 transition-colors shadow-lg shadow-red-900/20"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mindmap Canvas Wrapper */}
       <div 

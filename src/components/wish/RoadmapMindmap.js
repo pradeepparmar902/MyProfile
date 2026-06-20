@@ -323,6 +323,53 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
 
   return (
     <div className={`relative ${wish.isInline ? "w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"}`} onKeyDown={onKeyDown}>
+      <Panel position="top-right" className="m-4 pointer-events-auto flex flex-wrap gap-2 items-center justify-end z-50">
+        <div className="flex items-center gap-2 bg-slate-900/80 backdrop-blur-md border border-slate-700 rounded-lg px-3 py-1.5 shadow-lg">
+          {isEditingTitle ? (
+            <input
+              type="text"
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
+              onBlur={() => setIsEditingTitle(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+              className="bg-slate-800 text-sm font-bold text-white px-2 py-0.5 rounded border border-blue-500 outline-none w-48"
+              autoFocus
+            />
+          ) : (
+            <h2 
+              className="text-sm font-bold text-white cursor-pointer hover:text-blue-300 transition-colors group flex items-center gap-2 px-1"
+              onClick={() => setIsEditingTitle(true)}
+              title="Click to rename"
+            >
+              {titleValue} <span className="opacity-0 group-hover:opacity-100 text-[10px] font-normal text-blue-400">✏️</span>
+            </h2>
+          )}
+        </div>
+
+        {!wish.isInline && (
+          <button
+            onClick={onClose}
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-300 hover:text-white bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-lg transition-colors shadow-lg"
+          >
+            <X size={14} /> Close
+          </button>
+        )}
+        
+        <div className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-lg shadow-lg">
+          {isSaving ? (
+            <>
+              <div className="w-3 h-3 border-2 border-slate-500 border-t-slate-300 rounded-full animate-spin" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Check size={14} className="text-emerald-500" />
+              Saved
+            </>
+          )}
+        </div>
+      </Panel>
+
       {/* Canvas */}
       <div className="flex-1 w-full h-full flex relative" ref={reactFlowWrapper}>
         <div className="flex-1 h-full relative">
