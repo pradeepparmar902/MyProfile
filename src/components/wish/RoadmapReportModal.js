@@ -74,7 +74,7 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
   }, [nodes]);
 
   return (
-    <div className="absolute inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-slate-900 border border-slate-700 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
         
         {/* Header */}
@@ -95,7 +95,7 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-6 space-y-8 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-900 [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full">
           
           {/* Top Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -151,7 +151,7 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
                 <h3 className="font-semibold text-red-400">Overdue / Action Required</h3>
                 <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.overdue.length}</span>
               </div>
-              <div className="p-2 flex-1 overflow-y-auto max-h-[300px]">
+              <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-red-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-red-800/80">
                 {reportData.overdue.length === 0 ? (
                   <div className="p-4 text-center text-slate-400 text-sm">No overdue steps. Great job!</div>
                 ) : (
@@ -180,7 +180,7 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
                 <h3 className="font-semibold text-blue-400">On Track / Upcoming</h3>
                 <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.onTrack.length}</span>
               </div>
-              <div className="p-2 flex-1 overflow-y-auto max-h-[300px]">
+              <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-blue-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-blue-800/80">
                 {reportData.onTrack.length === 0 ? (
                   <div className="p-4 text-center text-slate-400 text-sm">No upcoming steps found.</div>
                 ) : (
@@ -211,7 +211,7 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
                 <h3 className="font-semibold text-emerald-400">Completed Steps</h3>
                 <span className="ml-auto bg-emerald-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.completedSteps.length}</span>
               </div>
-              <div className="p-0 overflow-x-auto">
+              <div className="p-0 overflow-x-auto [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-emerald-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-emerald-800/80">
                 <table className="w-full text-sm text-left text-slate-300">
                   <thead className="text-xs uppercase bg-slate-900/50 text-slate-400">
                     <tr>
