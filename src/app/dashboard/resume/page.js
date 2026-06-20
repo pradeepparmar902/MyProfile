@@ -21,6 +21,7 @@ export default async function ResumePage() {
   const internships = await db.internship.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
   const professions = await db.profession.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
   const professionsSelf = await db.professionSelf.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const resumes = await db.resume.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
 
   const profile = user.profile;
 
@@ -52,6 +53,7 @@ export default async function ResumePage() {
         internships={JSON.parse(JSON.stringify(internships))}
         professions={JSON.parse(JSON.stringify(professions))}
         professionsSelf={JSON.parse(JSON.stringify(professionsSelf))}
+        resumes={JSON.parse(JSON.stringify(resumes))}
       />
     </>
   );

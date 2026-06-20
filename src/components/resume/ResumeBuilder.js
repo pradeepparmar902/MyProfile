@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Printer, LayoutTemplate } from "lucide-react";
+import { Printer, LayoutTemplate, Plus, CheckCircle2, Save, ExternalLink, ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -17,45 +17,153 @@ export function ResumeBuilder(props) {
   const user = props.user;
   const profile = props.profile;
   const invite = props.invite;
-  const education = props.education?.filter(x => !x.isHidden) || [];
-  const achievements = props.achievements?.filter(x => !x.isHidden) || [];
-  const projects = props.projects?.filter(x => !x.isHidden) || [];
-  const skills = props.skills?.filter(x => !x.isHidden) || [];
-  const internships = props.internships?.filter(x => !x.isHidden) || [];
-  const professions = props.professions?.filter(x => !x.isHidden) || [];
-  const professionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
+  const resumes = props.resumes || [];
   
+  const rawEducation = props.education?.filter(x => !x.isHidden) || [];
+  const rawAchievements = props.achievements?.filter(x => !x.isHidden) || [];
+  const rawProjects = props.projects?.filter(x => !x.isHidden) || [];
+  const rawSkills = props.skills?.filter(x => !x.isHidden) || [];
+  const rawInternships = props.internships?.filter(x => !x.isHidden) || [];
+  const rawProfessions = props.professions?.filter(x => !x.isHidden) || [];
+  const rawProfessionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
+
+  const [activeTab, setActiveTab] = useState("master");
+  
+  // Find current resume if tailored
+  const currentResume = activeTab === "master" ? null : resumes.find(r => r.id === activeTab);
+  const isTailored = !!currentResume;
+
   const [template, setTemplate] = useState("classic");
   const [origin, setOrigin] = useState("");
   
+  const [customHeadline, setCustomHeadline] = useState("");
+  const [customBio, setCustomBio] = useState("");
+  const [title, setTitle] = useState("");
+  const [selections, setSelections] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [expandedSection, setExpandedSection] = useState(null);
+
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
   }, []);
+
+  // Sync state when tab changes
+  useEffect(() => {
+    if (activeTab === "master") {
+      setTemplate("classic");
+    } else if (currentResume) {
+      setTemplate(currentResume.template || "classic");
+      setCustomHeadline(currentResume.customHeadline || props.profile?.headline || "");
+      setCustomBio(currentResume.customBio || props.profile?.bio || "");
+      setTitle(currentResume.title || "Untitled Resume");
+      setSelections(currentResume.selections || {});
+    }
+  }, [activeTab, currentResume, props.profile]);
+
+  const handleSave = async () => {
+    if (!currentResume) return;
+    setIsSaving(true);
+    try {
+      await fetch(`/api/resumes/${currentResume.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title, template, customHeadline, customBio, selections
+        }),
+      });
+      // A full app might refresh router here to update `props.resumes` but we rely on local state
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Auto-save debounced
+  useEffect(() => {
+    if (!currentResume) return;
+    // Don't auto-save immediately on mount/tab-switch if it matches DB exactly to save requests
+    if (
+      title === currentResume.title &&
+      template === currentResume.template &&
+      customHeadline === (currentResume.customHeadline || props.profile?.headline || "") &&
+      customBio === (currentResume.customBio || props.profile?.bio || "") &&
+      JSON.stringify(selections) === JSON.stringify(currentResume.selections || {})
+    ) return;
+
+    const timer = setTimeout(() => handleSave(), 1500);
+    return () => clearTimeout(timer);
+  }, [title, template, customHeadline, customBio, selections]);
+
+  const createNewResume = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/resumes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: "New Resume", template: "classic" }),
+      });
+      const data = await res.json();
+      window.location.reload(); // Quickest way to refresh props.resumes
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const deleteResume = async (id) => {
+    if (!confirm("Are you sure you want to delete this tailored resume?")) return;
+    await fetch(`/api/resumes/${id}`, { method: "DELETE" });
+    window.location.reload();
+  };
+
   const [visibleSections, setVisibleSections] = useState({
-    education: true,
-    achievements: true,
-    projects: true,
-    skills: true,
-    internships: true,
-    professions: true,
-    professionsSelf: true,
+    education: true, achievements: true, projects: true, skills: true,
+    internships: true, professions: true, professionsSelf: true,
   });
 
   const toggleSection = (section) =>
     setVisibleSections((prev) => ({ ...prev, [section]: !prev[section] }));
 
+  const toggleItemSelection = (category, id) => {
+    setSelections(prev => {
+      let current = prev[category];
+      if (!current) {
+        const fullDataMap = {
+          education: rawEducation, achievements: rawAchievements, projects: rawProjects,
+          skills: rawSkills, internships: rawInternships, professions: rawProfessions, professionsSelf: rawProfessionsSelf,
+        };
+        current = fullDataMap[category].map(x => x.id);
+      }
+      if (current.includes(id)) {
+        return { ...prev, [category]: current.filter(x => x !== id) };
+      } else {
+        return { ...prev, [category]: [...current, id] };
+      }
+    });
+  };
+
+  const hasSelections = (category) => Array.isArray(selections[category]);
+
+  const education = isTailored ? rawEducation.filter(x => !hasSelections("education") || selections.education.includes(x.id)) : rawEducation;
+  const achievements = isTailored ? rawAchievements.filter(x => !hasSelections("achievements") || selections.achievements.includes(x.id)) : rawAchievements;
+  const projects = isTailored ? rawProjects.filter(x => !hasSelections("projects") || selections.projects.includes(x.id)) : rawProjects;
+  const skills = isTailored ? rawSkills.filter(x => !hasSelections("skills") || selections.skills.includes(x.id)) : rawSkills;
+  const internships = isTailored ? rawInternships.filter(x => !hasSelections("internships") || selections.internships.includes(x.id)) : rawInternships;
+  const professions = isTailored ? rawProfessions.filter(x => !hasSelections("professions") || selections.professions.includes(x.id)) : rawProfessions;
+  const professionsSelf = isTailored ? rawProfessionsSelf.filter(x => !hasSelections("professionsSelf") || selections.professionsSelf.includes(x.id)) : rawProfessionsSelf;
+
   const sectionsConfig = [
-    { key: "education", label: "Education", data: education },
-    { key: "achievements", label: "Achievements", data: achievements },
-    { key: "projects", label: "Projects", data: projects },
-    { key: "skills", label: "Skills", data: skills },
-    { key: "internships", label: "Internships", data: internships },
-    { key: "professions", label: "Profession – Job", data: professions },
-    { key: "professionsSelf", label: "Self Business / Training", data: professionsSelf },
+    { key: "education", label: "Education", data: education, rawData: rawEducation },
+    { key: "achievements", label: "Achievements", data: achievements, rawData: rawAchievements },
+    { key: "projects", label: "Projects", data: projects, rawData: rawProjects },
+    { key: "skills", label: "Skills", data: skills, rawData: rawSkills },
+    { key: "internships", label: "Internships", data: internships, rawData: rawInternships },
+    { key: "professions", label: "Profession – Job", data: professions, rawData: rawProfessions },
+    { key: "professionsSelf", label: "Self Business / Training", data: professionsSelf, rawData: rawProfessionsSelf },
   ];
 
-  const vis = visibleSections;
+  const vis = isTailored ? {
+    education: education.length > 0, achievements: achievements.length > 0, projects: projects.length > 0,
+    skills: skills.length > 0, internships: internships.length > 0, professions: professions.length > 0, professionsSelf: professionsSelf.length > 0,
+  } : visibleSections;
 
   function getCategoryLabel(type) {
     const map = {
@@ -68,10 +176,10 @@ export function ResumeBuilder(props) {
   }
 
   const name = user?.name || "";
-  const headline = profile?.headline || "";
+  const headline = isTailored ? customHeadline : (profile?.headline || "");
   const location = profile?.location || "";
   const email = user?.email || "";
-  const bio = profile?.bio || "";
+  const bio = isTailored ? customBio : (profile?.bio || "");
   const linkedin = profile?.linkedinUrl || "";
   const portfolio = profile?.portfolioUrl || "";
 
@@ -573,9 +681,36 @@ export function ResumeBuilder(props) {
   };
 
   return (
-    <div className="grid gap-6 p-4 md:p-8 lg:grid-cols-[310px_1fr]">
+    <div className={`gap-6 p-4 md:p-8 ${props.readOnly ? 'flex justify-center' : 'grid lg:grid-cols-[310px_1fr]'}`}>
+      {/* Tabs */}
+      {!props.readOnly && (
+        <>
+      <div className="lg:col-span-2 flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200">
+        <button 
+          onClick={() => setActiveTab("master")}
+          className={`shrink-0 px-4 py-2 text-sm font-semibold rounded-t-lg transition ${activeTab === "master" ? "bg-white text-indigo-700 border border-b-white border-slate-200 shadow-[0_4px_0_0_white]" : "text-slate-600 hover:bg-slate-100"}`}
+        >
+          Master Resume
+        </button>
+        {resumes.map(r => (
+          <button 
+            key={r.id}
+            onClick={() => setActiveTab(r.id)}
+            className={`shrink-0 px-4 py-2 text-sm font-semibold rounded-t-lg transition ${activeTab === r.id ? "bg-white text-indigo-700 border border-b-white border-slate-200 shadow-[0_4px_0_0_white]" : "text-slate-600 hover:bg-slate-100"}`}
+          >
+            {r.title || "Untitled"}
+          </button>
+        ))}
+        <button 
+          onClick={createNewResume}
+          className="shrink-0 flex items-center gap-1 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+        >
+          <Plus size={16}/> New Tailored Resume
+        </button>
+      </div>
+
       {/* Controls */}
-      <Card className="no-print h-fit p-5 grid gap-5">
+      <Card className="no-print h-fit p-5 grid gap-5 border-t-0 rounded-tl-none">
         {/* Template picker */}
         <div>
           <p className="flex items-center gap-2 text-sm font-bold text-slate-900 mb-3">
@@ -592,29 +727,113 @@ export function ResumeBuilder(props) {
           </div>
         </div>
 
-        {/* Section toggles */}
-        <div>
-          <p className="text-sm font-bold text-slate-900 mb-3">Sections</p>
-          <div className="grid gap-2">
-            {sectionsConfig.map((sec) => (
-              <label key={sec.key}
-                className="flex items-center justify-between rounded-lg border border-slate-200 p-2.5 cursor-pointer hover:bg-slate-50 transition">
-                <span className="flex flex-col">
-                  <span className="text-sm font-medium text-slate-800">{sec.label}</span>
-                  <span className="text-xs text-slate-400">{sec.data?.length || 0} record{sec.data?.length === 1 ? "" : "s"}</span>
-                </span>
-                <input type="checkbox" checked={visibleSections[sec.key]}
-                  onChange={() => toggleSection(sec.key)}
-                  className="size-4 accent-[#4F46E5] rounded" />
+        {isTailored ? (
+          <>
+            <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-xl mb-2">
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-800">Tailored Settings</span>
+                <div className="flex items-center gap-3">
+                  <a href={`/resume/${currentResume.id}`} target="_blank" className="text-indigo-600 hover:text-indigo-800 text-[10px] font-bold flex items-center gap-1"><ExternalLink size={12}/> Link</a>
+                  {isSaving ? (
+                    <span className="flex items-center gap-1 text-[10px] font-semibold text-blue-600 animate-pulse"><Save size={12}/> Saving...</span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600"><CheckCircle2 size={12}/> Saved</span>
+                  )}
+                  <button onClick={() => deleteResume(currentResume.id)} className="text-rose-500 hover:text-rose-700"><Trash2 size={14}/></button>
+                </div>
+              </div>
+              
+              <label className="block mb-2">
+                <span className="text-xs font-semibold text-slate-700 mb-1 block">Document Title</span>
+                <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full text-sm p-2 rounded border border-slate-200 bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition" />
               </label>
-            ))}
+              <label className="block mb-2">
+                <span className="text-xs font-semibold text-slate-700 mb-1 block">Tailored Headline</span>
+                <input type="text" value={customHeadline} onChange={e => setCustomHeadline(e.target.value)} className="w-full text-sm p-2 rounded border border-slate-200 bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition" placeholder="e.g. Senior Marketing Director" />
+              </label>
+              <label className="block">
+                <span className="text-xs font-semibold text-slate-700 mb-1 block">Tailored Summary</span>
+                <textarea value={customBio} onChange={e => setCustomBio(e.target.value)} rows={4} className="w-full text-sm p-2 rounded border border-slate-200 bg-white resize-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition" placeholder="Professional summary focused on this specific role..." />
+              </label>
+            </div>
+
+            <div>
+              <p className="text-sm font-bold text-slate-900 mb-3 flex items-center justify-between">
+                <span>Select Specific Content</span>
+              </p>
+              <div className="grid gap-2">
+                {sectionsConfig.map((sec) => {
+                  if (sec.rawData.length === 0) return null;
+                  const isExpanded = expandedSection === sec.key;
+                  
+                  return (
+                    <div key={sec.key} className="border border-slate-200 rounded-lg overflow-hidden transition-all bg-white">
+                      <button 
+                        onClick={() => setExpandedSection(isExpanded ? null : sec.key)}
+                        className={`w-full flex items-center justify-between p-3 text-left transition ${isExpanded ? "bg-slate-50 border-b border-slate-200" : "hover:bg-slate-50"}`}
+                      >
+                        <span className="flex flex-col">
+                          <span className="text-sm font-bold text-slate-800">{sec.label}</span>
+                          <span className="text-xs font-medium text-indigo-600">{sec.data.length} of {sec.rawData.length} included</span>
+                        </span>
+                        {isExpanded ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
+                      </button>
+                      
+                      {isExpanded && (
+                        <div className="p-2 bg-slate-50 max-h-[250px] overflow-y-auto">
+                          <div className="flex flex-col gap-1">
+                            {sec.rawData.map(item => {
+                              const isSelected = !hasSelections(sec.key) || selections[sec.key].includes(item.id);
+                              return (
+                                <label key={item.id} className="flex items-start gap-3 p-2 hover:bg-white rounded cursor-pointer transition border border-transparent hover:border-slate-200">
+                                  <input 
+                                    type="checkbox" 
+                                    checked={isSelected}
+                                    onChange={() => toggleItemSelection(sec.key, item.id)}
+                                    className="mt-1 size-4 accent-indigo-600 rounded" 
+                                  />
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-bold text-slate-900 line-clamp-1">{item.title || item.degree || item.designation || item.skillName}</span>
+                                    <span className="text-[10px] text-slate-500 line-clamp-1">{item.companyName || item.institutionName || item.category || ""}</span>
+                                  </div>
+                                </label>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        ) : (
+          <div>
+            <p className="text-sm font-bold text-slate-900 mb-3">Sections</p>
+            <div className="grid gap-2">
+              {sectionsConfig.map((sec) => (
+                <label key={sec.key}
+                  className="flex items-center justify-between rounded-lg border border-slate-200 p-2.5 cursor-pointer hover:bg-slate-50 transition">
+                  <span className="flex flex-col">
+                    <span className="text-sm font-medium text-slate-800">{sec.label}</span>
+                    <span className="text-xs text-slate-400">{sec.data?.length || 0} record{sec.data?.length === 1 ? "" : "s"}</span>
+                  </span>
+                  <input type="checkbox" checked={visibleSections[sec.key]}
+                    onChange={() => toggleSection(sec.key)}
+                    className="size-4 accent-[#4F46E5] rounded" />
+                </label>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <Button className="w-full" onClick={handleDownloadPdf}>
           <Printer size={15} /> Print / Save as PDF
         </Button>
       </Card>
+      </>
+      )}
 
       {/* Resume preview */}
       <div id="resume-preview" className="print-page overflow-hidden rounded-xl">

@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/profile/layout,_N_T_/profile/demo-student/layout,_N_T_/profile/demo-student/page,_N_T_/profile/demo-student"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/profile/demo-student/__PAGE__",
+    "/profile/demo-student",
+    "/profile",
+    "/_index",
+    "/_head"
+  ]
+}
