@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { ExternalLink, Mail } from "lucide-react";
+import { UserPlanSelector } from "@/components/admin/UserPlanSelector";
 
 export default async function AdminUsersPage() {
   await requireAdmin();
@@ -12,6 +13,7 @@ export default async function AdminUsersPage() {
   const achievements = await db.achievement.findMany({});
   const projects = await db.project.findMany({});
   const outOfBox = await db.outOfBox.findMany({});
+  const plans = await db.plan.findMany({});
 
   const userStats = users.map((user) => {
     const profile = profiles.find((p) => p.userId === user.id);
@@ -40,6 +42,7 @@ export default async function AdminUsersPage() {
               <tr>
                 <th className="px-6 py-4 font-semibold">User</th>
                 <th className="px-6 py-4 font-semibold">Joined Date</th>
+                <th className="px-6 py-4 font-semibold">Plan</th>
                 <th className="px-6 py-4 font-semibold">Activity Count</th>
                 <th className="px-6 py-4 font-semibold text-right">Actions</th>
               </tr>
@@ -56,6 +59,9 @@ export default async function AdminUsersPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <UserPlanSelector userId={user.id} currentPlanId={user.planId} plans={plans} />
                   </td>
                   <td className="px-6 py-4">
                     <span className="inline-flex items-center justify-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-indigo-700 font-medium">
@@ -75,7 +81,7 @@ export default async function AdminUsersPage() {
               ))}
               {userStats.length === 0 && (
                 <tr>
-                  <td colSpan="4" className="px-6 py-8 text-center text-slate-500">
+                  <td colSpan="5" className="px-6 py-8 text-center text-slate-500">
                     No users found.
                   </td>
                 </tr>

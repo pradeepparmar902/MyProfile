@@ -12,6 +12,7 @@ export default async function AdminLayout({ children }) {
 
   const navItems = [
     { label: "User Management", href: "/admin/users", icon: Users },
+    { label: "Subscription Plans", href: "/admin/plans", icon: Settings },
     { label: "Global Settings", href: "/admin/settings", icon: Settings },
   ];
 

@@ -16,6 +16,7 @@ import {
   Users,
   Heart,
   Sparkles,
+  CreditCard,
 } from "lucide-react";
 
 export function getNavItems(settings = {}) {
@@ -49,6 +50,7 @@ export function getNavItems(settings = {}) {
     { icon: Heart, label: "Hobbies", href: "/dashboard/hobbies", show: showHobbies },
     { icon: Sparkles, label: "My Roadmap", href: "/dashboard/roadmaps", show: showRoadmaps },
     { icon: FileText, label: "Resume", href: "/dashboard/resume" },
+    { icon: CreditCard, label: "My Plan & Billing", href: "/dashboard/billing" },
     { icon: BookOpen, label: "User Manual", href: "/dashboard/manual" },
     { icon: Settings, label: "Settings", href: "/dashboard/settings" },
   ];

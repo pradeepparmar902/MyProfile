@@ -5,7 +5,7 @@ import { Plus, X, Trash2 } from "lucide-react";
 import RoadmapMindmap from "./RoadmapMindmap";
 import { useRouter } from "next/navigation";
 
-export function RoadmapManager({ initialItems }) {
+export function RoadmapManager({ initialItems, limits }) {
   const router = useRouter();
   const [roadmaps, setRoadmaps] = useState(initialItems || []);
   const [activeRoadmapId, setActiveRoadmapId] = useState(initialItems && initialItems.length > 0 ? initialItems[0].id : 'new');
@@ -128,13 +128,20 @@ export function RoadmapManager({ initialItems }) {
           
           <button
             onClick={handleAddNew}
-            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors border border-blue-100 flex-shrink-0"
+            disabled={roadmaps.length >= (limits?.roadmapLimit || 9999)}
+            className="flex items-center gap-1 px-4 py-2 rounded-lg font-medium bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors border border-blue-100 flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
             title="Create New Roadmap"
           >
             <Plus size={18} />
             <span>New Roadmap</span>
           </button>
         </div>
+        {limits && roadmaps.length >= limits.roadmapLimit && limits.roadmapLimit < 9999 && (
+          <div className="mt-2 text-xs text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-200 flex justify-between items-center">
+            <span>You have reached your {limits.planName} plan limit of {limits.roadmapLimit} roadmaps.</span>
+            <a href="/dashboard/billing" className="font-bold underline">Upgrade Plan</a>
+          </div>
+        )}
       </div>
 
       {/* Delete Confirmation Modal */}

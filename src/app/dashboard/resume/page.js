@@ -3,6 +3,7 @@ import { DashboardTopbar } from "@/components/layout/DashboardTopbar";
 import { ResumeBuilder } from "@/components/resume/ResumeBuilder";
 import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserLimits } from "@/lib/plans";
 
 export default async function ResumePage() {
   const sessionUser = await getSessionUser();
@@ -22,6 +23,7 @@ export default async function ResumePage() {
   const professions = await db.profession.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
   const professionsSelf = await db.professionSelf.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
   const resumes = await db.resume.findMany({ where: { userId: user.id }, orderBy: { createdAt: "desc" } });
+  const limits = await getUserLimits(user.id);
 
   const profile = user.profile;
 
@@ -54,6 +56,7 @@ export default async function ResumePage() {
         professions={JSON.parse(JSON.stringify(professions))}
         professionsSelf={JSON.parse(JSON.stringify(professionsSelf))}
         resumes={JSON.parse(JSON.stringify(resumes))}
+        limits={limits}
       />
     </>
   );

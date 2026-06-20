@@ -3,6 +3,7 @@ import { DashboardTopbar } from "@/components/layout/DashboardTopbar";
 import { RoadmapManager } from "@/components/roadmap/RoadmapManager";
 import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserLimits } from "@/lib/plans";
 
 export default async function RoadmapsPage() {
   const user = await getSessionUser();
@@ -12,6 +13,7 @@ export default async function RoadmapsPage() {
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
   });
+  const limits = await getUserLimits(user.id);
 
   return (
     <>
@@ -27,7 +29,7 @@ export default async function RoadmapsPage() {
           </>
         }
       />
-      <RoadmapManager initialItems={items} />
+      <RoadmapManager initialItems={items} limits={limits} />
     </>
   );
 }

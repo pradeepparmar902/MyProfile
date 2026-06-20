@@ -5,6 +5,7 @@ import { ProfileEditor } from "@/components/profile/ProfileEditor";
 import { LinkedInConnect } from "@/components/linkedin/LinkedInConnect";
 import { RecruiterLink } from "@/components/profile/RecruiterLink";
 import { db } from "@/lib/db";
+import { getUserLimits } from "@/lib/plans";
 
 export default async function SettingsPage() {
   const user = await getSessionUser();
@@ -14,6 +15,7 @@ export default async function SettingsPage() {
     where: { id: user.id },
     include: { profile: true } 
   });
+  const limits = await getUserLimits(user.id);
   const resumes = await db.resume.findMany({ 
     where: { userId: user.id },
     orderBy: { createdAt: "desc" }
@@ -29,7 +31,7 @@ export default async function SettingsPage() {
     <>
       <DashboardTopbar title="Settings" />
       <div className="grid gap-8 p-4 md:p-8">
-        <RecruiterLink username={fullUser?.profile?.username} resumes={resumes} />
+        <RecruiterLink username={fullUser?.profile?.username} resumes={resumes} limits={limits} />
         <LinkedInConnect isConnected={linkedinConnected} />
       </div>
     </>

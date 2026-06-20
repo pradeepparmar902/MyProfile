@@ -11,6 +11,7 @@ export function SettingsManager({ initialSettings }) {
   const [isSaving, setIsSaving] = useState(false);
   const [settings, setSettings] = useState({
     theme: initialSettings?.theme || "modern",
+    enableCommercialization: initialSettings?.enableCommercialization ?? false,
     showEducation: initialSettings?.showEducation ?? true,
     showAchievements: initialSettings?.showAchievements ?? true,
     showProjects: initialSettings?.showProjects ?? true,
@@ -141,6 +142,21 @@ export function SettingsManager({ initialSettings }) {
             <ToggleRow label="Other Activities" description="Clubs & volunteering" settingKey="showActivities" />
             <ToggleRow label="Out of Box Thinking" description="Creative problem solving" settingKey="showOutOfBox" />
           </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="grid size-10 place-items-center rounded-lg bg-emerald-100 text-emerald-600">
+            <Check size={20} />
+          </span>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Commercialization & Billing</h2>
+            <p className="text-sm text-slate-500">Enable subscription plans and limits for resumes, roadmaps, and recruiters.</p>
+          </div>
+        </div>
+        <div className="mt-6">
+          <ToggleRow label="Enable Commercialization" description="If disabled, all users have unlimited access to everything." settingKey="enableCommercialization" />
         </div>
       </Card>
 

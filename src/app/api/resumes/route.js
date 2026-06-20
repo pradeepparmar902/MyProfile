@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserLimits } from "@/lib/plans";
 
 export async function POST(req) {
   try {
@@ -8,6 +9,12 @@ export async function POST(req) {
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
+
+    const limits = await getUserLimits(user.id);
+    const count = await db.resume.count({ where: { userId: user.id } });
+    if (count >= limits.resumeLimit) {
+      return NextResponse.json({ error: `Limit reached. Your ${limits.planName} plan only allows ${limits.resumeLimit} resumes.` }, { status: 403 });
+    }
 
     const resume = await db.resume.create({
       data: {

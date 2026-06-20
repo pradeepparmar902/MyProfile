@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { error, json } from "@/lib/api";
 import { authenticated } from "@/lib/crud";
+import { getUserLimits } from "@/lib/plans";
 
 export async function GET() {
   const { user, response } = await authenticated();
@@ -19,6 +20,12 @@ export async function POST(request) {
   const body = await request.json();
 
   if (!body.title) return error("Title is required.");
+
+  const limits = await getUserLimits(user.id);
+  const count = await db.roadmap.count({ where: { userId: user.id } });
+  if (count >= limits.roadmapLimit) {
+    return error(`Limit reached. Your ${limits.planName} plan only allows ${limits.roadmapLimit} roadmaps.`, 403);
+  }
 
   const item = await db.roadmap.create({
     data: {

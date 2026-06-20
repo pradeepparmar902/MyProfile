@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";
 
-export function RecruiterLink({ username, resumes = [] }) {
+export function RecruiterLink({ username, resumes = [], limits }) {
   const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
@@ -133,7 +133,13 @@ export function RecruiterLink({ username, resumes = [] }) {
           )}
         </div>
         {error && <p className="text-sm font-semibold text-red-600">{error}</p>}
-        <Button disabled={creating} className="w-fit">
+        {limits && invites.length >= limits.inviteLimit && limits.inviteLimit < 9999 && (
+          <div className="text-xs text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-200 flex justify-between items-center">
+            <span>You have reached your {limits.planName} plan limit of {limits.inviteLimit} recruiter links.</span>
+            <a href="/dashboard/billing" className="font-bold underline">Upgrade Plan</a>
+          </div>
+        )}
+        <Button disabled={creating || (limits && invites.length >= limits.inviteLimit)} className="w-fit">
           <Plus size={16} />
           {creating ? "Creating..." : "Generate Link"}
         </Button>

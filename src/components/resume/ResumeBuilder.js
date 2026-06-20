@@ -17,6 +17,7 @@ export function ResumeBuilder(props) {
   const user = props.user;
   const profile = props.profile;
   const invite = props.invite;
+  const limits = props.limits;
   const resumes = props.resume ? [props.resume] : (props.resumes || []);
   
   const rawEducation = props.education?.filter(x => !x.isHidden) || [];
@@ -720,12 +721,19 @@ export function ResumeBuilder(props) {
             {activeTab === r.id ? (title || "Untitled") : (r.title || "Untitled")}
           </button>
         ))}
-        <button 
-          onClick={createNewResume}
-          className="shrink-0 flex items-center gap-1 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
-        >
-          <Plus size={16}/> New Tailored Resume
-        </button>
+        {(!limits || resumes.length < limits.resumeLimit || limits.resumeLimit >= 9999) ? (
+          <button 
+            onClick={createNewResume}
+            className="shrink-0 flex items-center gap-1 px-3 py-2 text-sm font-semibold text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
+          >
+            <Plus size={16}/> New Tailored Resume
+          </button>
+        ) : (
+          <div className="shrink-0 flex flex-col justify-center px-3 text-xs text-amber-600 font-medium">
+            <span>Limit Reached ({limits.resumeLimit})</span>
+            <a href="/dashboard/billing" className="underline font-bold">Upgrade Plan</a>
+          </div>
+        )}
       </div>
 
       {/* Controls */}
