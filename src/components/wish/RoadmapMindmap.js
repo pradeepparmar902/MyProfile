@@ -190,18 +190,33 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setIsSaving(true);
     const mindmapData = { nodes: getNodes(), edges: getEdges() };
     
-    await fetch(`/api/wishes/${wish.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ mindmapData: JSON.stringify(mindmapData) }),
-    });
+    if (wish.id === 'new') {
+      const res = await fetch(`/api/wishes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          title: wish.title || "My Career Vision",
+          mindmapData: JSON.stringify(mindmapData) 
+        }),
+      });
+      const data = await res.json();
+      if (data.wish) {
+        wish.id = data.wish.id; // Update ID so future saves are PUTs
+      }
+    } else {
+      await fetch(`/api/wishes/${wish.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mindmapData: JSON.stringify(mindmapData) }),
+      });
+    }
     
     setIsSaving(false);
     if (onSave) onSave(mindmapData);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm" onKeyDown={onKeyDown}>
+    <div className={wish.isInline ? "w-full h-[700px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"} onKeyDown={onKeyDown}>
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shadow-lg">
         <div>
@@ -209,12 +224,14 @@ function MindmapCanvas({ wish, onClose, onSave }) {
           <p className="text-sm text-slate-400">Press Tab to add a child step, Enter to add a sibling step.</p>
         </div>
         <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
-          >
-            <X size={16} /> Close
-          </button>
+          {!wish.isInline && (
+            <button
+              onClick={onClose}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
+            >
+              <X size={16} /> Close
+            </button>
+          )}
           <button
             onClick={handleSave}
             disabled={isSaving}
