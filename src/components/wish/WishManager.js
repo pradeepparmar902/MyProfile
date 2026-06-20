@@ -135,7 +135,7 @@ export function WishManager({ initialItems }) {
         </div>
       </div>
 
-      <div className="w-full h-[750px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+      <div className="w-full h-[calc(100vh-220px)] min-h-[500px] flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200">
         <RoadmapMindmap 
           key={activeWish.id} 
           wish={{...activeWish, isInline: true}} 

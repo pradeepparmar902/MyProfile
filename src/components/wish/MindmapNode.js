@@ -102,7 +102,7 @@ export default function MindmapNode({ id, data, selected }) {
 
       {/* Main Node Content */}
       <div 
-        className={`px-4 py-2.5 rounded-xl shadow-md min-w-[140px] max-w-[250px] transition-colors border-2 relative`}
+        className={`px-3 py-1.5 rounded-lg shadow-md min-w-[100px] max-w-[200px] transition-colors border-2 relative`}
         style={{ 
           backgroundColor: currentColor, 
           borderColor: currentColor,
@@ -117,11 +117,11 @@ export default function MindmapNode({ id, data, selected }) {
             onChange={(e) => setLocalLabel(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-full bg-transparent border-none outline-none text-center font-medium text-white"
+            className="w-full bg-transparent border-none outline-none text-center font-medium text-white text-sm"
             autoFocus
           />
         ) : (
-          <div className="text-center font-medium text-white break-words">
+          <div className="text-center font-medium text-white break-words text-sm leading-tight">
             {data.label}
           </div>
         )}
@@ -131,29 +131,29 @@ export default function MindmapNode({ id, data, selected }) {
           className="absolute -top-3 left-1/2 -translate-x-1/2 cursor-pointer z-30"
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
         >
-          <div className={`text-[9px] font-bold px-2 py-0.5 rounded-full border shadow-sm whitespace-nowrap text-white ${getStatusColor(data.status)} border-black/20`}>
+          <div className={`text-[8px] font-bold px-1.5 py-[1px] rounded-full border shadow-sm whitespace-nowrap text-white ${getStatusColor(data.status)} border-black/20`}>
             {data.status === 'Achieved' ? '✅' : data.status === 'In Progress' ? '⏳' : '⭕'} {data.status || 'Not yet started'}
           </div>
         </div>
 
         {/* Bottom Left Start Date */}
         <div 
-          className="absolute -bottom-2.5 left-2 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="absolute -bottom-2 left-1.5 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
           title="Start Date"
         >
-          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[9px] px-1.5 py-0.5 rounded border border-slate-600 shadow-sm flex items-center gap-1">
+          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[8px] px-1 py-[1px] rounded border border-slate-600 shadow-sm flex items-center gap-1">
             🗓 {data.startDate || 'Start'}
           </div>
         </div>
 
         {/* Bottom Right Target Date */}
         <div 
-          className="absolute -bottom-2.5 right-2 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+          className="absolute -bottom-2 right-1.5 cursor-pointer z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
           onClick={(e) => { e.stopPropagation(); data.onMoreInfo && data.onMoreInfo(id); }}
           title="Target Date"
         >
-          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[9px] px-1.5 py-0.5 rounded border border-slate-600 shadow-sm flex items-center gap-1">
+          <div className="bg-slate-800 hover:bg-slate-700 text-white text-[8px] px-1 py-[1px] rounded border border-slate-600 shadow-sm flex items-center gap-1">
             🏁 {data.endDate || 'Target'}
           </div>
         </div>
@@ -163,14 +163,14 @@ export default function MindmapNode({ id, data, selected }) {
           type="target" 
           position={Position.Top} 
           id="top-target" 
-          className="!w-4 !h-4 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
+          className="!w-2.5 !h-2.5 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
           title="Connect here"
         />
         <Handle 
           type="target" 
           position={Position.Left} 
           id="left-target" 
-          className="!w-4 !h-4 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
+          className="!w-2.5 !h-2.5 !bg-slate-800 !border-2 !border-slate-400 hover:!border-blue-400 hover:!bg-blue-50 transition-colors z-20" 
           title="Connect here"
         />
 
@@ -182,10 +182,10 @@ export default function MindmapNode({ id, data, selected }) {
             position={Position.Right}
             id="right-source"
             onClick={() => data.onAddChildRight && data.onAddChildRight(id)}
-            className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+            className="!w-4 !h-4 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
             title="Click to add right, Drag to connect"
           >
-            <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <Plus size={10} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </Handle>
           
           {/* Add Sibling / Source Plug (Bottom) */}
@@ -194,10 +194,10 @@ export default function MindmapNode({ id, data, selected }) {
             position={Position.Bottom}
             id="bottom-source"
             onClick={() => data.onAddChildBottom && data.onAddChildBottom(id)}
-            className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+            className="!w-4 !h-4 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
             title="Click to add below, Drag to connect"
           >
-            <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <Plus size={10} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
           </Handle>
         </div>
       </div>
