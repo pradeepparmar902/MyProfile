@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Printer, LayoutTemplate, ChevronDown, ChevronUp, Save, FileText, CheckCircle2 } from "lucide-react";
+import { Printer, LayoutTemplate } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -17,99 +17,45 @@ export function ResumeBuilder(props) {
   const user = props.user;
   const profile = props.profile;
   const invite = props.invite;
-  const isTailored = !!props.resume;
-  const rawEducation = props.education?.filter(x => !x.isHidden) || [];
-  const rawAchievements = props.achievements?.filter(x => !x.isHidden) || [];
-  const rawProjects = props.projects?.filter(x => !x.isHidden) || [];
-  const rawSkills = props.skills?.filter(x => !x.isHidden) || [];
-  const rawInternships = props.internships?.filter(x => !x.isHidden) || [];
-  const rawProfessions = props.professions?.filter(x => !x.isHidden) || [];
-  const rawProfessionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
+  const education = props.education?.filter(x => !x.isHidden) || [];
+  const achievements = props.achievements?.filter(x => !x.isHidden) || [];
+  const projects = props.projects?.filter(x => !x.isHidden) || [];
+  const skills = props.skills?.filter(x => !x.isHidden) || [];
+  const internships = props.internships?.filter(x => !x.isHidden) || [];
+  const professions = props.professions?.filter(x => !x.isHidden) || [];
+  const professionsSelf = props.professionsSelf?.filter(x => !x.isHidden) || [];
   
-  const [template, setTemplate] = useState(props.resume?.template || "classic");
+  const [template, setTemplate] = useState("classic");
   const [origin, setOrigin] = useState("");
-  const [customHeadline, setCustomHeadline] = useState(props.resume?.customHeadline || props.profile?.headline || "");
-  const [customBio, setCustomBio] = useState(props.resume?.customBio || props.profile?.bio || "");
-  const [title, setTitle] = useState(props.resume?.title || "Untitled Resume");
-  
-  const [selections, setSelections] = useState(props.resume?.selections || {});
-  const [isSaving, setIsSaving] = useState(false);
-  const [expandedSection, setExpandedSection] = useState(null);
   
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOrigin(window.location.origin);
   }, []);
+  const [visibleSections, setVisibleSections] = useState({
+    education: true,
+    achievements: true,
+    projects: true,
+    skills: true,
+    internships: true,
+    professions: true,
+    professionsSelf: true,
+  });
 
-  const handleSave = async () => {
-    if (!props.resume) return;
-    setIsSaving(true);
-    try {
-      await fetch(`/api/resumes/${props.resume.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title, template, customHeadline, customBio, selections
-        }),
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!props.resume) return;
-    const timer = setTimeout(() => handleSave(), 1500);
-    return () => clearTimeout(timer);
-  }, [title, template, customHeadline, customBio, selections]);
-
-  const toggleItemSelection = (category, id) => {
-    setSelections(prev => {
-      let current = prev[category];
-      if (!current) {
-        const fullDataMap = {
-          education: rawEducation, achievements: rawAchievements, projects: rawProjects,
-          skills: rawSkills, internships: rawInternships, professions: rawProfessions, professionsSelf: rawProfessionsSelf,
-        };
-        current = fullDataMap[category].map(x => x.id);
-      }
-      
-      if (current.includes(id)) {
-        return { ...prev, [category]: current.filter(x => x !== id) };
-      } else {
-        return { ...prev, [category]: [...current, id] };
-      }
-    });
-  };
-
-  const hasSelections = (category) => Array.isArray(selections[category]);
-
-  const education = rawEducation.filter(x => !hasSelections("education") || selections.education.includes(x.id));
-  const achievements = rawAchievements.filter(x => !hasSelections("achievements") || selections.achievements.includes(x.id));
-  const projects = rawProjects.filter(x => !hasSelections("projects") || selections.projects.includes(x.id));
-  const skills = rawSkills.filter(x => !hasSelections("skills") || selections.skills.includes(x.id));
-  const internships = rawInternships.filter(x => !hasSelections("internships") || selections.internships.includes(x.id));
-  const professions = rawProfessions.filter(x => !hasSelections("professions") || selections.professions.includes(x.id));
-  const professionsSelf = rawProfessionsSelf.filter(x => !hasSelections("professionsSelf") || selections.professionsSelf.includes(x.id));
+  const toggleSection = (section) =>
+    setVisibleSections((prev) => ({ ...prev, [section]: !prev[section] }));
 
   const sectionsConfig = [
-    { key: "education", label: "Education", data: education, rawData: rawEducation },
-    { key: "achievements", label: "Achievements", data: achievements, rawData: rawAchievements },
-    { key: "projects", label: "Projects", data: projects, rawData: rawProjects },
-    { key: "skills", label: "Skills", data: skills, rawData: rawSkills },
-    { key: "internships", label: "Internships", data: internships, rawData: rawInternships },
-    { key: "professions", label: "Profession – Job", data: professions, rawData: rawProfessions },
-    { key: "professionsSelf", label: "Self Business", data: professionsSelf, rawData: rawProfessionsSelf },
+    { key: "education", label: "Education", data: education },
+    { key: "achievements", label: "Achievements", data: achievements },
+    { key: "projects", label: "Projects", data: projects },
+    { key: "skills", label: "Skills", data: skills },
+    { key: "internships", label: "Internships", data: internships },
+    { key: "professions", label: "Profession – Job", data: professions },
+    { key: "professionsSelf", label: "Self Business / Training", data: professionsSelf },
   ];
 
-  const vis = {
-    education: education.length > 0,
-    achievements: achievements.length > 0,
-    projects: projects.length > 0,
-    skills: skills.length > 0,
-    internships: internships.length > 0,
-    professions: professions.length > 0,
-    professionsSelf: professionsSelf.length > 0,
-  };
+  const vis = visibleSections;
 
   function getCategoryLabel(type) {
     const map = {
@@ -122,10 +68,10 @@ export function ResumeBuilder(props) {
   }
 
   const name = user?.name || "";
-  const headline = isTailored ? customHeadline : (profile?.headline || "");
+  const headline = profile?.headline || "";
   const location = profile?.location || "";
   const email = user?.email || "";
-  const bio = isTailored ? customBio : (profile?.bio || "");
+  const bio = profile?.bio || "";
   const linkedin = profile?.linkedinUrl || "";
   const portfolio = profile?.portfolioUrl || "";
 
@@ -627,103 +573,41 @@ export function ResumeBuilder(props) {
   };
 
   return (
-    <div className={`gap-6 p-4 md:p-8 ${props.readOnly ? 'flex justify-center' : 'grid lg:grid-cols-[310px_1fr]'}`}>
+    <div className="grid gap-6 p-4 md:p-8 lg:grid-cols-[310px_1fr]">
       {/* Controls */}
-      {!props.readOnly && (
-        <Card className="no-print h-fit p-5 grid gap-5">
-          {/* Template picker */}
-          <div>
-            <p className="flex items-center gap-2 text-sm font-bold text-slate-900 mb-3">
-              <LayoutTemplate size={15} /> Choose Template
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {TEMPLATES.map((t) => (
-                <button key={t.key} onClick={() => setTemplate(t.key)}
-                  className={`rounded-xl border-2 p-3 text-left transition ${template === t.key ? "border-[#4F46E5] bg-indigo-50" : "border-slate-200 hover:border-slate-300"}`}>
-                  <p className="text-sm font-bold text-slate-900">{t.label}</p>
-                  <p className="text-xs text-slate-500">{t.desc}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Title & Save Status (If tailored) */}
-        {isTailored && (
-          <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl mb-2">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-800">Resume Settings</span>
-              {isSaving ? (
-                <span className="flex items-center gap-1 text-[10px] font-semibold text-blue-600 animate-pulse"><Save size={12}/> Saving...</span>
-              ) : (
-                <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600"><CheckCircle2 size={12}/> Saved</span>
-              )}
-            </div>
-            
-            <label className="block mb-2">
-              <span className="text-xs font-semibold text-slate-700 mb-1 block">Document Title</span>
-              <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full text-sm p-2 rounded border border-slate-200 bg-white" />
-            </label>
-            <label className="block mb-2">
-              <span className="text-xs font-semibold text-slate-700 mb-1 block">Tailored Headline</span>
-              <input type="text" value={customHeadline} onChange={e => setCustomHeadline(e.target.value)} className="w-full text-sm p-2 rounded border border-slate-200 bg-white" placeholder="e.g. Senior Marketing Director" />
-            </label>
-            <label className="block">
-              <span className="text-xs font-semibold text-slate-700 mb-1 block">Tailored Summary</span>
-              <textarea value={customBio} onChange={e => setCustomBio(e.target.value)} rows={3} className="w-full text-sm p-2 rounded border border-slate-200 bg-white resize-none" placeholder="Professional summary focused on this specific role..." />
-            </label>
-          </div>
-        )}
-
-        {/* Section Item Picker */}
+      <Card className="no-print h-fit p-5 grid gap-5">
+        {/* Template picker */}
         <div>
-          <p className="text-sm font-bold text-slate-900 mb-3 flex items-center justify-between">
-            <span>Select Content</span>
+          <p className="flex items-center gap-2 text-sm font-bold text-slate-900 mb-3">
+            <LayoutTemplate size={15} /> Choose Template
           </p>
+          <div className="grid grid-cols-2 gap-2">
+            {TEMPLATES.map((t) => (
+              <button key={t.key} onClick={() => setTemplate(t.key)}
+                className={`rounded-xl border-2 p-3 text-left transition ${template === t.key ? "border-[#4F46E5] bg-indigo-50" : "border-slate-200 hover:border-slate-300"}`}>
+                <p className="text-sm font-bold text-slate-900">{t.label}</p>
+                <p className="text-xs text-slate-500">{t.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Section toggles */}
+        <div>
+          <p className="text-sm font-bold text-slate-900 mb-3">Sections</p>
           <div className="grid gap-2">
-            {sectionsConfig.map((sec) => {
-              if (sec.rawData.length === 0) return null;
-              const isExpanded = expandedSection === sec.key;
-              const isAllSelected = !hasSelections(sec.key) || selections[sec.key].length === sec.rawData.length;
-              
-              return (
-                <div key={sec.key} className="border border-slate-200 rounded-lg overflow-hidden transition-all bg-white">
-                  <button 
-                    onClick={() => setExpandedSection(isExpanded ? null : sec.key)}
-                    className={`w-full flex items-center justify-between p-3 text-left transition ${isExpanded ? "bg-slate-50 border-b border-slate-200" : "hover:bg-slate-50"}`}
-                  >
-                    <span className="flex flex-col">
-                      <span className="text-sm font-bold text-slate-800">{sec.label}</span>
-                      <span className="text-xs font-medium text-indigo-600">{sec.data.length} of {sec.rawData.length} selected</span>
-                    </span>
-                    {isExpanded ? <ChevronUp size={16} className="text-slate-400" /> : <ChevronDown size={16} className="text-slate-400" />}
-                  </button>
-                  
-                  {isExpanded && (
-                    <div className="p-2 bg-slate-50 max-h-[250px] overflow-y-auto">
-                      <div className="flex flex-col gap-1">
-                        {sec.rawData.map(item => {
-                          const isSelected = !hasSelections(sec.key) || selections[sec.key].includes(item.id);
-                          return (
-                            <label key={item.id} className="flex items-start gap-3 p-2 hover:bg-white rounded cursor-pointer transition border border-transparent hover:border-slate-200">
-                              <input 
-                                type="checkbox" 
-                                checked={isSelected}
-                                onChange={() => toggleItemSelection(sec.key, item.id)}
-                                className="mt-1 size-4 accent-[#4F46E5] rounded" 
-                              />
-                              <div className="flex flex-col">
-                                <span className="text-xs font-bold text-slate-900 line-clamp-1">{item.title || item.degree || item.designation || item.skillName}</span>
-                                <span className="text-[10px] text-slate-500 line-clamp-1">{item.companyName || item.institutionName || item.category || ""}</span>
-                              </div>
-                            </label>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+            {sectionsConfig.map((sec) => (
+              <label key={sec.key}
+                className="flex items-center justify-between rounded-lg border border-slate-200 p-2.5 cursor-pointer hover:bg-slate-50 transition">
+                <span className="flex flex-col">
+                  <span className="text-sm font-medium text-slate-800">{sec.label}</span>
+                  <span className="text-xs text-slate-400">{sec.data?.length || 0} record{sec.data?.length === 1 ? "" : "s"}</span>
+                </span>
+                <input type="checkbox" checked={visibleSections[sec.key]}
+                  onChange={() => toggleSection(sec.key)}
+                  className="size-4 accent-[#4F46E5] rounded" />
+              </label>
+            ))}
           </div>
         </div>
 
@@ -731,7 +615,6 @@ export function ResumeBuilder(props) {
           <Printer size={15} /> Print / Save as PDF
         </Button>
       </Card>
-      )}
 
       {/* Resume preview */}
       <div id="resume-preview" className="print-page overflow-hidden rounded-xl">

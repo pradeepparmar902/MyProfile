@@ -17,7 +17,6 @@ const collections = {
   activity: "activities",
   invite: "invites",
   setting: "settings",
-  resume: "resumes",
 };
 
 const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
