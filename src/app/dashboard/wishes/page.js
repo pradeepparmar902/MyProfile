@@ -16,7 +16,8 @@ export default async function WishesPage() {
   return (
     <>
       <DashboardTopbar 
-        title="My Wish / Career Vision" 
+        title="My Roadmap / Career Vision" 
+        description="Share your future goals, roadmap, or dream companies."
         guideContent={
           <>
             <p>What is your ultimate career goal? What are you working towards?</p>
