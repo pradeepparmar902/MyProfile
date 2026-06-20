@@ -84,7 +84,8 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       ...params, 
       type: 'smoothstep', 
       animated: true, 
-      style: { stroke: color, strokeWidth: 3 } 
+      style: { stroke: color, strokeWidth: 3 },
+      reconnectable: true
     }, eds));
   }, [setEdges, getNodes]);
 
@@ -102,35 +103,29 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     );
   }, [setNodes]);
 
-  // Find the lowest Y position among children to place the new node below them
-  const getChildYPosition = (sourceId, sourcePosition) => {
-    const childEdges = getEdges().filter(e => e.source === sourceId);
-    if (childEdges.length === 0) return sourcePosition.y;
-    
-    const childNodes = getNodes().filter(n => childEdges.some(e => e.target === n.id));
-    const maxY = Math.max(...childNodes.map(n => n.position.y));
-    return maxY + Y_OFFSET;
-  };
-
-  const addChildNode = useCallback((sourceId) => {
+  const addChildNodeRight = useCallback((sourceId) => {
     const sourceNode = getNodes().find(n => n.id === sourceId);
     if (!sourceNode) return;
 
     const newNodeId = uuidv4();
-    const newY = getChildYPosition(sourceId, sourceNode.position);
+    let newX = sourceNode.position.x + 250;
+    let newY = sourceNode.position.y;
+    
+    const childEdges = getEdges().filter(e => e.source === sourceId);
+    if (childEdges.length > 0) {
+      const childNodes = getNodes().filter(n => childEdges.some(e => e.target === n.id));
+      newY = Math.max(...childNodes.map(n => n.position.y)) + 80;
+    }
     
     const newNode = {
       id: newNodeId,
       type: 'mindmap',
-      position: { x: sourceNode.position.x + X_OFFSET, y: newY },
+      position: { x: newX, y: newY },
       data: { 
         label: 'New Node', 
         color: sourceNode.data.color,
-        onLabelChange,
-        onColorChange,
-        onDelete: deleteNode,
-        onAddChild: addChildNode,
-        onAddSibling: addSiblingNode,
+        status: 'Not Started',
+        notes: '',
       },
     };
 
@@ -138,30 +133,61 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       id: `e-${sourceId}-${newNodeId}`,
       source: sourceId,
       target: newNodeId,
+      sourceHandle: 'right-source',
+      targetHandle: 'left-target',
       type: 'smoothstep',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
+      reconnectable: true,
     };
 
     setNodes((nds) => [...nds, newNode]);
     setEdges((eds) => [...eds, newEdge]);
-    
-    // Select the new node so user can start typing
-    setTimeout(() => {
-      setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId })));
-    }, 50);
+    setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
   }, [getNodes, getEdges, setNodes, setEdges]);
 
-  const addSiblingNode = useCallback((nodeId) => {
-    const node = getNodes().find(n => n.id === nodeId);
-    if (!node || node.data.isRoot) return;
+  const addChildNodeBottom = useCallback((sourceId) => {
+    const sourceNode = getNodes().find(n => n.id === sourceId);
+    if (!sourceNode) return;
 
-    // Find the parent by looking at edges
-    const parentEdge = getEdges().find(e => e.target === nodeId);
-    if (parentEdge) {
-      addChildNode(parentEdge.source);
+    const newNodeId = uuidv4();
+    let newX = sourceNode.position.x;
+    let newY = sourceNode.position.y + 150;
+    
+    const childEdges = getEdges().filter(e => e.source === sourceId);
+    if (childEdges.length > 0) {
+      const childNodes = getNodes().filter(n => childEdges.some(e => e.target === n.id));
+      newX = Math.max(...childNodes.map(n => n.position.x)) + 200;
     }
-  }, [getNodes, getEdges, addChildNode]);
+    
+    const newNode = {
+      id: newNodeId,
+      type: 'mindmap',
+      position: { x: newX, y: newY },
+      data: { 
+        label: 'New Node', 
+        color: sourceNode.data.color,
+        status: 'Not Started',
+        notes: '',
+      },
+    };
+
+    const newEdge = {
+      id: `e-${sourceId}-${newNodeId}`,
+      source: sourceId,
+      target: newNodeId,
+      sourceHandle: 'bottom-source',
+      targetHandle: 'top-target',
+      type: 'smoothstep',
+      style: { stroke: sourceNode.data.color, strokeWidth: 3 },
+      animated: true,
+      reconnectable: true,
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+    setEdges((eds) => [...eds, newEdge]);
+    setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
+  }, [getNodes, getEdges, setNodes, setEdges]);
 
   // Update node data dynamically (for callbacks) now that they are defined
   useEffect(() => {
@@ -173,36 +199,32 @@ function MindmapCanvas({ wish, onClose, onSave }) {
           onLabelChange,
           onColorChange,
           onDelete: deleteNode,
-          onAddChild: addChildNode,
-          onAddSibling: addSiblingNode,
+          onAddChildRight: addChildNodeRight,
+          onAddChildBottom: addChildNodeBottom,
           onMoreInfo,
         },
       }))
     );
-  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNode, addSiblingNode, onMoreInfo]);
+  }, [setNodes, onLabelChange, onColorChange, deleteNode, addChildNodeRight, addChildNodeBottom, onMoreInfo]);
 
   // Handle Keyboard Shortcuts
   const onKeyDown = useCallback((event) => {
     const selectedNodes = getNodes().filter(n => n.selected);
     if (selectedNodes.length === 1) {
       const selectedNode = selectedNodes[0];
-      
-      // Ignore if user is typing in an input
       if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') return;
 
       if (event.key === 'Tab') {
         event.preventDefault();
-        addChildNode(selectedNode.id);
+        addChildNodeRight(selectedNode.id);
       } else if (event.key === 'Enter') {
         event.preventDefault();
-        addSiblingNode(selectedNode.id);
+        addChildNodeBottom(selectedNode.id);
       } else if (event.key === 'Backspace' || event.key === 'Delete') {
-        if (!selectedNode.data.isRoot) {
-          deleteNode(selectedNode.id);
-        }
+        if (!selectedNode.data.isRoot) deleteNode(selectedNode.id);
       }
     }
-  }, [getNodes, addChildNode, addSiblingNode, deleteNode]);
+  }, [getNodes, addChildNodeRight, addChildNodeBottom, deleteNode]);
 
   const handleSave = async () => {
     setIsSaving(true);

@@ -151,33 +151,31 @@ export default function MindmapNode({ id, data, selected }) {
         />
 
         {/* Quick Add Buttons / Source Plugs (Drag to connect, Click to auto-add) */}
-        {(selected || isRoot) && (
-          <>
-            {/* Add Child / Source Plug (Right) */}
-            <Handle
-              type="source"
-              position={Position.Right}
-              id="right-source"
-              onClick={() => data.onAddChild && data.onAddChild(id)}
-              className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
-              title="Click to add Child, Drag to connect"
-            >
-              <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            </Handle>
-            
-            {/* Add Sibling / Source Plug (Bottom) */}
-            <Handle
-              type="source"
-              position={Position.Bottom}
-              id="bottom-source"
-              onClick={() => data.onAddSibling && data.onAddSibling(id)}
-              className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
-              title="Click to add Sibling, Drag to connect"
-            >
-              <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            </Handle>
-          </>
-        )}
+        <div className={selected || isRoot ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}>
+          {/* Add Child / Source Plug (Right) */}
+          <Handle
+            type="source"
+            position={Position.Right}
+            id="right-source"
+            onClick={() => data.onAddChildRight && data.onAddChildRight(id)}
+            className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+            title="Click to add right, Drag to connect"
+          >
+            <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </Handle>
+          
+          {/* Add Sibling / Source Plug (Bottom) */}
+          <Handle
+            type="source"
+            position={Position.Bottom}
+            id="bottom-source"
+            onClick={() => data.onAddChildBottom && data.onAddChildBottom(id)}
+            className="!w-6 !h-6 !bg-blue-500 hover:!bg-blue-600 !border-2 !border-[#1e293b] shadow-sm z-30 transition-colors flex items-center justify-center cursor-pointer"
+            title="Click to add below, Drag to connect"
+          >
+            <Plus size={14} className="text-white pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </Handle>
+        </div>
       </div>
     </div>
   );
