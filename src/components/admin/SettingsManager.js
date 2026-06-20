@@ -12,6 +12,7 @@ export function SettingsManager({ initialSettings }) {
   const [settings, setSettings] = useState({
     theme: initialSettings?.theme || "modern",
     enableCommercialization: initialSettings?.enableCommercialization ?? false,
+    commercializationLaunchDate: initialSettings?.commercializationLaunchDate || "",
     showEducation: initialSettings?.showEducation ?? true,
     showAchievements: initialSettings?.showAchievements ?? true,
     showProjects: initialSettings?.showProjects ?? true,
@@ -155,8 +156,23 @@ export function SettingsManager({ initialSettings }) {
             <p className="text-sm text-slate-500">Enable subscription plans and limits for resumes, roadmaps, and recruiters.</p>
           </div>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 space-y-4">
           <ToggleRow label="Enable Commercialization" description="If disabled, all users have unlimited access to everything." settingKey="enableCommercialization" />
+          
+          {settings.enableCommercialization && (
+            <div className="py-3 border-t border-slate-100">
+              <label className="block">
+                <span className="font-semibold text-slate-900 block">Launch Date (Optional)</span>
+                <span className="text-sm text-slate-500 block mb-2">If set, limits will only enforce AFTER this date. Until then, everyone gets unlimited access.</span>
+                <input 
+                  type="date" 
+                  value={settings.commercializationLaunchDate}
+                  onChange={(e) => setSettings({...settings, commercializationLaunchDate: e.target.value})}
+                  className="p-2 border border-slate-300 rounded-md shadow-sm w-full max-w-xs"
+                />
+              </label>
+            </div>
+          )}
         </div>
       </Card>
 

@@ -15,6 +15,20 @@ export async function getUserLimits(userId) {
     };
   }
 
+  // If there's a launch date set in the future, return unlimited
+  if (globalSettings.commercializationLaunchDate) {
+    const launchDate = new Date(globalSettings.commercializationLaunchDate);
+    const now = new Date();
+    if (now < launchDate) {
+      return {
+        resumeLimit: UNLIMITED,
+        roadmapLimit: UNLIMITED,
+        inviteLimit: UNLIMITED,
+        planName: `Unlimited (Free until ${launchDate.toLocaleDateString()})`,
+      };
+    }
+  }
+
   const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) throw new Error("User not found");
 
