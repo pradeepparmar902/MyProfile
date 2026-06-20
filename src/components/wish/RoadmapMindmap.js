@@ -85,7 +85,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'smoothstep', 
       animated: true, 
       style: { stroke: color, strokeWidth: 3 },
-      reconnectable: true
+      reconnectable: 'target'
     }, eds));
   }, [setEdges, getNodes]);
 
@@ -138,7 +138,7 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'smoothstep',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
-      reconnectable: true,
+      reconnectable: 'target',
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -181,13 +181,25 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       type: 'smoothstep',
       style: { stroke: sourceNode.data.color, strokeWidth: 3 },
       animated: true,
-      reconnectable: true,
+      reconnectable: 'target',
     };
 
     setNodes((nds) => [...nds, newNode]);
     setEdges((eds) => [...eds, newEdge]);
     setTimeout(() => setNodes((nds) => nds.map(n => ({ ...n, selected: n.id === newNodeId }))), 50);
   }, [getNodes, getEdges, setNodes, setEdges]);
+
+  // Retroactively fix existing edges to be smoothstep and reconnectable
+  useEffect(() => {
+    setEdges((eds) => 
+      eds.map(e => {
+        if (e.type !== 'smoothstep' || e.reconnectable !== 'target') {
+          return { ...e, type: 'smoothstep', reconnectable: 'target' };
+        }
+        return e;
+      })
+    );
+  }, [setEdges]);
 
   // Update node data dynamically for newly created nodes
   const nodeCount = nodes.length;
