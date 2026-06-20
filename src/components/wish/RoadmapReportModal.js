@@ -10,8 +10,10 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
     let achieved = 0;
     let inProgress = 0;
     let notStarted = 0;
+    
     let overdue = [];
-    let onTrack = [];
+    let inProgressList = [];
+    let notStartedList = [];
     let completedSteps = [];
 
     nodes.forEach(node => {
@@ -54,8 +56,10 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
         completedSteps.push(stepData);
       } else if (isOverdue) {
         overdue.push(stepData);
+      } else if (currentStatus === 'In Progress') {
+        inProgressList.push(stepData);
       } else {
-        onTrack.push(stepData);
+        notStartedList.push(stepData);
       }
     });
 
@@ -68,7 +72,8 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
       notStarted,
       completionRate,
       overdue,
-      onTrack,
+      inProgressList,
+      notStartedList,
       completedSteps
     };
   }, [nodes]);
@@ -86,12 +91,20 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
             </h2>
             <p className="text-slate-400 mt-1">Roadmap: <strong className="text-slate-200">{wishTitle || 'Untitled Roadmap'}</strong></p>
           </div>
-          <button 
-            onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
-          >
-            <X size={24} />
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => window.print()}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white bg-slate-800 hover:bg-blue-600 rounded-lg transition-colors border border-slate-700 hover:border-blue-500"
+            >
+              <FileText size={16} /> Save as PDF
+            </button>
+            <button 
+              onClick={onClose}
+              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
@@ -143,12 +156,12 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Overdue Items (Critical) */}
             <div className="bg-red-950/20 border border-red-900/50 rounded-xl overflow-hidden flex flex-col">
               <div className="bg-red-900/20 px-4 py-3 border-b border-red-900/50 flex items-center gap-2">
                 <AlertTriangle className="text-red-400" size={18} />
-                <h3 className="font-semibold text-red-400">Overdue / Action Required</h3>
+                <h3 className="font-semibold text-red-400">Overdue</h3>
                 <span className="ml-auto bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.overdue.length}</span>
               </div>
               <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-red-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-red-800/80">
@@ -173,27 +186,48 @@ export default function RoadmapReportModal({ nodes, wishTitle, onClose }) {
               </div>
             </div>
 
-            {/* On Track / Upcoming */}
-            <div className="bg-blue-950/10 border border-blue-900/30 rounded-xl overflow-hidden flex flex-col">
-              <div className="bg-blue-900/10 px-4 py-3 border-b border-blue-900/30 flex items-center gap-2">
-                <Clock className="text-blue-400" size={18} />
-                <h3 className="font-semibold text-blue-400">On Track / Upcoming</h3>
-                <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.onTrack.length}</span>
+            {/* In Progress Items */}
+            <div className="bg-amber-950/10 border border-amber-900/30 rounded-xl overflow-hidden flex flex-col">
+              <div className="bg-amber-900/10 px-4 py-3 border-b border-amber-900/30 flex items-center gap-2">
+                <Clock className="text-amber-400" size={18} />
+                <h3 className="font-semibold text-amber-400">In Progress (On Track)</h3>
+                <span className="ml-auto bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.inProgressList.length}</span>
               </div>
-              <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-blue-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-blue-800/80">
-                {reportData.onTrack.length === 0 ? (
-                  <div className="p-4 text-center text-slate-400 text-sm">No upcoming steps found.</div>
+              <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-amber-900/50 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-amber-800/80">
+                {reportData.inProgressList.length === 0 ? (
+                  <div className="p-4 text-center text-slate-400 text-sm">No active steps.</div>
                 ) : (
                   <ul className="space-y-2">
-                    {reportData.onTrack.map(step => (
+                    {reportData.inProgressList.map(step => (
                       <li key={step.id} className="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex flex-col gap-2">
-                        <div className="flex justify-between items-start">
-                          <span className="font-medium text-slate-200">{step.title}</span>
-                          <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">{step.status}</span>
+                        <span className="font-medium text-slate-200">{step.title}</span>
+                        <div className="flex gap-4 text-xs text-slate-500">
+                          <span className="flex items-center gap-1"><Calendar size={12}/> Target: {step.endDate}</span>
                         </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+
+            {/* Not Started Items */}
+            <div className="bg-slate-800/30 border border-slate-700/50 rounded-xl overflow-hidden flex flex-col">
+              <div className="bg-slate-800/50 px-4 py-3 border-b border-slate-700 flex items-center gap-2">
+                <CircleDashed className="text-slate-400" size={18} />
+                <h3 className="font-semibold text-slate-300">Not Started</h3>
+                <span className="ml-auto bg-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{reportData.notStartedList.length}</span>
+              </div>
+              <div className="p-2 flex-1 overflow-y-auto max-h-[300px] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-600">
+                {reportData.notStartedList.length === 0 ? (
+                  <div className="p-4 text-center text-slate-400 text-sm">All steps started!</div>
+                ) : (
+                  <ul className="space-y-2">
+                    {reportData.notStartedList.map(step => (
+                      <li key={step.id} className="bg-slate-900/50 border border-slate-800 p-3 rounded-lg flex flex-col gap-2">
+                        <span className="font-medium text-slate-300">{step.title}</span>
                         <div className="flex gap-4 text-xs text-slate-500">
                           <span className="flex items-center gap-1"><Calendar size={12}/> Start: {step.startDate}</span>
-                          <span className="flex items-center gap-1"><Calendar size={12}/> Target: {step.endDate}</span>
                         </div>
                       </li>
                     ))}
