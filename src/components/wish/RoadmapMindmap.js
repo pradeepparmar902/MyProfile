@@ -90,21 +90,30 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       // Mindmap nodes should only have ONE incoming connection (one parent)
       const filteredEdges = eds.filter(e => e.target !== params.target);
       
-      return addEdge({ 
-        ...params, 
-        type: 'custom', 
-        animated: true, 
+      const newEdge = {
+        ...params,
+        id: `e-${params.source}-${params.target}-${uuidv4()}`,
+        type: 'custom',
+        animated: true,
         style: { stroke: color, strokeWidth: 3 },
-        reconnectable: true
-      }, filteredEdges);
+        reconnectable: true,
+      };
+      
+      return [...filteredEdges, newEdge];
     });
   }, [setEdges, getNodes]);
 
   const onReconnect = useCallback((oldEdge, newConnection) => {
     setEdges((els) => {
       // If reconnecting to a new target, remove any existing connection to that target
-      const filtered = els.filter(e => e.id === oldEdge.id || e.target !== newConnection.target);
-      return reconnectEdge(oldEdge, newConnection, filtered);
+      const filtered = els.filter(e => e.id !== oldEdge.id && e.target !== newConnection.target);
+      
+      const newEdge = {
+        ...oldEdge,
+        ...newConnection,
+      };
+      
+      return [...filtered, newEdge];
     });
   }, [setEdges]);
 
