@@ -4,10 +4,17 @@ import { Plus, Edit2, Palette, Trash2, Info } from 'lucide-react';
 
 export default function MindmapNode({ id, data, selected }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [label, setLabel] = useState(data.label || 'New Node');
+  const [localLabel, setLocalLabel] = useState(data.label);
   const inputRef = useRef(null);
+  
+  const isRoot = data.isRoot;
+  const colors = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#64748b'];
+  const currentColor = data.color || '#3b82f6';
 
-  // Focus input when editing starts
+  useEffect(() => {
+    setLocalLabel(data.label);
+  }, [data.label]);
+
   useEffect(() => {
     if (isEditing && inputRef.current) {
       inputRef.current.focus();
@@ -17,43 +24,33 @@ export default function MindmapNode({ id, data, selected }) {
 
   const handleBlur = () => {
     setIsEditing(false);
-    if (data.onLabelChange) {
-      data.onLabelChange(id, label);
+    if (data.onLabelChange && localLabel.trim() !== '') {
+      data.onLabelChange(id, localLabel);
+    } else {
+      setLocalLabel(data.label); // Revert if empty
     }
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      e.target.blur();
+      handleBlur();
+    } else if (e.key === 'Escape') {
+      setLocalLabel(data.label);
+      setIsEditing(false);
     }
   };
 
-  // Color preset options for the toolbar
-  const colors = [
-    '#3b82f6', // blue
-    '#ef4444', // red
-    '#eab308', // yellow
-    '#a855f7', // purple
-    '#22c55e', // green
-    '#f97316', // orange
-    '#64748b', // slate
-  ];
-
-  const nodeColor = data.color || '#3b82f6';
-  const isRoot = data.isRoot;
+  // Status Indicator
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'Achieved': return 'bg-green-500';
+      case 'In Progress': return 'bg-yellow-500';
+      default: return 'bg-slate-500';
+    }
+  };
 
   return (
-    <>
-      {/* Target handle (left side) - hidden for root node */}
-      {!isRoot && (
-        <Handle 
-          type="target" 
-          position={Position.Left} 
-          style={{ background: 'transparent', border: 'none' }}
-        />
-      )}
-
-      {/* Floating Toolbar (appears only when selected) */}
+    <div className={`relative group transition-all duration-200 ${selected ? 'scale-105 z-40' : 'z-10'}`}>
       <NodeToolbar
         isVisible={selected}
         position={Position.Top}
@@ -82,9 +79,9 @@ export default function MindmapNode({ id, data, selected }) {
             <button
               key={c}
               onClick={() => data.onColorChange && data.onColorChange(id, c)}
-              className={`w-5 h-5 rounded-full transition-transform hover:scale-110 ${nodeColor === c ? 'ring-2 ring-offset-1 ring-slate-400' : ''}`}
-              style={{ backgroundColor: c }}
-              title={`Change color`}
+              className="w-5 h-5 rounded-full hover:scale-125 transition-transform border border-white shadow-sm"
+              style={{ backgroundColor: c, boxShadow: currentColor === c ? `0 0 0 2px ${c}` : 'none' }}
+              title={`Set color ${c}`}
             />
           ))}
         </div>
@@ -94,8 +91,8 @@ export default function MindmapNode({ id, data, selected }) {
             <div className="w-px h-6 bg-slate-200 mx-1 self-center" />
             <button 
               onClick={() => data.onDelete && data.onDelete(id)}
-              className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors"
-              title="Delete node"
+              className="p-2 hover:bg-red-50 rounded-lg text-red-500 transition-colors"
+              title="Delete node (Backspace)"
             >
               <Trash2 size={16} />
             </button>
@@ -103,41 +100,47 @@ export default function MindmapNode({ id, data, selected }) {
         )}
       </NodeToolbar>
 
-      {/* Main Node Container */}
+      {/* Main Node Content */}
       <div 
-        className={`relative rounded-xl px-4 py-2 transition-all duration-200 ${
-          selected ? 'ring-2 ring-offset-2 shadow-md' : 'shadow-sm hover:shadow'
-        }`}
-        style={{
-          backgroundColor: '#1e293b', // Dark background like the reference image
-          color: 'white',
-          border: `2px solid ${nodeColor}`,
-          boxShadow: selected ? `0 0 0 2px ${nodeColor}40` : undefined,
-          minWidth: '120px',
+        className={`px-5 py-3 rounded-xl shadow-md min-w-[120px] max-w-[250px] transition-colors border-2`}
+        style={{ 
+          backgroundColor: isRoot ? currentColor : '#1e293b', 
+          borderColor: currentColor,
+          boxShadow: selected ? `0 0 0 4px ${currentColor}40` : '0 4px 6px -1px rgb(0 0 0 / 0.1)',
         }}
         onDoubleClick={() => setIsEditing(true)}
       >
         {isEditing ? (
           <input
             ref={inputRef}
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
+            value={localLabel}
+            onChange={(e) => setLocalLabel(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            className="w-full bg-transparent outline-none text-white font-medium placeholder-slate-400"
-            placeholder="Node text..."
+            className="w-full bg-transparent border-none outline-none text-center font-medium text-white"
+            autoFocus
           />
         ) : (
-          <div className="font-medium">{label}</div>
+          <div className="text-center font-medium text-white break-words">
+            {data.label}
+          </div>
+        )}
+        
+        {/* Status dot */}
+        {data.status && (
+          <div 
+            className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 border-[#1e293b] ${getStatusColor(data.status)}`}
+            title={data.status}
+          />
         )}
 
-        {/* Quick Add Buttons (visible when selected) */}
-        {selected && (
+        {/* Quick Add Buttons (shown on hover or select) */}
+        {(selected || isRoot) && (
           <>
             {/* Add Child (Right) */}
             <button
               onClick={() => data.onAddChild && data.onAddChild(id)}
-              className="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
+              className="absolute top-1/2 -right-3 -translate-y-1/2 w-6 h-6 bg-blue-500 rounded-full text-white flex items-center justify-center hover:bg-blue-600 transition-colors shadow-sm z-10 border-2 border-[#1e293b]"
               title="Add Child (Tab)"
             >
               <Plus size={14} />
@@ -155,12 +158,12 @@ export default function MindmapNode({ id, data, selected }) {
         )}
       </div>
 
-      {/* Source handle (right side) */}
-      <Handle 
-        type="source" 
-        position={Position.Right} 
-        style={{ background: 'transparent', border: 'none' }}
-      />
-    </>
+      {/* Connection Points (Drag to connect) */}
+      <Handle type="target" position={Position.Top} id="top-target" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
+      <Handle type="target" position={Position.Left} id="left-target" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
+      
+      <Handle type="source" position={Position.Bottom} id="bottom-source" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
+      <Handle type="source" position={Position.Right} id="right-source" className="w-3 h-3 !bg-blue-500 border-2 border-white opacity-0 hover:opacity-100 transition-opacity" />
+    </div>
   );
 }

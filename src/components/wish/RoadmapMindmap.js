@@ -7,6 +7,7 @@ import {
   useNodesState,
   useEdgesState,
   addEdge,
+  reconnectEdge,
   Background,
   Controls,
   MiniMap,
@@ -73,6 +74,23 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setEdges((eds) => eds.filter((e) => e.source !== id && e.target !== id));
     if (activeNodeId === id) setActiveNodeId(null);
   }, [setNodes, setEdges, activeNodeId]);
+
+  const onConnect = useCallback((params) => {
+    // Determine color based on source node
+    const sourceNode = getNodes().find(n => n.id === params.source);
+    const color = sourceNode?.data?.color || '#3b82f6';
+    
+    setEdges((eds) => addEdge({ 
+      ...params, 
+      type: 'bezier', 
+      animated: true, 
+      style: { stroke: color, strokeWidth: 3 } 
+    }, eds));
+  }, [setEdges, getNodes]);
+
+  const onReconnect = useCallback((oldEdge, newConnection) => {
+    setEdges((els) => reconnectEdge(oldEdge, newConnection, els));
+  }, [setEdges]);
 
   const onMoreInfo = useCallback((id) => {
     setActiveNodeId(id);
@@ -251,6 +269,8 @@ function MindmapCanvas({ wish, onClose, onSave }) {
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onReconnect={onReconnect}
             nodeTypes={nodeTypes}
             fitView
             fitViewOptions={{ padding: 0.2 }}
