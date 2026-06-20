@@ -83,13 +83,13 @@
   },
   {
     "route": "/dashboard/settings",
-    "firstLoadUncompressedJsBytes": 852873,
+    "firstLoadUncompressedJsBytes": 853326,
     "firstLoadChunkPaths": [
       ".next\\static\\chunks\\01xlw8hd842-c.js",
       ".next\\static\\chunks\\0d3shmwh5_nmn.js",
       ".next\\static\\chunks\\0l7iyaisdzgcd.js",
       ".next\\static\\chunks\\136bop.p9~8m0.js",
-      ".next\\static\\chunks\\090s8.7g06dxl.js",
+      ".next\\static\\chunks\\0tjtlm48jhaq9.js",
       ".next\\static\\chunks\\00gq-v0e07i1q.js",
       ".next\\static\\chunks\\0pqt~8bl3ukh4.js",
       ".next\\static\\chunks\\0x242tgq8si5u.js",

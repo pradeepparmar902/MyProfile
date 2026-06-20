@@ -31,7 +31,7 @@ export async function POST(req) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { type, allowedEmail } = body;
+  const { type, allowedEmail, resumeId } = body;
   if (!type || !["GENERAL", "SPECIFIC"].includes(type)) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
@@ -44,6 +44,7 @@ export async function POST(req) {
     data: {
       profileId: profile.id,
       type,
+      resumeId: resumeId || null,
       allowedEmail: type === "SPECIFIC" ? allowedEmail : null,
     },
   });

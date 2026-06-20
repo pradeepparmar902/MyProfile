@@ -59,12 +59,23 @@ export default async function InviteProfilePage({ params }) {
   // Track profile view
   await db.profileView.create({ data: { profileId: profile.id } });
 
-  profile.user.education = profile.user.education.filter((x) => !x.isHidden);
-  profile.user.achievements = profile.user.achievements.filter((x) => !x.isHidden);
-  profile.user.projects = profile.user.projects.filter((x) => !x.isHidden);
-  profile.user.skills = profile.user.skills.filter((x) => !x.isHidden);
-  profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden);
-  profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden);
+  let resume = null;
+  if (invite.resumeId) {
+    resume = await db.resume.findUnique({ where: { id: invite.resumeId } });
+  }
+
+  const hasSelections = (category) => Array.isArray(resume?.selections?.[category]);
+  const isSelected = (category, id) => !resume || !hasSelections(category) || resume.selections[category].includes(id);
+
+  profile.user.education = profile.user.education.filter((x) => !x.isHidden && isSelected("education", x.id) && (resume?.selections?.visibleSections?.education !== false));
+  profile.user.achievements = profile.user.achievements.filter((x) => !x.isHidden && isSelected("achievements", x.id) && (resume?.selections?.visibleSections?.achievements !== false));
+  profile.user.projects = profile.user.projects.filter((x) => !x.isHidden && isSelected("projects", x.id) && (resume?.selections?.visibleSections?.projects !== false));
+  profile.user.skills = profile.user.skills.filter((x) => !x.isHidden && isSelected("skills", x.id) && (resume?.selections?.visibleSections?.skills !== false));
+  profile.user.outOfBox = profile.user.outOfBox.filter((x) => !x.isHidden && isSelected("outOfBox", x.id));
+  profile.user.hobbies = profile.user.hobbies.filter((x) => !x.isHidden && isSelected("hobbies", x.id));
+
+  if (resume?.customHeadline) profile.headline = resume.customHeadline;
+  if (resume?.customBio) profile.bio = resume.customBio;
 
   const initials = profile.user.name.split(" ").map((part) => part[0]).join("").slice(0, 2).toUpperCase();
 

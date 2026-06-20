@@ -14,6 +14,11 @@ export default async function SettingsPage() {
     where: { id: user.id },
     include: { profile: true } 
   });
+  const resumes = await db.resume.findMany({ 
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" }
+  });
+
   const linkedinConnected = !!(
     fullUser?.linkedinAccessToken &&
     fullUser?.linkedinTokenExpiry &&
@@ -24,7 +29,7 @@ export default async function SettingsPage() {
     <>
       <DashboardTopbar title="Settings" />
       <div className="grid gap-8 p-4 md:p-8">
-        <RecruiterLink username={fullUser?.profile?.username} />
+        <RecruiterLink username={fullUser?.profile?.username} resumes={resumes} />
         <LinkedInConnect isConnected={linkedinConnected} />
       </div>
     </>

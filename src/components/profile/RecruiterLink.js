@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Field, Input, Select } from "@/components/ui/Field";
 
-export function RecruiterLink({ username }) {
+export function RecruiterLink({ username, resumes = [] }) {
   const [invites, setInvites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [type, setType] = useState("GENERAL");
+  const [resumeId, setResumeId] = useState("");
   const [allowedEmail, setAllowedEmail] = useState("");
   const [error, setError] = useState("");
   const [origin, setOrigin] = useState("");
@@ -43,7 +44,11 @@ export function RecruiterLink({ username }) {
       const res = await fetch("/api/profile/invites", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, allowedEmail: type === "SPECIFIC" ? allowedEmail : undefined }),
+        body: JSON.stringify({ 
+          type, 
+          resumeId: resumeId || undefined,
+          allowedEmail: type === "SPECIFIC" ? allowedEmail : undefined 
+        }),
       });
       const data = await res.json();
 
@@ -107,6 +112,14 @@ export function RecruiterLink({ username }) {
               <option value="SPECIFIC">Specific Recruiter (Email required)</option>
             </Select>
           </Field>
+          <Field label="Associated Resume">
+            <Select value={resumeId} onChange={(e) => setResumeId(e.target.value)}>
+              <option value="">Master Resume (Full Portfolio)</option>
+              {resumes.map(r => (
+                <option key={r.id} value={r.id}>{r.title || "Untitled Tailored Resume"}</option>
+              ))}
+            </Select>
+          </Field>
           {type === "SPECIFIC" && (
             <Field label="Recruiter Email">
               <Input 
@@ -143,6 +156,7 @@ export function RecruiterLink({ username }) {
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
                     {inv.type === "GENERAL" ? "Anyone with the link can view." : `Restricted to: ${inv.allowedEmail}`}
+                    {inv.resumeId ? ` • Tailored: ${resumes.find(r => r.id === inv.resumeId)?.title || "Unknown"}` : " • Master Portfolio"}
                     {inv.createdAt && ` • Created on ${new Date(inv.createdAt).toLocaleDateString()}`}
                   </p>
                 </div>
