@@ -323,60 +323,6 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
 
   return (
     <div className={`relative ${wish.isInline ? "w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"}`} onKeyDown={onKeyDown}>
-      {/* Header Overlay */}
-      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4 z-50 pointer-events-none">
-        <div className="flex justify-between items-start gap-4 pointer-events-auto bg-[#0f172a]/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-700/50">
-          <div>
-            {isEditingTitle ? (
-              <input
-                type="text"
-                value={titleValue}
-                onChange={(e) => setTitleValue(e.target.value)}
-                onBlur={() => setIsEditingTitle(false)}
-                onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
-                className="bg-slate-800 text-xl font-bold text-white px-2 py-1 rounded border border-blue-500 outline-none w-64 mb-1"
-                autoFocus
-              />
-            ) : (
-              <h2 
-                className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors mb-1 group flex items-center gap-2"
-                onClick={() => setIsEditingTitle(true)}
-                title="Click to rename"
-              >
-                {titleValue} <span className="opacity-0 group-hover:opacity-100 text-sm font-normal text-blue-400">✏️</span>
-              </h2>
-            )}
-            <p className="text-sm text-slate-400">Press Tab to add a child step, Enter to add a sibling step.</p>
-          </div>
-          {onDelete && (
-            <button
-              onClick={() => setIsConfirmingDelete(true)}
-              className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
-              title="Delete Roadmap"
-            >
-              <Trash2 size={18} />
-            </button>
-          )}
-        </div>
-        <div className="flex gap-3 pointer-events-auto bg-[#0f172a]/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-700/50">
-          {!wish.isInline && (
-            <button
-              onClick={onClose}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors"
-            >
-              <X size={16} /> Close
-            </button>
-          )}
-          <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 bg-slate-800 rounded-lg border border-slate-700">
-            {isSaving ? (
-              <><Loader2 size={14} className="animate-spin" /> Autosaving...</>
-            ) : (
-              <><Check size={14} className="text-emerald-500" /> Saved</>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Canvas */}
       <div className="flex-1 w-full h-full flex relative" ref={reactFlowWrapper}>
         <div className="flex-1 h-full relative">
