@@ -344,6 +344,18 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
               {titleValue} <span className="opacity-0 group-hover:opacity-100 text-[10px] font-normal text-blue-400">✏️</span>
             </h2>
           )}
+
+          <div className="h-4 w-px bg-slate-700 mx-1"></div>
+
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded transition-colors"
+              title="Delete Roadmap"
+            >
+              <Trash2 size={14} />
+            </button>
+          )}
         </div>
 
         {!wish.isInline && (

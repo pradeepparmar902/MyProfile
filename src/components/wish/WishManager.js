@@ -123,15 +123,6 @@ export function WishManager({ initialItems }) {
               } ${draggedWishId === wish.id ? 'opacity-50 border-2 border-dashed border-slate-300' : 'opacity-100 border border-transparent'}`}
             >
               <span>{wish.title || 'Untitled Roadmap'}</span>
-              {activeWishId === wish.id && (
-                <div 
-                  onClick={(e) => { e.stopPropagation(); setIsConfirmingDelete(true); }}
-                  className="p-0.5 rounded text-slate-400 hover:bg-slate-700 hover:text-red-400 transition-colors"
-                  title="Delete Tab"
-                >
-                  <X size={14} />
-                </div>
-              )}
             </button>
           ))}
           
@@ -182,7 +173,7 @@ export function WishManager({ initialItems }) {
           wish={{...activeWish, isInline: true}} 
           onClose={() => {}} 
           onSave={handleWishSaved}
-          onDelete={handleDeleteWish}
+          onDelete={() => setIsConfirmingDelete(true)}
         />
       </div>
     </div>
