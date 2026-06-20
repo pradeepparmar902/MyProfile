@@ -44,7 +44,12 @@ import { db } from "@/lib/db";
 import Script from "next/script";
 
 export default async function RootLayout({ children }) {
-  const globalSettings = await db.setting.findFirst({}) || {};
+  let globalSettings = {};
+  try {
+    globalSettings = await db.setting.findFirst({}) || {};
+  } catch (error) {
+    console.error("Failed to fetch settings in layout:", error);
+  }
   const adSenseId = globalSettings.adSensePublisherId;
 
   return (

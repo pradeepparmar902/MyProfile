@@ -1,0 +1,8 @@
+User-Agent: *
+Allow: /
+Allow: /profile/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+
+Sitemap: https://credoras.org/sitemap.xml

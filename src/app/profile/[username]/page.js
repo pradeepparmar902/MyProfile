@@ -9,10 +9,15 @@ import { MediaGallery } from "@/components/media/MediaGallery";
 
 export async function generateMetadata({ params }) {
   const { username } = await params;
-  const profile = await db.profile.findUnique({
-    where: { username },
-    include: { user: { select: { name: true } } },
-  });
+  let profile = null;
+  try {
+    profile = await db.profile.findUnique({
+      where: { username },
+      include: { user: { select: { name: true } } },
+    });
+  } catch (error) {
+    console.error("Failed to fetch profile metadata:", error);
+  }
 
   if (!profile) return {};
 

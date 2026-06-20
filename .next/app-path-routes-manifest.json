@@ -82,5 +82,7 @@
   "/profile/[username]/page": "/profile/[username]",
   "/profile/demo-student/page": "/profile/demo-student",
   "/register/page": "/register",
-  "/resume/[id]/page": "/resume/[id]"
+  "/resume/[id]/page": "/resume/[id]",
+  "/robots.txt/route": "/robots.txt",
+  "/sitemap.xml/route": "/sitemap.xml"
 }

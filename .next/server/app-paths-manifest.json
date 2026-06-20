@@ -82,5 +82,7 @@
   "/profile/[username]/page": "app/profile/[username]/page.js",
   "/profile/demo-student/page": "app/profile/demo-student/page.js",
   "/register/page": "app/register/page.js",
-  "/resume/[id]/page": "app/resume/[id]/page.js"
+  "/resume/[id]/page": "app/resume/[id]/page.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/sitemap.xml/route": "app/sitemap.xml/route.js"
 }

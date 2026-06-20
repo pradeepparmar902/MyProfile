@@ -4,9 +4,14 @@ export default async function sitemap() {
   const baseUrl = "https://credoras.org";
 
   // Get all public profiles
-  const profiles = await db.profile.findMany({
-    where: { isPublic: true },
-  });
+  let profiles = [];
+  try {
+    profiles = await db.profile.findMany({
+      where: { isPublic: true },
+    });
+  } catch (error) {
+    console.error("Failed to fetch profiles for sitemap:", error);
+  }
 
   const profileUrls = profiles.map((profile) => ({
     url: `${baseUrl}/profile/${profile.username}`,
