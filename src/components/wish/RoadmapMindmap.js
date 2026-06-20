@@ -36,9 +36,11 @@ const X_OFFSET = 250;
 const Y_OFFSET = 80;
 
 function MindmapCanvas({ wish, onClose, onSave }) {
-  const { project, getNodes, getEdges, setNodes, setEdges } = useReactFlow();
+  const { getNodes, getEdges, setNodes, setEdges } = useReactFlow();
   const [isSaving, setIsSaving] = useState(false);
   const [activeNodeId, setActiveNodeId] = useState(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState(wish.title || 'Untitled Roadmap');
   const reactFlowWrapper = useRef(null);
 
   // Initialize nodes and edges from wish.mindmapData or use defaults
@@ -276,12 +278,13 @@ function MindmapCanvas({ wish, onClose, onSave }) {
     setIsSaving(true);
     const mindmapData = { nodes: getNodes(), edges: getEdges() };
     
-    if (wish.id === 'new') {
+    if (wish.id.startsWith('new')) {
       const res = await fetch(`/api/wishes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          title: wish.title || "My Career Vision",
+          title: titleValue, 
+          description: wish.description || '', 
           mindmapData: JSON.stringify(mindmapData) 
         }),
       });
@@ -293,7 +296,11 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       await fetch(`/api/wishes/${wish.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mindmapData: JSON.stringify(mindmapData) }),
+        body: JSON.stringify({ 
+          title: titleValue,
+          description: wish.description || '',
+          mindmapData: JSON.stringify(mindmapData) 
+        }),
       });
     }
     
@@ -306,7 +313,25 @@ function MindmapCanvas({ wish, onClose, onSave }) {
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 bg-slate-900 border-b border-slate-800 shadow-lg">
         <div>
-          <h2 className="text-xl font-bold text-white">{wish.title} Roadmap</h2>
+          {isEditingTitle ? (
+            <input
+              type="text"
+              value={titleValue}
+              onChange={(e) => setTitleValue(e.target.value)}
+              onBlur={() => setIsEditingTitle(false)}
+              onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+              className="bg-slate-800 text-xl font-bold text-white px-2 py-1 rounded border border-blue-500 outline-none w-64 mb-1"
+              autoFocus
+            />
+          ) : (
+            <h2 
+              className="text-xl font-bold text-white cursor-pointer hover:text-blue-300 transition-colors mb-1 group flex items-center gap-2"
+              onClick={() => setIsEditingTitle(true)}
+              title="Click to rename"
+            >
+              {titleValue} <span className="opacity-0 group-hover:opacity-100 text-sm font-normal text-blue-400">✏️</span>
+            </h2>
+          )}
           <p className="text-sm text-slate-400">Press Tab to add a child step, Enter to add a sibling step.</p>
         </div>
         <div className="flex gap-3">
