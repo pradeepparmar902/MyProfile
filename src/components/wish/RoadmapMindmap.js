@@ -321,6 +321,7 @@ function MindmapCanvas({ wish, onClose, onSave, onDelete }) {
     return () => clearTimeout(timeoutId);
   }, [nodes, edges, titleValue]);
 
+  return (
     <div className={`relative ${wish.isInline ? "w-full h-full flex flex-col rounded-2xl overflow-hidden shadow-sm border border-slate-200" : "fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm"}`} onKeyDown={onKeyDown}>
       {/* Header Overlay */}
       <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4 z-50 pointer-events-none">
