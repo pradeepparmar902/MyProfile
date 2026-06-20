@@ -7,6 +7,36 @@ import { Card } from "@/components/ui/Card";
 import { db } from "@/lib/db";
 import { MediaGallery } from "@/components/media/MediaGallery";
 
+export async function generateMetadata({ params }) {
+  const { username } = await params;
+  const profile = await db.profile.findUnique({
+    where: { username },
+    include: { user: { select: { name: true } } },
+  });
+
+  if (!profile) return {};
+
+  const title = `${profile.user.name} | Proofolio`;
+  const description = profile.headline || profile.bio || `View the professional career portfolio and proof-backed achievements of ${profile.user.name}.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `https://credoras.org/profile/${username}`,
+      type: "profile",
+      siteName: "Proofolio",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+  };
+}
+
 export default async function PublicProfilePage({ params }) {
   const { username } = await params;
   const profile = await db.profile.findUnique({

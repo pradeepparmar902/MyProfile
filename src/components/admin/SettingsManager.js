@@ -13,6 +13,7 @@ export function SettingsManager({ initialSettings }) {
     theme: initialSettings?.theme || "modern",
     enableCommercialization: initialSettings?.enableCommercialization ?? false,
     commercializationLaunchDate: initialSettings?.commercializationLaunchDate || "",
+    adSensePublisherId: initialSettings?.adSensePublisherId || "",
     showEducation: initialSettings?.showEducation ?? true,
     showAchievements: initialSettings?.showAchievements ?? true,
     showProjects: initialSettings?.showProjects ?? true,
@@ -173,6 +174,31 @@ export function SettingsManager({ initialSettings }) {
               </label>
             </div>
           )}
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="grid size-10 place-items-center rounded-lg bg-blue-100 text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">Google AdSense (Monetization)</h2>
+            <p className="text-sm text-slate-500">Earn revenue by displaying ads on your platform and student profiles.</p>
+          </div>
+        </div>
+        <div className="mt-6 py-3 border-t border-slate-100">
+          <label className="block">
+            <span className="font-semibold text-slate-900 block">Publisher ID</span>
+            <span className="text-sm text-slate-500 block mb-2">Enter your Google AdSense ID (e.g. <code>ca-pub-1234567890123456</code>). Leave blank to disable ads.</span>
+            <input 
+              type="text" 
+              value={settings.adSensePublisherId}
+              onChange={(e) => setSettings({...settings, adSensePublisherId: e.target.value})}
+              placeholder="ca-pub-..."
+              className="p-2 border border-slate-300 rounded-md shadow-sm w-full max-w-sm"
+            />
+          </label>
         </div>
       </Card>
 
