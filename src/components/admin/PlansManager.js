@@ -6,8 +6,9 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Edit2, Trash2, Plus, Save, X, Star } from "lucide-react";
 
-export function PlansManager({ initialPlans }) {
+export function PlansManager({ initialPlans, currency = "USD" }) {
   const router = useRouter();
+  const symbol = currency === "INR" ? "₹" : "$";
   const [plans, setPlans] = useState(initialPlans || []);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({});
@@ -165,7 +166,7 @@ export function PlansManager({ initialPlans }) {
                 </div>
               )}
               <h3 className="text-xl font-bold text-slate-900">{plan.name}</h3>
-              <p className="text-3xl font-black text-indigo-600 my-4">${plan.price}<span className="text-sm font-normal text-slate-500">/mo</span></p>
+              <p className="text-3xl font-black text-indigo-600 my-4">{symbol}{plan.price}<span className="text-sm font-normal text-slate-500">/mo</span></p>
               
               <ul className="space-y-3 mb-8 flex-1 text-sm text-slate-600">
                 <li className="flex justify-between border-b pb-2"><span>Resumes</span> <strong>{plan.resumeLimit >= 9999 ? "Unlimited" : plan.resumeLimit}</strong></li>

@@ -13,6 +13,7 @@ export function SettingsManager({ initialSettings }) {
     theme: initialSettings?.theme || "modern",
     enableCommercialization: initialSettings?.enableCommercialization ?? false,
     commercializationLaunchDate: initialSettings?.commercializationLaunchDate || "",
+    currency: initialSettings?.currency || "USD",
     adSensePublisherId: initialSettings?.adSensePublisherId || "",
     showEducation: initialSettings?.showEducation ?? true,
     showAchievements: initialSettings?.showAchievements ?? true,
@@ -172,7 +173,21 @@ export function SettingsManager({ initialSettings }) {
                   className="p-2 border border-slate-300 rounded-md shadow-sm w-full max-w-xs"
                 />
               </label>
-            </div>
+            <label className="flex items-center justify-between p-3 border rounded-lg bg-slate-50 cursor-pointer">
+              <div>
+                <span className="font-semibold text-slate-900 block">Currency</span>
+                <span className="text-sm text-slate-500">Choose between USD ($) and INR (₹) for subscription plans.</span>
+              </div>
+              <select
+                className="p-2 border border-slate-300 rounded-md bg-white text-sm font-semibold"
+                value={settings.currency}
+                onChange={(e) => setSettings({...settings, currency: e.target.value})}
+              >
+                <option value="USD">USD ($)</option>
+                <option value="INR">INR (₹)</option>
+              </select>
+            </label>
+          </div>
           )}
         </div>
       </Card>

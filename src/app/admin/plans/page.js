@@ -5,6 +5,8 @@ import { PlansManager } from "@/components/admin/PlansManager";
 export default async function AdminPlansPage() {
   await requireAdmin();
   const plans = await db.plan.findMany({ orderBy: { price: "asc" } });
+  const globalSettings = await db.setting.findFirst({}) || {};
+  const currency = globalSettings.currency || "USD";
 
   // Ensure default plans exist if none
   if (plans.length === 0) {
@@ -26,7 +28,7 @@ export default async function AdminPlansPage() {
         <h1 className="text-2xl font-bold text-slate-900">Subscription Plans</h1>
         <p className="text-slate-600 mt-1">Manage pricing tiers and limits for commercialization.</p>
       </div>
-      <PlansManager initialPlans={plans} />
+      <PlansManager initialPlans={plans} currency={currency} />
     </div>
   );
 }

@@ -11,6 +11,8 @@ export default async function BillingPage() {
 
   const limits = await getUserLimits(user.id);
   const allPlans = await db.plan.findMany({ orderBy: { price: "asc" } });
+  const globalSettings = await db.setting.findFirst({}) || {};
+  const symbol = globalSettings.currency === "INR" ? "₹" : "$";
 
   const resumeCount = await db.resume.count({ where: { userId: user.id } });
   const roadmapCount = await db.roadmap.count({ where: { userId: user.id } });
@@ -89,7 +91,7 @@ export default async function BillingPage() {
                   <div className="text-xs font-bold text-indigo-600 uppercase mb-2">Current Plan</div>
                 )}
                 <h3 className="font-bold text-slate-900 text-lg">{plan.name}</h3>
-                <p className="text-2xl font-black text-slate-900 mt-1 mb-4">${plan.price}<span className="text-sm font-normal text-slate-500">/mo</span></p>
+                <p className="text-2xl font-black text-slate-900 mt-1 mb-4">{symbol}{plan.price}<span className="text-sm font-normal text-slate-500">/mo</span></p>
                 <ul className="space-y-2 text-sm text-slate-600 mb-6">
                   <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> {plan.resumeLimit >= 9999 ? "Unlimited" : plan.resumeLimit} Resumes</li>
                   <li className="flex items-center gap-2"><Check size={14} className="text-emerald-500" /> {plan.roadmapLimit >= 9999 ? "Unlimited" : plan.roadmapLimit} Roadmaps</li>
